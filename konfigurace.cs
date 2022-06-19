@@ -53,11 +53,11 @@ namespace TiskStitku
 					"# IP adresa nebo jmeno tiskarny" + Environment.NewLine +
 					"IPtiskarny:" + Environment.NewLine +
 					"# typ tiskarny 0 - sdilena, 1 - mistni, 2 - sitova" + Environment.NewLine +
-					"TypTiskarny:" + Environment.NewLine +
+					"TypTiskarny:2" + Environment.NewLine +
 					"# adresar souboru s epl prikazy" + Environment.NewLine +
-					"adresar:" + Environment.NewLine +
+					"adresar:." + Environment.NewLine +
 					"# kodovani ulozenych souboru (UTF-8 nebo windows-1250)" + Environment.NewLine +
-					"kodovani:" + Environment.NewLine);
+					"kodovani:UTF-8" + Environment.NewLine);
 				AdresaTiskarny = "";
 				TypTiskarny = 2;
 				Adresar = ".";

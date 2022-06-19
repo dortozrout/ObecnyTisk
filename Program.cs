@@ -9,6 +9,7 @@ namespace TiskStitku
 	{
 		static void Main(string[] args)
 		{
+			Console.OutputEncoding = Encoding.Unicode;
 			if (args.Length == 0)
 			{
 				Konfigurace.Nacti("conf.txt");
@@ -39,12 +40,21 @@ namespace TiskStitku
 						list = databazePrikazu.VratSeznam(hledanyText);
 					}
 					telo = "";
-					for (int i = 0; i < list.Count; i++)
+					int cislo = 0;
+					if (list.Count != 0)
 					{
-						telo += string.Format(("{0}.").PadLeft(5) + "\t{1}" + Environment.NewLine, i + 1, Path.GetFileName(list[i].NazevSouboru));
+						for (int i = 0; i < list.Count; i++)
+						{
+							telo += string.Format(("{0}.").PadLeft(5) + "\t{1}" + Environment.NewLine, i + 1, Path.GetFileName(list[i].NazevSouboru));
+						}
+						telo = (telo).TrimEnd('\n');
+						cislo = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", telo, " Vyber soubor zadáním čísla (1 - " + list.Count + "): ", 1, list.Count, 0);
 					}
-					telo = (telo).TrimEnd('\n');
-					int cislo = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", telo, " Vyber soubor zadáním čísla (1 - " + list.Count + "): ", 1, list.Count, 0);
+					else
+					{
+						telo = " Nenalezen žádný výskyt \"" + hledanyText + "\"";
+						UzivRozhrani.Oznameni(" Tisk štítků na EPL tiskárně", telo, " Pokračuj stisknutím libovolné klávesy.");
+					}
 					cislo--;
 					if (cislo != -1)
 					{

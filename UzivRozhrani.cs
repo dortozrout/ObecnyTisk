@@ -15,6 +15,7 @@ namespace TiskStitku
 			zprava += telo + Environment.NewLine + Linka;
 			zprava += vyzva;
 			Console.Clear();
+			UzivRozhrani.VypisLogo();
 			Console.Write(zprava);
 			string uzVstup = Console.ReadLine().Trim();
 			if (string.IsNullOrEmpty(uzVstup))
@@ -28,6 +29,7 @@ namespace TiskStitku
 			zprava += telo + Environment.NewLine + Linka;
 			zprava += vyzva;
 			Console.Clear();
+			UzivRozhrani.VypisLogo();
 			Console.Write(zprava);
 			string uzVstup = Console.ReadLine().Trim();
 			if (string.IsNullOrEmpty(uzVstup))
@@ -40,6 +42,7 @@ namespace TiskStitku
 			zprava += telo + Environment.NewLine + Linka;
 			zprava += vyzva;
 			Console.Clear();
+			UzivRozhrani.VypisLogo();
 			Console.Write(zprava);
 			Console.ReadKey();
 		}
@@ -51,6 +54,7 @@ namespace TiskStitku
 			while (true)
 			{
 				Console.Clear();
+				UzivRozhrani.VypisLogo();
 				Console.Write(zprava);
 				string s = Console.ReadLine();
 				s = s.Trim().ToLower();
@@ -88,6 +92,7 @@ namespace TiskStitku
 			while (true)
 			{
 				Console.Clear();
+				UzivRozhrani.VypisLogo();
 				Console.Write(zprava);
 				string s = Console.ReadLine();
 				if (string.IsNullOrEmpty(s))
@@ -95,7 +100,7 @@ namespace TiskStitku
 					cislo = vychozi;
 					break;
 				}
-				else if (s=="*")
+				else if (s == "*")
 				{
 					cislo = -2;
 					break;
@@ -122,6 +127,7 @@ namespace TiskStitku
 			while (true)
 			{
 				Console.Clear();
+				UzivRozhrani.VypisLogo();
 				Console.Write(zprava);
 				string s = Console.ReadLine();
 				if (string.IsNullOrEmpty(s))
@@ -151,6 +157,7 @@ namespace TiskStitku
 			while (true)
 			{
 				Console.Clear();
+				UzivRozhrani.VypisLogo();
 				Console.Write(zprava);
 
 				string s = Console.ReadLine();
@@ -166,6 +173,21 @@ namespace TiskStitku
 				}
 			}
 			return datum;
+		}
+		public static void VypisLogo()
+		{
+			//Zjisteni barev console
+			ConsoleColor puvodniPozadi = Console.BackgroundColor;
+			ConsoleColor puvodniPismo = Console.ForegroundColor;
+			//Nastaveni novych barev
+			Console.BackgroundColor = ConsoleColor.Gray;
+			Console.ForegroundColor = ConsoleColor.Black;
+			//Vypsani barkodu
+			string barcode = "   ▌ ▌█▌█▌▌▌█▌▌▌ █▌█▌▌▌ ▌█▌▌█▌▌ ▌█▌█▌▌█▌ ▌▌▌█▌▌▌ █▌▌█▌▌█▌ ▌▌ ▌█▌█▌▌   ";
+			Console.WriteLine(barcode);
+			//Vraceni puvodnich barev
+			Console.BackgroundColor = puvodniPozadi;
+			Console.ForegroundColor = puvodniPismo;
 		}
 	}
 }
