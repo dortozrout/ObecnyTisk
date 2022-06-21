@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Diagnostics;
 
 namespace TiskStitku
 {
@@ -18,8 +19,9 @@ namespace TiskStitku
 		public static string AdresaTiskarny { get; private set; }
 		public static int TypTiskarny { get; private set; }
 		public static string TypTiskarnySlovy { get; private set; }
-		public static void Nacti(string konfiguracniSoubor) //jmeno konfig souboru v adresari %appdata%/TiskStitku
+		public static int Nacti(string konfiguracniSoubor) //jmeno konfig souboru v adresari %appdata%/TiskStitku
 		{
+			int navratovaHodnota = 0;
 			string cesta = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TiskStitku");
 			if (!Directory.Exists(cesta))
 				Directory.CreateDirectory(cesta);
@@ -58,12 +60,21 @@ namespace TiskStitku
 					"adresar:." + Environment.NewLine +
 					"# kodovani ulozenych souboru (UTF-8 nebo windows-1250)" + Environment.NewLine +
 					"kodovani:UTF-8" + Environment.NewLine);
-				AdresaTiskarny = "";
-				TypTiskarny = 2;
-				Adresar = ".";
-				Kodovani = "UTF-8";
+				UzivRozhrani.Oznameni("  Tisk štítků na EPL tiskárně",
+					" První spuštění programu s konfiguračním souborem " + Environment.NewLine +
+					" " + Path.GetFullPath(Path.Combine(cesta, konfiguracniSoubor)) + Environment.NewLine +
+					" Bude otevřen v notepadu, uprav ho podle svých potřeb.",
+					" Pokračuj stisknutím libovolné klávesy.");
+				Process externiProces = new Process();
+				externiProces.StartInfo.FileName = "Notepad.exe";
+				externiProces.StartInfo.Arguments = Path.GetFullPath(Path.Combine(cesta, konfiguracniSoubor));
+				externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;
+				externiProces.Start();
+				externiProces.WaitForExit();
+				navratovaHodnota = 1;
 			}
 			KonfiguracniSoubor = Path.GetFullPath(Path.Combine(cesta, konfiguracniSoubor));
+			return navratovaHodnota;
 		}
 	}
 }

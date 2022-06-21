@@ -1,7 +1,4 @@
 using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace TiskStitku
 {
@@ -15,7 +12,7 @@ namespace TiskStitku
 			zprava += telo + Environment.NewLine + Linka;
 			zprava += vyzva;
 			Console.Clear();
-			UzivRozhrani.VypisLogo();
+			VypisLogo();
 			Console.Write(zprava);
 			string uzVstup = Console.ReadLine().Trim();
 			if (string.IsNullOrEmpty(uzVstup))
@@ -29,7 +26,7 @@ namespace TiskStitku
 			zprava += telo + Environment.NewLine + Linka;
 			zprava += vyzva;
 			Console.Clear();
-			UzivRozhrani.VypisLogo();
+			VypisLogo();
 			Console.Write(zprava);
 			string uzVstup = Console.ReadLine().Trim();
 			if (string.IsNullOrEmpty(uzVstup))
@@ -42,7 +39,7 @@ namespace TiskStitku
 			zprava += telo + Environment.NewLine + Linka;
 			zprava += vyzva;
 			Console.Clear();
-			UzivRozhrani.VypisLogo();
+			VypisLogo();
 			Console.Write(zprava);
 			Console.ReadKey();
 		}
@@ -54,7 +51,7 @@ namespace TiskStitku
 			while (true)
 			{
 				Console.Clear();
-				UzivRozhrani.VypisLogo();
+				VypisLogo();
 				Console.Write(zprava);
 				string s = Console.ReadLine();
 				s = s.Trim().ToLower();
@@ -92,7 +89,7 @@ namespace TiskStitku
 			while (true)
 			{
 				Console.Clear();
-				UzivRozhrani.VypisLogo();
+				VypisLogo();
 				Console.Write(zprava);
 				string s = Console.ReadLine();
 				if (string.IsNullOrEmpty(s))
@@ -127,7 +124,7 @@ namespace TiskStitku
 			while (true)
 			{
 				Console.Clear();
-				UzivRozhrani.VypisLogo();
+				VypisLogo();
 				Console.Write(zprava);
 				string s = Console.ReadLine();
 				if (string.IsNullOrEmpty(s))
@@ -157,7 +154,7 @@ namespace TiskStitku
 			while (true)
 			{
 				Console.Clear();
-				UzivRozhrani.VypisLogo();
+				VypisLogo();
 				Console.Write(zprava);
 
 				string s = Console.ReadLine();

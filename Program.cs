@@ -10,14 +10,16 @@ namespace TiskStitku
 		static void Main(string[] args)
 		{
 			Console.OutputEncoding = Encoding.Unicode;
+			int nh;
 			if (args.Length == 0)
 			{
-				Konfigurace.Nacti("conf.txt");
+				nh=Konfigurace.Nacti("conf.txt");
 			}
 			else
 			{
-				Konfigurace.Nacti(args[0]);
+				nh=Konfigurace.Nacti(args[0]);
 			}
+			if (nh == 1) Konfigurace.Nacti(Konfigurace.KonfiguracniSoubor);
 			DatabazePrikazu databazePrikazu = new DatabazePrikazu(Konfigurace.Adresar);
 			List<EplPrikaz> list;
 			string hledanyText;
@@ -29,7 +31,7 @@ namespace TiskStitku
 					+ " Adresář se soubory: " + Path.GetFullPath(Konfigurace.Adresar) + Environment.NewLine
 					+ " Kódování souborů: " + Konfigurace.Kodovani;
 				hledanyText = UzivRozhrani.VratText(" Tisk štítků na EPL tiskárně", telo, " Zadej část názvu hledaného souboru" + Environment.NewLine + " nebo * pro zobrazení všech souborů " + Environment.NewLine + " (prázdný vstup ukončí program): ", "");
-				if (!String.IsNullOrEmpty(hledanyText))
+				if (!string.IsNullOrEmpty(hledanyText))
 				{
 					if (hledanyText == "*")
 					{
