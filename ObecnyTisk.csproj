@@ -73,6 +73,8 @@
     <Compile Include="TiskLokalniTiskarna.cs" />
     <Compile Include="TiskSdilenaTiskarna.cs" />
     <Compile Include="UzivRozhrani.cs" />
+    <Compile Include="Dotaz.cs" />
+    <Compile Include="SeznamDotazu.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".git\config" />
