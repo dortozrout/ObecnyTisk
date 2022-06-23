@@ -63,7 +63,7 @@ namespace TiskStitku
 				UzivRozhrani.Oznameni("  Tisk štítků na EPL tiskárně",
 					" První spuštění programu s konfiguračním souborem " + Environment.NewLine +
 					" " + Path.GetFullPath(Path.Combine(cesta, konfiguracniSoubor)) + Environment.NewLine +
-					" Bude otevřen v notepadu, uprav ho podle svých potřeb.",
+					" Konfigurační soubor bude otevřen v notepadu, uprav ho podle svých potřeb.",
 					" Pokračuj stisknutím libovolné klávesy.");
 				Process externiProces = new Process();
 				externiProces.StartInfo.FileName = "Notepad.exe";

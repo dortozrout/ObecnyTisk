@@ -30,7 +30,7 @@ namespace TiskStitku
 		{
 			List<EplPrikaz> seznam = new List<EplPrikaz>();
 			hledanyText = hledanyText.ToLower();
-			foreach(EplPrikaz prikaz in this.seznam)
+			foreach (EplPrikaz prikaz in this.seznam)
 			{
 				if (prikaz.NazevSouboru.ToLower().Contains(hledanyText))
 				{
@@ -39,11 +39,41 @@ namespace TiskStitku
 			}
 			return seznam;
 		}
-
-		public List<EplPrikaz> Najdi()
+		public EplPrikaz Vyber(string hledanyText)
 		{
-			return null;
+			List<EplPrikaz> list;
+			if (hledanyText == "*")
+			{
+				list = VratSeznam();
+			}
+			else
+			{
+				list = VratSeznam(hledanyText);
+			}
+			string telo = "";
+			int cislo = 0;
+			if (list.Count != 0)
+			{
+				for (int i = 0; i < list.Count; i++)
+				{
+					telo += string.Format(("{0}.").PadLeft(5) + "\t{1}" + Environment.NewLine, i + 1, Path.GetFileName(list[i].NazevSouboru));
+				}
+				telo = (telo).TrimEnd('\n');
+				cislo = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", telo, " Vyber soubor zadáním čísla (1 - " + list.Count + "): ", 1, list.Count, 0);
+			}
+			else
+			{
+				telo = " Nenalezen žádný výskyt \"" + hledanyText + "\"";
+				UzivRozhrani.Oznameni(" Tisk štítků na EPL tiskárně", telo, " Pokračuj stisknutím libovolné klávesy.");
+			}
+			cislo--;
+			if (cislo != -1)
+			{
+				EplPrikaz eplPrikaz = list[cislo];
+				return eplPrikaz;
+			}
+			else
+				return null;
 		}
-
 	}
 }
