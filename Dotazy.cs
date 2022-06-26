@@ -7,11 +7,14 @@ namespace TiskStitku
 
 	public class Dotazy
 	{
+		// seznam dotazu pro jeden soubor s epl prikazem
+		// ktery je napsan jako sablona k doplneni
+		// tj. obsahuje P na konci, nebo <vzor> 
 		public List<Dotaz> GenerujListDotazu(string teloEPLprikazu)
 		{
 			List<Dotaz> listDotazu = new List<Dotaz>();
-			int pocatek;
-			int konec;
+			int pocatek; //pocatek vzoru
+			int konec; //konec vzoru
 			Dotaz dotaz;
 			while (teloEPLprikazu.Contains("<"))
 			{

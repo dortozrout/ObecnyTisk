@@ -2,7 +2,7 @@
 
 namespace TiskStitku
 {
-	public class Dotaz
+	public class Dotaz //jeden Dotaz je dvojice otazka-odpoved
 	{
 		public string Otazka { get; set; }
 		public string Odpoved { get; set; }

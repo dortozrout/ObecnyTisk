@@ -3,66 +3,96 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace TiskStitku
+namespace TiskStitku;
+
+class Program
 {
-	class Program
-	{
-		static void Main(string[] args)
-		{
-			Console.OutputEncoding = Encoding.Unicode;
-			int nh;
-			if (args.Length == 0)
-			{
-				nh = Konfigurace.Nacti("conf.txt");
-			}
-			else
-			{
-				nh = Konfigurace.Nacti(args[0]);
-			}
-			if (nh == 1) Konfigurace.Nacti(Konfigurace.KonfiguracniSoubor);
-			DatabazePrikazu databazePrikazu = new DatabazePrikazu(Konfigurace.Adresar);
-			string hledanyText;
-			do
-			{
-				string telo = " Konfigurační soubor: " + Konfigurace.KonfiguracniSoubor + Environment.NewLine
-					+ " Adresa tiskárny: " + Konfigurace.AdresaTiskarny + Environment.NewLine
-					+ " Typ tiskárny: " + Konfigurace.TypTiskarnySlovy + Environment.NewLine
-					+ " Adresář se soubory: " + Path.GetFullPath(Konfigurace.Adresar) + Environment.NewLine
-					+ " Kódování souborů: " + Konfigurace.Kodovani;
-				hledanyText = UzivRozhrani.VratText(" Tisk štítků na EPL tiskárně", telo, " Zadej část názvu hledaného souboru" + Environment.NewLine + " nebo * pro zobrazení všech souborů " + Environment.NewLine + " (prázdný vstup ukončí program): ", "");
-				if (!string.IsNullOrEmpty(hledanyText))
-				{
-					EplPrikaz eplPrikaz = databazePrikazu.Vyber(hledanyText);
-					if (eplPrikaz != null)
-					{
-						Dotazy dotazy = new Dotazy();
-						List<Dotaz> listDotazu = dotazy.GenerujListDotazu(eplPrikaz.Telo);
-						int pocetStitku = 1;
-						foreach (Dotaz dotaz in listDotazu)
-						{
-							if (dotaz.Otazka == "počet štítků")
-							{
-								pocetStitku = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", " Tisk šablony " + Path.GetFileName(eplPrikaz.NazevSouboru), " Zadej počet štítků od 1 do 20 (přednastaveno 1): ", 0, 20, 1);
-								dotaz.Odpoved = pocetStitku.ToString();
-							}
-							else
-							{
-								dotaz.Odpoved = UzivRozhrani.VratText(" Tisk štítků na EPL tiskárně", " Tisk šablony " + Path.GetFileName(eplPrikaz.NazevSouboru), " Zadej " + dotaz.Otazka + ": ", "");
-							}
-						}
-						eplPrikaz.UpravTelo(listDotazu);
-						if (pocetStitku != 0)
-						{
-							if (Konfigurace.TypTiskarny == 0)
-								TiskSdilenaTiskarna.Print(Konfigurace.AdresaTiskarny, eplPrikaz.Telo);
-							if (Konfigurace.TypTiskarny == 1)
-								TiskLokalniTiskarna.SendStringToPrinter(Konfigurace.AdresaTiskarny, eplPrikaz.Telo);
-							if (Konfigurace.TypTiskarny == 2)
-								TiskIPTiskarna.TiskniStitek(Konfigurace.AdresaTiskarny, eplPrikaz.Telo);
-						}
-					}
-				}
-			} while (!string.IsNullOrEmpty(hledanyText));
-		}
-	}
+    static void Main(string[] args)
+    {
+        //Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        //Console.OutputEncoding = Encoding.Unicode;
+        Console.OutputEncoding = Encoding.UTF8;
+        int nh;//navratova hodnota 1 pokud konf soubor neexistuje vytvori se novy
+        if (args.Length == 0)
+        {
+            nh = Konfigurace.Nacti("conf.txt");
+        }
+        else
+        {
+            nh = Konfigurace.Nacti(args[0]);
+        }
+        //nacteni konfigurace pokud byl konfig soubor nove vytvoren 
+        if (nh == 1) Konfigurace.Nacti(Konfigurace.KonfiguracniSoubor);
+        EplPrikaz eplPrikaz = null;
+        EplPrikazy eplPrikazy = new EplPrikazy(Konfigurace.Adresar, Konfigurace.HledanyText);
+        if (Konfigurace.JedenSoubor) //Tisk pouze jednoho souboru
+        {
+            if (eplPrikazy.VratSeznam().Count == 0)
+            {
+                UzivRozhrani.Oznameni(" Tisk štítků na EPL tiskárně",
+                    " Program je nakonfigurován na tisk jednoho souboru"
+                    + Environment.NewLine
+                    + " ale soubor "
+                    + Konfigurace.HledanyText
+                    + " se v adresari "
+                    + Konfigurace.Adresar
+                    + " nenašel."
+                    + Environment.NewLine
+                    + " Zkontroluj nastavení v konfiguračním souboru: "
+                    + Path.GetFullPath(Konfigurace.KonfiguracniSoubor),
+                    " Pokračuj stisknutím libovolné klávesy.");
+            }
+            else
+            {
+                eplPrikaz = eplPrikazy.VratSeznam()[0];
+                int i = eplPrikaz.VyplnSablonu();
+                if (i == 0)
+                {
+                    Tisk.TiskniStitek(eplPrikaz.Telo);
+                }
+            }
+        }
+        //Tisk vice souboru vymezenych hledanim
+        else if (!Konfigurace.JedenSoubor && !string.IsNullOrEmpty(Konfigurace.HledanyText))
+        {
+            do
+            {
+                eplPrikaz = eplPrikazy.Vyber();
+                if (eplPrikaz != null)
+                {
+                    int i = eplPrikaz.VyplnSablonu();
+                    if (i == 0)
+                    {
+                        Tisk.TiskniStitek(eplPrikaz.Telo);
+                    }
+                }
+            } while (eplPrikaz != null);
+        }
+        else //Zobrazi nebo prohleda cely adresar
+        {
+            string hledanyText = "";
+            do
+            {
+                string telo = " Konfigurační soubor: " + Konfigurace.KonfiguracniSoubor + Environment.NewLine
+                    + " Adresa tiskárny: " + Konfigurace.AdresaTiskarny + Environment.NewLine
+                    + " Typ tiskárny: " + Konfigurace.TypTiskarnySlovy + Environment.NewLine
+                    + " Adresář se soubory: " + Path.GetFullPath(Konfigurace.Adresar) + Environment.NewLine
+                    + " Kódování souborů: " + Konfigurace.Kodovani;
+                hledanyText = UzivRozhrani.VratText(" Tisk štítků na EPL tiskárně", telo, " Zadej část názvu hledaného souboru" + Environment.NewLine + " nebo * pro zobrazení všech souborů " + Environment.NewLine + " (prázdný vstup ukončí program): ", "");
+                if (!string.IsNullOrEmpty(hledanyText))
+                {
+                    eplPrikaz = eplPrikazy.Vyber(hledanyText);
+                    if (eplPrikaz != null)
+                    {
+                        int i = eplPrikaz.VyplnSablonu();
+                        if (i == 0)
+                        {
+                            Tisk.TiskniStitek(eplPrikaz.Telo);
+                        }
+                    }
+                }
+            } while (!string.IsNullOrEmpty(hledanyText));
+        }
+    }
 }
+

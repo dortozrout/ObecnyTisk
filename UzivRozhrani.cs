@@ -4,7 +4,7 @@ namespace TiskStitku
 {
 	static class UzivRozhrani
 	{
-		private static string zprava;
+		private static string zprava = "";
 		private static readonly string Linka = "".PadLeft(92, '\u2500') + Environment.NewLine;
 		public static string VratText(string nadpis, string telo, string vyzva, string vychozi)
 		{
