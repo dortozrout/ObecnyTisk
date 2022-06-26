@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TiskStitku
+﻿namespace TiskStitku
 {
 	public class Dotaz //jeden Dotaz je dvojice otazka-odpoved
 	{

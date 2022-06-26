@@ -1,6 +1,5 @@
 namespace TiskStitku
 {
-
     public class Tisk
     {
         public static void TiskniStitek(string telo)

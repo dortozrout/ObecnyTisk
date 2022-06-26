@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Text;
 
 namespace TiskStitku;
@@ -23,7 +20,7 @@ class Program
         }
         //nacteni konfigurace pokud byl konfig soubor nove vytvoren 
         if (nh == 1) Konfigurace.Nacti(Konfigurace.KonfiguracniSoubor);
-        EplPrikaz eplPrikaz = null;
+        EplPrikaz eplPrikaz;
         EplPrikazy eplPrikazy = new EplPrikazy(Konfigurace.Adresar, Konfigurace.HledanyText);
         if (Konfigurace.JedenSoubor) //Tisk pouze jednoho souboru
         {

@@ -1,0 +1,16 @@
+C:\Users\Admin\Source\Repos\ObecnyTisk\bin\Debug\net6.0\ObecnyTisk.exe
+C:\Users\Admin\Source\Repos\ObecnyTisk\bin\Debug\net6.0\ObecnyTisk.dll.config
+C:\Users\Admin\Source\Repos\ObecnyTisk\bin\Debug\net6.0\ObecnyTisk.deps.json
+C:\Users\Admin\Source\Repos\ObecnyTisk\bin\Debug\net6.0\ObecnyTisk.runtimeconfig.json
+C:\Users\Admin\Source\Repos\ObecnyTisk\bin\Debug\net6.0\ObecnyTisk.dll
+C:\Users\Admin\Source\Repos\ObecnyTisk\bin\Debug\net6.0\ref\ObecnyTisk.dll
+C:\Users\Admin\Source\Repos\ObecnyTisk\bin\Debug\net6.0\ObecnyTisk.pdb
+C:\Users\Admin\Source\Repos\ObecnyTisk\obj\Debug\net6.0\ObecnyTisk.csproj.AssemblyReference.cache
+C:\Users\Admin\Source\Repos\ObecnyTisk\obj\Debug\net6.0\ObecnyTisk.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\Source\Repos\ObecnyTisk\obj\Debug\net6.0\ObecnyTisk.AssemblyInfoInputs.cache
+C:\Users\Admin\Source\Repos\ObecnyTisk\obj\Debug\net6.0\ObecnyTisk.AssemblyInfo.cs
+C:\Users\Admin\Source\Repos\ObecnyTisk\obj\Debug\net6.0\ObecnyTisk.csproj.CoreCompileInputs.cache
+C:\Users\Admin\Source\Repos\ObecnyTisk\obj\Debug\net6.0\ObecnyTisk.dll
+C:\Users\Admin\Source\Repos\ObecnyTisk\obj\Debug\net6.0\ref\ObecnyTisk.dll
+C:\Users\Admin\Source\Repos\ObecnyTisk\obj\Debug\net6.0\ObecnyTisk.pdb
+C:\Users\Admin\Source\Repos\ObecnyTisk\obj\Debug\net6.0\ObecnyTisk.genruntimeconfig.cache

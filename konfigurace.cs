@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using System.Diagnostics;
 
 namespace TiskStitku
@@ -11,8 +9,8 @@ namespace TiskStitku
 
         //Adresář se soubory obsahujícími EPL příkazy
         public static string Adresar { get; private set; }
-        //Vyraz pro vyhledani jednoho nebo nekolika epl prikazu v adresari
-        public static string HledanyText { get; private set; }
+		//Vyraz pro vyhledani jednoho nebo nekolika epl prikazu v adresari
+		public static string HledanyText { get; private set; } = "";
         //Tisk pouze jednoho souboru?
         public static bool JedenSoubor { get; private set; }
         //Kodovani souborů
@@ -25,6 +23,7 @@ namespace TiskStitku
         public static string TypTiskarnySlovy { get; private set; }
         public static int Nacti(string konfiguracniSoubor) //jmeno konfig souboru v adresari %appdata%/TiskStitku
         {
+
             int navratovaHodnota = 0;
             string cesta = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TiskStitku");
             if (!Directory.Exists(cesta))
@@ -83,8 +82,8 @@ namespace TiskStitku
                     " Konfigurační soubor bude otevřen v notepadu, uprav ho podle svých potřeb.",
                     " Pokračuj stisknutím libovolné klávesy.");
                 Process externiProces = new Process();
-                //externiProces.StartInfo.FileName = "Notepad.exe";
-                externiProces.StartInfo.FileName = "mousepad";
+                externiProces.StartInfo.FileName = "Notepad.exe";
+                //externiProces.StartInfo.FileName = "mousepad";
                 externiProces.StartInfo.Arguments = Path.GetFullPath(Path.Combine(cesta, konfiguracniSoubor));
                 externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
                 externiProces.Start();

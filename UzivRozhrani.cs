@@ -1,5 +1,3 @@
-using System;
-
 namespace TiskStitku
 {
 	static class UzivRozhrani

@@ -1,9 +1,3 @@
-using System;
-using System.Text;
-//using System.Drawing;
-//using System.Drawing.Printing;
-using System.IO;
-//using System.Windows.Forms;
 using System.Runtime.InteropServices;
 
 namespace TiskStitku
