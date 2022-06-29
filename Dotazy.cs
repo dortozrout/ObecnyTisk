@@ -1,4 +1,7 @@
-﻿namespace TiskStitku
+﻿using System;
+using System.Collections.Generic;
+
+namespace TiskStitku
 {
 
 	public class Dotazy

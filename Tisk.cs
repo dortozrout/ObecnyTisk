@@ -12,7 +12,6 @@ namespace TiskStitku
                 TiskIPTiskarna.TiskniStitek(Konfigurace.AdresaTiskarny, telo);
             if (Konfigurace.TypTiskarny == 3)
                 UzivRozhrani.Oznameni(" Tisk štítků na EPL tiskárně", telo, " Pokračuj stisnutím libovolné klávesy");
-
         }
     }
 }

@@ -1,4 +1,6 @@
-using Microsoft.Win32.SafeHandles;
+using Microsoft.Win32.SafeHandles;//musi byt na zacatku
+using System;
+using System.IO;
 using System.Text;
 using System.Runtime.InteropServices;
 

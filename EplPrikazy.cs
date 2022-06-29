@@ -1,4 +1,7 @@
+using System;
 using System.Text;
+using System.Collections.Generic;
+using System.IO;
 
 namespace TiskStitku
 {
@@ -6,9 +9,11 @@ namespace TiskStitku
     {
         private List<EplPrikaz> seznam = new List<EplPrikaz>();
         //konstruktor vytvori list epl prikazu ze souboru v danem umisteni
-        public EplPrikazy(string AdresaSlozky, string hledanyText)
+        //public EplPrikazy(string AdresaSlozky, string hledanyText)
+        public EplPrikazy(string AdresaSlozky)
         {
-            var jmenaSouboru = Directory.EnumerateFiles(AdresaSlozky, hledanyText); //jmena souboru jsou vcetne cesty
+            //var jmenaSouboru = Directory.EnumerateFiles(AdresaSlozky, hledanyText); //jmena souboru jsou vcetne cesty
+            var jmenaSouboru = Directory.EnumerateFiles(AdresaSlozky, "*"); //jmena souboru jsou vcetne cesty
             foreach (string jmenoSouboru in jmenaSouboru)
             {
                 string teloSouboru = File.ReadAllText(jmenoSouboru, Encoding.GetEncoding(Konfigurace.Kodovani));
@@ -28,18 +33,20 @@ namespace TiskStitku
             hledanyText = hledanyText.ToLower();
             foreach (EplPrikaz prikaz in this.seznam)
             {
-                if (prikaz.NazevSouboru.ToLower().Contains(hledanyText))
+				string nazevBezCesty = Path.GetFileName(prikaz.NazevSouboru);
+				//if (prikaz.NazevSouboru.ToLower().Contains(hledanyText))
+                if(nazevBezCesty.ToLower().Contains(hledanyText))
                 {
                     seznam.Add(prikaz);
                 }
             }
             return seznam;
         }
-        //Vybere jeden prikaz ze seznamu
+        //Vybere jeden prikaz ze seznamu vymezeneho hledanym textem
         public EplPrikaz Vyber(string hledanyText)
         {
             List<EplPrikaz> list;
-            if (hledanyText == "*")
+			if (hledanyText == "*")
             {
                 list = VratSeznam();
             }
