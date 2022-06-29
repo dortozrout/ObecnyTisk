@@ -46,12 +46,19 @@ namespace TiskStitku
 				}
 				else
 				{
-					eplPrikaz = eplPrikazy.VratSeznam(Konfigurace.HledanyText)[0];
-					int i = eplPrikaz.VyplnSablonu();
-					if (i == 0)
+					int i;
+					int j = 0;
+					do
 					{
-						Tisk.TiskniStitek(eplPrikaz.Telo);
-					}
+						eplPrikaz = eplPrikazy.VratSeznam(Konfigurace.HledanyText)[0];
+						i = eplPrikaz.VyplnSablonu();
+						if (i == 0)
+						{
+							Tisk.TiskniStitek(eplPrikaz.Telo);
+						}
+						j++;
+						if (j==10) break;//pojistka aby se netisklo donekonecna
+					} while (i == 0 && Konfigurace.OpakovanyTisk);
 				}
 			}
 			//Tisk vice souboru vymezenych hledanim

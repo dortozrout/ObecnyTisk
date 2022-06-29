@@ -15,6 +15,8 @@ namespace TiskStitku
 		public static string HledanyText { get; private set; }
 		//Tisk pouze jednoho souboru?
 		public static bool JedenSoubor { get; private set; }
+		//Opakovany tisk 1 souboru?
+		public static bool OpakovanyTisk { get; private set; }
 		//Kodovani souborů
 		public static string Kodovani { get; private set; }
 		//ip adresa nebo jméno tiskárny
@@ -33,6 +35,7 @@ namespace TiskStitku
 			{
 				string[] konfArray = File.ReadAllLines(Path.Combine(cesta, konfiguracniSoubor));
 				bool jedenSoubor = false;
+				bool opakovanyTisk = false;
 				foreach (string s in konfArray)
 				{
 					if (!s.StartsWith("#")) //ignoruje radky zakomentovane pomoci #
@@ -47,11 +50,14 @@ namespace TiskStitku
 							HledanyText = s.Substring(s.IndexOf(':') + 1).Trim();
 						if (s.ToLower().Contains("jedensoubor:")) //true pokud se ma vytisknout pouze jeden soubor
 							bool.TryParse(s.Substring(s.IndexOf(':') + 1).Trim(), out jedenSoubor);
+						if (s.ToLower().Contains("opakovanytisk:")) //true pkud se jeden soubor ma tisknout opakovane
+							bool.TryParse(s.Substring(s.IndexOf(':') + 1).Trim(), out opakovanyTisk);
 						if (s.ToLower().Contains("kodovani:")) //adresar se soubory epl prikazu
 							Kodovani = s.Substring(s.IndexOf(':') + 1).Trim();
 					}
 				}
 				JedenSoubor = jedenSoubor;
+				OpakovanyTisk = opakovanyTisk;
 				if (!Directory.Exists(Adresar))
 				{
 					UzivRozhrani.Oznameni("  Tisk štítků na EPL tiskárně",
@@ -90,6 +96,8 @@ namespace TiskStitku
 					"hledanyText:" + Environment.NewLine +
 					"# jestli se ma tisknout jenom jeden soubor" + Environment.NewLine +
 					"jedenSoubor:false" + Environment.NewLine +
+					"# jeden soubor se tiskne opakovane" + Environment.NewLine +
+					"opakovanytisk:false" + Environment.NewLine +
 					"# kodovani ulozenych souboru (UTF-8 nebo windows-1250)" + Environment.NewLine +
 					"kodovani:UTF-8" + Environment.NewLine);
 				UzivRozhrani.Oznameni("  Tisk štítků na EPL tiskárně",
