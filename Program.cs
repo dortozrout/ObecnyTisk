@@ -25,6 +25,7 @@ namespace TiskStitku
 			}
 			//nacteni konfigurace pokud byl konfig soubor nove vytvoren 
 			if (nh == 1) Konfigurace.Nacti(Konfigurace.KonfiguracniSoubor);
+			List<EplPrikaz> vybraneEplPrikazy;
 			EplPrikaz eplPrikaz;
 			EplPrikazy eplPrikazy = new EplPrikazy(Konfigurace.Adresar);//nacte soubory z Adresare do seznamu
 			if (Konfigurace.JedenSoubor) //Tisk pouze jednoho souboru
@@ -50,14 +51,15 @@ namespace TiskStitku
 					int j = 0;
 					do
 					{
-						eplPrikaz = eplPrikazy.VratSeznam(Konfigurace.HledanyText)[0];
+						vybraneEplPrikazy = eplPrikazy.VratSeznam(Konfigurace.HledanyText);
+						eplPrikaz = vybraneEplPrikazy[0];
 						i = eplPrikaz.VyplnSablonu();
 						if (i == 0)
 						{
 							Tisk.TiskniStitek(eplPrikaz.Telo);
 						}
 						j++;
-						if (j==10) break;//pojistka aby se netisklo donekonecna
+						if (j == 10) break;//pojistka aby se netisklo donekonecna
 					} while (i == 0 && Konfigurace.OpakovanyTisk);
 				}
 			}
@@ -66,16 +68,20 @@ namespace TiskStitku
 			{
 				do
 				{
-					eplPrikaz = eplPrikazy.Vyber(Konfigurace.HledanyText);
-					if (eplPrikaz != null)
+					vybraneEplPrikazy = eplPrikazy.Vyber(Konfigurace.HledanyText);
+					//eplPrikaz = eplPrikazy.Vyber(Konfigurace.HledanyText);
+					if (vybraneEplPrikazy != null)
 					{
-						int i = eplPrikaz.VyplnSablonu();
-						if (i == 0)
+						foreach (EplPrikaz epl in vybraneEplPrikazy)
 						{
-							Tisk.TiskniStitek(eplPrikaz.Telo);
+							int i = epl.VyplnSablonu();
+							if (i == 0)
+							{
+								Tisk.TiskniStitek(epl.Telo);
+							}
 						}
 					}
-				} while (eplPrikaz != null);
+				} while (vybraneEplPrikazy != null);
 			}
 			else //Zobrazi nebo prohleda cely adresar
 			{
@@ -91,13 +97,17 @@ namespace TiskStitku
 					hledanyText = UzivRozhrani.VratText(" Tisk štítků na EPL tiskárně", telo, " Zadej část názvu hledaného souboru" + Environment.NewLine + " nebo * pro zobrazení všech souborů " + Environment.NewLine + " (prázdný vstup ukončí program): ", "");
 					if (!string.IsNullOrEmpty(hledanyText))
 					{
-						eplPrikaz = eplPrikazy.Vyber(hledanyText);
-						if (eplPrikaz != null)
+						vybraneEplPrikazy = eplPrikazy.Vyber(hledanyText);
+						//eplPrikaz = eplPrikazy.Vyber(Konfigurace.HledanyText);
+						if (vybraneEplPrikazy != null)
 						{
-							int i = eplPrikaz.VyplnSablonu();
-							if (i == 0)
+							foreach (EplPrikaz epl in vybraneEplPrikazy)
 							{
-								Tisk.TiskniStitek(eplPrikaz.Telo);
+								int i = epl.VyplnSablonu();
+								if (i == 0)
+								{
+									Tisk.TiskniStitek(epl.Telo);
+								}
 							}
 						}
 					}

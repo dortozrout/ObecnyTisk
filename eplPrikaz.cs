@@ -10,7 +10,7 @@ namespace TiskStitku
 		public string NazevSouboru { get; private set; }
 		public string Sablona { get; private set; }
 		public string Telo { get; private set; }
-		//public List<Dotaz> SeznamDotazu { get; set; }
+		public List<Dotaz> ListDotazu { get; set; }
 		public EplPrikaz(string nazevSouboru, string sablona) //konstruktor
 		{
 			NazevSouboru = nazevSouboru;
@@ -22,9 +22,9 @@ namespace TiskStitku
 		{
 			Telo = Sablona;
 			Dotazy dotazy = new Dotazy();
-			List<Dotaz> listDotazu = dotazy.GenerujListDotazu(Telo);
+			ListDotazu = dotazy.GenerujListDotazu(Telo);
 			int pocetStitku = 1;
-			foreach (Dotaz dotaz in listDotazu) //ziskani odpovedi
+			foreach (Dotaz dotaz in ListDotazu) //ziskani odpovedi
 			{
 				if (dotaz.Otazka == "počet štítků")
 				{
@@ -40,7 +40,7 @@ namespace TiskStitku
 					dotaz.Odpoved = UzivRozhrani.VratText(" Tisk štítků na EPL tiskárně", " Tisk šablony " + Path.GetFileName(NazevSouboru), " Zadej " + dotaz.Otazka + ": ", "");
 				}
 			}
-			foreach (Dotaz dotaz in listDotazu) //vepsani odpovedi do sablony
+			foreach (Dotaz dotaz in ListDotazu) //vepsani odpovedi do sablony
 			{
 				if (dotaz.Otazka == "počet štítků")
 					Telo = Telo.TrimEnd(new char[] { '\r', '\n' }) + dotaz.Odpoved + Environment.NewLine;
