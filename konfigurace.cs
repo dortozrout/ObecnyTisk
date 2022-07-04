@@ -24,6 +24,9 @@ namespace TiskStitku
 		//typ tiskarny - lokalni, sdilena nebo sitova
 		public static int TypTiskarny { get; private set; }
 		public static string TypTiskarnySlovy { get; private set; }
+		//jestli vyzadovat zadani login
+		public static bool Prihlasit { get; private set; }
+		public static string Uzivatel { get; private set; }
 		public static int Nacti(string konfiguracniSoubor) //jmeno konfig souboru v adresari %appdata%/TiskStitku
 		{
 			HledanyText = "";
@@ -36,6 +39,7 @@ namespace TiskStitku
 				string[] konfArray = File.ReadAllLines(Path.Combine(cesta, konfiguracniSoubor));
 				bool jedenSoubor = false;
 				bool opakovanyTisk = false;
+				bool prihlasit = false;
 				foreach (string s in konfArray)
 				{
 					if (!s.StartsWith("#")) //ignoruje radky zakomentovane pomoci #
@@ -52,12 +56,20 @@ namespace TiskStitku
 							bool.TryParse(s.Substring(s.IndexOf(':') + 1).Trim(), out jedenSoubor);
 						if (s.ToLower().Contains("opakovanytisk:")) //true pkud se jeden soubor ma tisknout opakovane
 							bool.TryParse(s.Substring(s.IndexOf(':') + 1).Trim(), out opakovanyTisk);
-						if (s.ToLower().Contains("kodovani:")) //adresar se soubory epl prikazu
+						if (s.ToLower().Contains("kodovani:")) //kodovani souboru sablon epl prikazu
 							Kodovani = s.Substring(s.IndexOf(':') + 1).Trim();
+						if (s.ToLower().Contains("prihlasit:")) //kodovani souboru sablon epl prikazu
+							bool.TryParse(s.Substring(s.IndexOf(':') + 1).Trim(), out prihlasit);
 					}
 				}
 				JedenSoubor = jedenSoubor;
 				OpakovanyTisk = opakovanyTisk;
+				Prihlasit = prihlasit;
+				if (prihlasit)
+				{
+					Uzivatel = UzivRozhrani.VratText("  Tisk štítků na EPL tiskárně", " Je vyžadováno zadání login.", " Zadej login: ", "");
+				}
+
 				if (!Directory.Exists(Adresar))
 				{
 					UzivRozhrani.Oznameni("  Tisk štítků na EPL tiskárně",
@@ -99,7 +111,9 @@ namespace TiskStitku
 					"# jeden soubor se tiskne opakovane" + Environment.NewLine +
 					"opakovanytisk:false" + Environment.NewLine +
 					"# kodovani ulozenych souboru (UTF-8 nebo windows-1250)" + Environment.NewLine +
-					"kodovani:UTF-8" + Environment.NewLine);
+					"kodovani:UTF-8" + Environment.NewLine +
+					"# zda vyzadovat login" + Environment.NewLine +
+					"prihlasit:false" + Environment.NewLine);
 				UzivRozhrani.Oznameni("  Tisk štítků na EPL tiskárně",
 					" První spuštění programu s konfiguračním souborem " + Environment.NewLine +
 					" " + Path.GetFullPath(Path.Combine(cesta, konfiguracniSoubor)) + Environment.NewLine +

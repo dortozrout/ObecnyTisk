@@ -31,6 +31,18 @@ namespace TiskStitku
 					pocetStitku = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", " Tisk šablony " + Path.GetFileName(NazevSouboru), " Zadej počet štítků od 1 do 20 (přednastaveno 1): ", 0, 20, 1);
 					dotaz.Odpoved = pocetStitku.ToString();
 				}
+				else if (dotaz.Otazka.Contains("pocet|"))
+				{
+					string[] pole = dotaz.Otazka.Split('|');
+					int prednastPocet = 1;
+					int.TryParse(pole[1], out prednastPocet);
+					pocetStitku = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", " Tisk šablony " + Path.GetFileName(NazevSouboru), " Zadej počet štítků od 1 do 30 (přednastaveno " + prednastPocet + "): ", 0, 30, prednastPocet);
+					dotaz.Odpoved = pocetStitku.ToString();
+				}
+				else if (Konfigurace.Prihlasit && dotaz.Otazka == "uzivatel")
+				{
+					dotaz.Odpoved = Konfigurace.Uzivatel;
+				}
 				else if (DatumNCas(dotaz.Otazka))
 				{
 					dotaz.Odpoved = VratDatumNCas(dotaz.Otazka);

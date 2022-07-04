@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TiskStitku
 {
@@ -28,6 +29,8 @@ namespace TiskStitku
 				dotaz = new Dotaz("počet štítků");
 				listDotazu.Add(dotaz);
 			}
+			//odstaneni duplicitnich dotazu
+			listDotazu = listDotazu.GroupBy(p => p.Otazka).Select(g => g.First()).ToList();
 			return listDotazu;
 		}
 	}
