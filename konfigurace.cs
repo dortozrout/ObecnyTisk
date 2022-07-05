@@ -67,9 +67,11 @@ namespace TiskStitku
 				Prihlasit = prihlasit;
 				if (prihlasit)
 				{
-					Uzivatel = UzivRozhrani.VratText("  Tisk štítků na EPL tiskárně", " Je vyžadováno zadání login.", " Zadej login: ", "");
+					do
+					{
+						Uzivatel = UzivRozhrani.VratText("  Tisk štítků na EPL tiskárně", " Je vyžadována identifikace uživatele.", " Zadej login: ", "");
+					} while (string.IsNullOrWhiteSpace(Uzivatel));
 				}
-
 				if (!Directory.Exists(Adresar))
 				{
 					UzivRozhrani.Oznameni("  Tisk štítků na EPL tiskárně",
