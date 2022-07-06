@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace TiskStitku
 {
@@ -24,9 +25,17 @@ namespace TiskStitku
 			Dotazy dotazy = new Dotazy();
 			ListDotazu = dotazy.GenerujListDotazu(Telo);
 			int pocetStitku = 1;
+			//list obsahujicí jeden člen pokud se dotaz.Otazka najde v listu Dotazy.Data
+			List<Dotaz> dataVyhledany = new List<Dotaz>();
 			foreach (Dotaz dotaz in ListDotazu) //ziskani odpovedi
 			{
-				if (dotaz.Otazka == "počet štítků")
+				if (Dotazy.Data != null)
+					dataVyhledany = Dotazy.Data.Where(x => x.Otazka.Equals(dotaz.Otazka.ToLower())).ToList();
+				if (dataVyhledany.Count != 0)
+				{
+					dotaz.Odpoved = dataVyhledany[0].Odpoved;
+				}
+				else if (dotaz.Otazka == "počet štítků")
 				{
 					pocetStitku = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", " Tisk šablony " + Path.GetFileName(NazevSouboru), " Zadej počet štítků od 1 do 20 (přednastaveno 1): ", 0, 20, 1);
 					dotaz.Odpoved = pocetStitku.ToString();

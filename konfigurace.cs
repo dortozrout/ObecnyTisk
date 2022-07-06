@@ -27,6 +27,7 @@ namespace TiskStitku
 		//jestli vyzadovat zadani login
 		public static bool Prihlasit { get; private set; }
 		public static string Uzivatel { get; private set; }
+		public static string AdresaDat { get; private set; }
 		public static int Nacti(string konfiguracniSoubor) //jmeno konfig souboru v adresari %appdata%/TiskStitku
 		{
 			HledanyText = "";
@@ -60,6 +61,8 @@ namespace TiskStitku
 							Kodovani = s.Substring(s.IndexOf(':') + 1).Trim();
 						if (s.ToLower().Contains("prihlasit:")) //kodovani souboru sablon epl prikazu
 							bool.TryParse(s.Substring(s.IndexOf(':') + 1).Trim(), out prihlasit);
+						if (s.ToLower().Contains("data:")) //dvojice globalnich dat otazka-odpoved
+							AdresaDat = s.Substring(s.IndexOf(':') + 1).Trim();
 					}
 				}
 				JedenSoubor = jedenSoubor;
@@ -115,7 +118,9 @@ namespace TiskStitku
 					"# kodovani ulozenych souboru (UTF-8 nebo windows-1250)" + Environment.NewLine +
 					"kodovani:UTF-8" + Environment.NewLine +
 					"# zda vyzadovat login" + Environment.NewLine +
-					"prihlasit:false" + Environment.NewLine);
+					"prihlasit:false" + Environment.NewLine +
+					"# adresa souboru s daty" + Environment.NewLine +
+					"data:" + Environment.NewLine);
 				UzivRozhrani.Oznameni("  Tisk štítků na EPL tiskárně",
 					" První spuštění programu s konfiguračním souborem " + Environment.NewLine +
 					" " + Path.GetFullPath(Path.Combine(cesta, konfiguracniSoubor)) + Environment.NewLine +
@@ -124,6 +129,7 @@ namespace TiskStitku
 				Process externiProces = new Process();
 				externiProces.StartInfo.FileName = "Notepad.exe";
 				//externiProces.StartInfo.FileName = "mousepad";
+				//externiProces.StartInfo.FileName = "leafpad";
 				externiProces.StartInfo.Arguments = Path.GetFullPath(Path.Combine(cesta, konfiguracniSoubor));
 				externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 				externiProces.Start();

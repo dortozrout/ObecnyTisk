@@ -8,6 +8,11 @@
 		{
 			Otazka = otazka;
 		}
+		public Dotaz(string otazka, string odpoved)
+		{
+			Otazka = otazka;
+			Odpoved = odpoved;
+		}
 		public override string ToString()
 		{
 			string navratovaHodnota = "Otazka = " + Otazka + " Odpoved = " + Odpoved;

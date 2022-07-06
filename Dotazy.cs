@@ -1,12 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 
 namespace TiskStitku
 {
 
 	public class Dotazy
 	{
+		public static List<Dotaz> Data;
+		public Dotazy()
+		{
+			//pokud je v config souboru zadana adresa souboru s daty - otazka:odpoved
+			//vyplni se pri prvnim vytvoreni instance statický list Dotazy.Data
+			if (!string.IsNullOrEmpty(Konfigurace.AdresaDat) && (Data == null))
+			{
+				List<Dotaz> data = new List<Dotaz>();
+				try
+				{
+					string[] dataArray = File.ReadAllLines(Path.GetFullPath(Konfigurace.AdresaDat));
+					foreach (string s in dataArray)
+					{
+						Dotaz datapar;
+						string[] radekDat;
+						if (!s.StartsWith("#")) //ignoruje radky zakomentovane pomoci #
+						{
+							if (s.ToLower().Contains(":"))
+							{
+								radekDat = s.Split(':');
+								datapar = new Dotaz(radekDat[0].ToLower().Trim(), radekDat[1].Trim());
+								data.Add(datapar);
+							}
+						}
+					}
+					Data = data;
+				}
+				catch
+				{
+
+				}
+			}
+		}
 		// seznam dotazu pro jeden soubor s epl prikazem
 		// ktery je napsan jako sablona k doplneni
 		// tj. obsahuje P na konci, nebo <vzor> 
