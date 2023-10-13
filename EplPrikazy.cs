@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace TiskStitku
 {
@@ -13,7 +14,7 @@ namespace TiskStitku
 		public EplPrikazy(string AdresaSlozky)
 		{
 			//var jmenaSouboru = Directory.EnumerateFiles(AdresaSlozky, hledanyText); //jmena souboru jsou vcetne cesty
-			var jmenaSouboru = Directory.EnumerateFiles(AdresaSlozky, "*"); //jmena souboru jsou vcetne cesty
+			var jmenaSouboru = Directory.EnumerateFiles(AdresaSlozky, "*").OrderBy(filename => filename); //jmena souboru jsou vcetne cesty
 			foreach (string jmenoSouboru in jmenaSouboru)
 			{
 				string teloSouboru = File.ReadAllText(jmenoSouboru, Encoding.GetEncoding(Konfigurace.Kodovani));
@@ -79,7 +80,7 @@ namespace TiskStitku
 			}
 			//cislo--;
 			//if (cislo != -1)
-			if (cisla[0] != 0)
+			if (cisla.Count != 0 && cisla[0] != 0)
 			{
 				List<EplPrikaz> eplPrikazy = new List<EplPrikaz>();
 				foreach (int i in cisla)

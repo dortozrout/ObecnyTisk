@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Diagnostics;
+using System.Text;
 
 namespace TiskStitku
 {
@@ -67,6 +68,20 @@ namespace TiskStitku
 				}
 				JedenSoubor = jedenSoubor;
 				OpakovanyTisk = opakovanyTisk;
+				try
+				{
+					Encoding.GetEncoding(Kodovani);
+				}
+				catch (Exception ex)
+				{
+					UzivRozhrani.Oznameni("  Tisk štítků na EPL tiskárně",
+					" Kódování \"" + Kodovani + "\" uvedené v konfiguračním souboru není platné." + Environment.NewLine +
+					" Popis chyby: " + Environment.NewLine +
+					ex.Message + Environment.NewLine +
+					" Program bude ukončen.",
+					" Pokračuj stisknutím libovolné klávesy.");
+					Environment.Exit(-1);
+				}
 				Prihlasit = prihlasit;
 				if (prihlasit)
 				{
