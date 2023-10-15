@@ -65,20 +65,24 @@ namespace TiskStitku
 						string dotazNaExpiraci = otazka.Split('|')[1];
 						DateTime expirace;
 						string zjistenaExpirace = "";
-						if (DateTime.TryParse(dotazNaExpiraci, out expirace))
-						{
+						if (!DateTime.TryParse(dotazNaExpiraci, out expirace))
+						/*{
 							zjistenaExpirace = expirace.ToString("dd.MM.yyyy");
 						}
-						else
+						else*/
 						{
 							if (Dotazy.Data != null)
 								dataVyhledany = Dotazy.Data.Where(x => x.Otazka.Equals(dotazNaExpiraci.ToLower())).ToList();
 							if (dataVyhledany.Count != 0)
+							{
 								zjistenaExpirace = dataVyhledany[0].Odpoved;
+								otazka = otazka.Replace(dotazNaExpiraci, zjistenaExpirace);
+							}
 						}
-						otazka = otazka.Replace(dotazNaExpiraci, zjistenaExpirace);
+						dotaz.Odpoved = VratDatumNCas(otazka);
+						if (dotaz.Odpoved == "netisknout") return 1;
 					}
-					dotaz.Odpoved = VratDatumNCas(otazka);
+
 				}
 				//pokud se nenajde prednastavena odpoved polozi se otazka uzivateli
 				else
@@ -126,6 +130,12 @@ namespace TiskStitku
 			{
 				cas = cas.AddDays(Posun);
 				odpoved = cas < expiraceSarze ? cas.ToString("d.M.yyyy") : expiraceSarze.ToString("d.M.yyyy");
+				if (cas > expiraceSarze)
+				{
+					UzivRozhrani.Oznameni(" Tisk štítků na EPL tiskárně", " Tisk šablony " + Path.GetFileName(NazevSouboru), string.Format(" Materiál expiruje již za {0} dní ({1})!", (expiraceSarze - DateTime.Today).Days, expiraceSarze.ToString("d.M.yyyy")));
+					if (DateTime.Now > expiraceSarze)
+						odpoved = "netisknout";
+				}
 			}
 			else odpoved = cas.AddMinutes(Posun).ToString("H:mm");
 			return odpoved;
