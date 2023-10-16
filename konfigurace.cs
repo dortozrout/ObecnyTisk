@@ -93,7 +93,7 @@ namespace TiskStitku
 				if (!Directory.Exists(Adresar))
 				{
 					UzivRozhrani.Oznameni("  Tisk štítků na EPL tiskárně",
-					" Adresář uvedený v konfiguračním souboru neexistuje " + Environment.NewLine +
+					" Adresář se šablonami uvedený v konfiguračním souboru neexistuje " + Environment.NewLine +
 					//" " + Path.GetFullPath(Path.Combine(cesta, konfiguracniSoubor)) + Environment.NewLine +
 					" Konfigurační soubor bude otevřen v editoru, uprav ho podle svých potřeb.",
 					" Pokračuj stisknutím libovolné klávesy.");
@@ -152,6 +152,8 @@ namespace TiskStitku
 				navratovaHodnota = 1;
 			}
 			KonfiguracniSoubor = Path.GetFullPath(Path.Combine(cesta, konfiguracniSoubor));
+			//nacteni konfigurace pokud byl konfig soubor nove vytvoren 
+			if(navratovaHodnota==1) Nacti(KonfiguracniSoubor);
 			return navratovaHodnota;
 		}
 	}

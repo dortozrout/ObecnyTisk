@@ -79,9 +79,10 @@ namespace TiskStitku
 								otazka = otazka.Replace(dotazNaExpiraci, zjistenaExpirace);
 							}
 						}
-						dotaz.Odpoved = VratDatumNCas(otazka);
-						if (dotaz.Odpoved == "netisknout") return 1;
 					}
+					dotaz.Odpoved = VratDatumNCas(otazka);
+					if (dotaz.Odpoved == "netisknout") return 1;
+
 
 				}
 				//pokud se nenajde prednastavena odpoved polozi se otazka uzivateli
@@ -138,17 +139,17 @@ namespace TiskStitku
 				{
 					odpoved = "netisknout";
 					UzivRozhrani.OznameniChyby(
-                        " Tisk štítků na EPL tiskárně",
-                        string.Format(" Tisk šablony {0} " + Environment.NewLine + " Materiál je proexpirovaný, expirace {1}," + Environment.NewLine + " štítek se nevytiskne!", Path.GetFileName(NazevSouboru), expiraceSarze.ToString("d.M.yyyy")),
-                        " Pokračuj stisknutím libovolné klávesy...");
+						" Tisk štítků na EPL tiskárně",
+						string.Format(" Tisk šablony {0} " + Environment.NewLine + " Materiál je proexpirovaný, expirace {1}," + Environment.NewLine + " štítek se nevytiskne!", Path.GetFileName(NazevSouboru), expiraceSarze.ToString("d.M.yyyy")),
+						" Pokračuj stisknutím libovolné klávesy...");
 				}
 				else //material ktery expiruje drive nez je trvanlivost po otevreni
 				{
 					odpoved = expiraceSarze.ToString("d.M.yyyy");
 					UzivRozhrani.OznameniChyby(
-                        " Tisk štítků na EPL tiskárně",
-                        string.Format(" Tisk šablony {0}" + Environment.NewLine + " Materiál expiruje již za {1} dní ({2})!", Path.GetFileName(NazevSouboru), (expiraceSarze - DateTime.Today).Days, expiraceSarze.ToString("d.M.yyyy")),
-                        " Pokračuj stisknutím libovolné klávesy...");
+						" Tisk štítků na EPL tiskárně",
+						string.Format(" Tisk šablony {0}" + Environment.NewLine + " Materiál expiruje již za {1} dní ({2})!", Path.GetFileName(NazevSouboru), (expiraceSarze - DateTime.Today).Days, expiraceSarze.ToString("d.M.yyyy")),
+						" Pokračuj stisknutím libovolné klávesy...");
 				}
 			}
 			else odpoved = expiraceVypoctena.AddMinutes(Posun).ToString("H:mm"); //dotaz na cas

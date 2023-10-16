@@ -11,24 +11,27 @@ namespace TiskStitku
 	{
 		static void Main(string[] args)
 		{
+			//Je treba pro .NET CORE
 			//Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-			//Console.OutputEncoding = Encoding.Unicode;
 			Console.OutputEncoding = Encoding.UTF8;
-			int nh;//navratova hodnota 1 pokud konf soubor neexistuje vytvori se novy
-			if (args.Length == 0)
+			if (args.Length == 0) //pokud je program spusten bez parametru
 			{
-				nh = Konfigurace.Nacti("conf.txt");
+				Konfigurace.Nacti("conf.txt"); //pouzije se vychozi konfigurak
 			}
-			else
+			else //jinak se prvni parametr bere jako jmeno konfiguraku v %appdata%\TiskStitku
 			{
-				nh = Konfigurace.Nacti(args[0]);
+				Konfigurace.Nacti(args[0]);
 			}
-			//nacteni konfigurace pokud byl konfig soubor nove vytvoren 
-			if (nh == 1) Konfigurace.Nacti(Konfigurace.KonfiguracniSoubor);
+			//deklarace promennych
 			List<EplPrikaz> vybraneEplPrikazy;
 			EplPrikaz eplPrikaz;
-			EplPrikazy eplPrikazy = new EplPrikazy(Konfigurace.Adresar);//nacte soubory z Adresare do seznamu
-			if (Konfigurace.JedenSoubor) //Tisk pouze jednoho souboru
+			//Konstruktor - nacte soubory z Adresare do privatniho seznamu (eplPrikazy.seznam)
+			EplPrikazy eplPrikazy = new EplPrikazy(Konfigurace.Adresar);
+			//Program muze bezet ve 3 modech - tisk pouze jednoho souboru podle konfiguraku
+			//                               - vyber ze souboru vyfiltrovanych jiz v konfiguraku
+			//                               - vyber ze souboru vyfiltrovanych zadanim filtru
+			//Tisk pouze jednoho souboru
+			if (Konfigurace.JedenSoubor)
 			{
 				if (eplPrikazy.VratSeznam(Konfigurace.HledanyText).Count == 0)
 				{
