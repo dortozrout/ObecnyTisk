@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,6 +46,27 @@ namespace TiskStitku
             Console.Clear();
             VypisLogo();
             Console.Write(zprava);
+            Console.ReadKey();
+        }
+        public static void OznameniChyby(string nadpis, string telo, string vyzva)
+        {
+            Console.Clear();
+            //vypsani loga
+            VypisLogo();
+            Console.Write(nadpis + Environment.NewLine + Linka);
+            //ulozeni puvodnich barev konzole do promenych
+            ConsoleColor puvodniPozadi = Console.BackgroundColor;
+            ConsoleColor puvodniPopredi = Console.ForegroundColor;
+            //nastaveni zvyraznenych barev bila/cervena
+            Console.BackgroundColor = ConsoleColor.DarkRed;
+            Console.ForegroundColor = ConsoleColor.White;
+            //vypsani zvyrazneneho tela zpravy
+            Console.Write(telo);
+            //nastaveni puvodnich barev
+            Console.BackgroundColor = puvodniPozadi;
+            Console.ForegroundColor = puvodniPopredi;
+            Console.Write(Environment.NewLine + Linka + vyzva);
+            //cekani na stisknuti libovolne klavesy
             Console.ReadKey();
         }
         public static bool VratAnoNe(string nadpis, string telo, string vyzva, bool vychoziRozhodnuti)

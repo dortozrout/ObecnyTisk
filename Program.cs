@@ -43,7 +43,7 @@ namespace TiskStitku
 						+ Environment.NewLine
 						+ " Zkontroluj nastavení v konfiguračním souboru: "
 						+ Path.GetFullPath(Konfigurace.KonfiguracniSoubor),
-						" Pokračuj stisknutím libovolné klávesy.");
+						" Pokračuj stisknutím libovolné klávesy...");
 				}
 				else
 				{

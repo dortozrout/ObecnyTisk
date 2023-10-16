@@ -37,7 +37,7 @@ namespace TiskStitku
 				}
 				catch (Exception ex)
 				{
-					UzivRozhrani.Oznameni("  Tisk štítků na EPL tiskárně",
+					UzivRozhrani.OznameniChyby("  Tisk štítků na EPL tiskárně",
 										" Při zpracování souboru: " + Environment.NewLine +
 										 Path.GetFullPath(Konfigurace.AdresaDat) + Environment.NewLine +
 										" Došlo k chybě: " + Environment.NewLine + ex.Message,

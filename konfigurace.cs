@@ -74,7 +74,7 @@ namespace TiskStitku
 				}
 				catch (Exception ex)
 				{
-					UzivRozhrani.Oznameni("  Tisk štítků na EPL tiskárně",
+					UzivRozhrani.OznameniChyby("  Tisk štítků na EPL tiskárně",
 					" Kódování \"" + Kodovani + "\" uvedené v konfiguračním souboru není platné." + Environment.NewLine +
 					" Popis chyby: " + Environment.NewLine +
 					ex.Message + Environment.NewLine +

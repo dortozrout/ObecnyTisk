@@ -26,15 +26,15 @@ namespace TiskStitku
 			ListDotazu = dotazy.GenerujListDotazu(Telo);
 			int pocetStitku = 1;
 			//list obsahujicí jeden člen pokud se dotaz.Otazka najde v listu Dotazy.Data
-			List<Dotaz> dataVyhledany = new List<Dotaz>();
+			List<Dotaz> dataVyhledana = new List<Dotaz>();
 			foreach (Dotaz dotaz in ListDotazu) //ziskani odpovedi
 			{
 				//nejprve se hleda odpoved v souboru s daty (Dotazy.Data)
 				if (Dotazy.Data != null)
-					dataVyhledany = Dotazy.Data.Where(x => x.Otazka.Equals(dotaz.Otazka.ToLower())).ToList();
-				if (dataVyhledany.Count != 0)
+					dataVyhledana = Dotazy.Data.Where(x => x.Otazka.Equals(dotaz.Otazka.ToLower())).ToList();
+				if (dataVyhledana.Count != 0)
 				{
-					dotaz.Odpoved = dataVyhledany[0].Odpoved;
+					dotaz.Odpoved = dataVyhledana[0].Odpoved;
 				}
 				//sablona s P na konci
 				else if (dotaz.Otazka == "počet štítků")
@@ -72,10 +72,10 @@ namespace TiskStitku
 						else*/
 						{
 							if (Dotazy.Data != null)
-								dataVyhledany = Dotazy.Data.Where(x => x.Otazka.Equals(dotazNaExpiraci.ToLower())).ToList();
-							if (dataVyhledany.Count != 0)
+								dataVyhledana = Dotazy.Data.Where(x => x.Otazka.Equals(dotazNaExpiraci.ToLower())).ToList();
+							if (dataVyhledana.Count != 0)
 							{
-								zjistenaExpirace = dataVyhledany[0].Odpoved;
+								zjistenaExpirace = dataVyhledana[0].Odpoved;
 								otazka = otazka.Replace(dotazNaExpiraci, zjistenaExpirace);
 							}
 						}
@@ -113,11 +113,11 @@ namespace TiskStitku
 		private string VratDatumNCas(string otazka)
 		{
 			string odpoved;
-			string sCas;
+			string casTyp;
 			double Posun = 0;
 			DateTime expiraceSarze = DateTime.MaxValue;
 			string[] castiOtazky = otazka.Split(new char[] { '+', '|' });
-			sCas = castiOtazky[0];
+			casTyp = castiOtazky[0];
 			if (castiOtazky.Length > 1) //Cas s posunem
 			{
 				if (!double.TryParse(castiOtazky[1], out Posun))
@@ -125,19 +125,33 @@ namespace TiskStitku
 			}
 			if (castiOtazky.Length > 2) //Cas s posunem a expiraci
 				DateTime.TryParse(castiOtazky[2], out expiraceSarze);
-			DateTime cas = DateTime.Now;
-			if (sCas.Equals("date"))
+			DateTime expiraceVypoctena = DateTime.Now;
+			if (casTyp.Equals("date")) //vyhodnoceni dotazu na datum
 			{
-				cas = cas.AddDays(Posun);
-				odpoved = cas < expiraceSarze ? cas.ToString("d.M.yyyy") : expiraceSarze.ToString("d.M.yyyy");
-				if (cas > expiraceSarze)
+				expiraceVypoctena = expiraceVypoctena.AddDays(Posun);
+
+				if (expiraceVypoctena < expiraceSarze) //materiál před expirací
 				{
-					UzivRozhrani.Oznameni(" Tisk štítků na EPL tiskárně", " Tisk šablony " + Path.GetFileName(NazevSouboru), string.Format(" Materiál expiruje již za {0} dní ({1})!", (expiraceSarze - DateTime.Today).Days, expiraceSarze.ToString("d.M.yyyy")));
-					if (DateTime.Now > expiraceSarze)
-						odpoved = "netisknout";
+					odpoved = expiraceVypoctena.ToString("d.M.yyyy");
+				}
+				else if (DateTime.Now > expiraceSarze) //proexpirovany material
+				{
+					odpoved = "netisknout";
+					UzivRozhrani.OznameniChyby(
+                        " Tisk štítků na EPL tiskárně",
+                        string.Format(" Tisk šablony {0} " + Environment.NewLine + " Materiál je proexpirovaný, expirace {1}," + Environment.NewLine + " štítek se nevytiskne!", Path.GetFileName(NazevSouboru), expiraceSarze.ToString("d.M.yyyy")),
+                        " Pokračuj stisknutím libovolné klávesy...");
+				}
+				else //material ktery expiruje drive nez je trvanlivost po otevreni
+				{
+					odpoved = expiraceSarze.ToString("d.M.yyyy");
+					UzivRozhrani.OznameniChyby(
+                        " Tisk štítků na EPL tiskárně",
+                        string.Format(" Tisk šablony {0}" + Environment.NewLine + " Materiál expiruje již za {1} dní ({2})!", Path.GetFileName(NazevSouboru), (expiraceSarze - DateTime.Today).Days, expiraceSarze.ToString("d.M.yyyy")),
+                        " Pokračuj stisknutím libovolné klávesy...");
 				}
 			}
-			else odpoved = cas.AddMinutes(Posun).ToString("H:mm");
+			else odpoved = expiraceVypoctena.AddMinutes(Posun).ToString("H:mm"); //dotaz na cas
 			return odpoved;
 		}
 	}
