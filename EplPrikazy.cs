@@ -25,7 +25,7 @@ namespace TiskStitku
 		//vraci cely seznam
 		public List<EplPrikaz> VratSeznam()
 		{
-			return this.seznam;
+			return seznam;
 		}
 		//vraci seznam vyhledanych prikazu
 		public List<EplPrikaz> VratSeznam(string hledanyText)
@@ -64,7 +64,7 @@ namespace TiskStitku
 				{
 					telo += string.Format(("{0}.").PadLeft(5) + "\t{1}" + Environment.NewLine, i + 1, Path.GetFileName(list[i].NazevSouboru));
 				}
-				telo = (telo).TrimEnd('\n');
+				telo = telo.TrimEnd('\n');
 				//cislo = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", telo, " Vyber soubor zadáním čísla (1 - " + list.Count + "): ", 1, list.Count, 0);
 				cisla = UzivRozhrani.VratCisla(" Tisk štítků na EPL tiskárně", telo, " Vyber soubor zadáním čísla (1 - " + list.Count + "): ", 1, list.Count, "0");
 			}

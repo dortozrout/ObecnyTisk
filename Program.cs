@@ -33,6 +33,7 @@ namespace TiskStitku
 			//Tisk pouze jednoho souboru
 			if (Konfigurace.JedenSoubor)
 			{
+				//osetreni pripadu kdy se nenajde soubor definovaný v konfiguráku
 				if (eplPrikazy.VratSeznam(Konfigurace.HledanyText).Count == 0)
 				{
 					UzivRozhrani.Oznameni(" Tisk štítků na EPL tiskárně",
@@ -48,22 +49,28 @@ namespace TiskStitku
 						+ Path.GetFullPath(Konfigurace.KonfiguracniSoubor),
 						" Pokračuj stisknutím libovolné klávesy...");
 				}
+				//pokud se soubor najde vytiskne se
 				else
 				{
-					int i;
-					int j = 0;
+					//deklarace promennych
+					int nhVyplnSablonu;
+					int zarazka = 0;
 					do
 					{
+						//vyberou se sablony odpovidajici hledanemu textu
 						vybraneEplPrikazy = eplPrikazy.VratSeznam(Konfigurace.HledanyText);
+						//z nich se vybere 1. nalezena
 						eplPrikaz = vybraneEplPrikazy[0];
-						i = eplPrikaz.VyplnSablonu();
-						if (i == 0)
+						//sablona se vyplni
+						nhVyplnSablonu = eplPrikaz.VyplnSablonu();
+						//pokud je vse ok vytiskne se
+						if (nhVyplnSablonu == 0)
 						{
 							Tisk.TiskniStitek(eplPrikaz.Telo);
 						}
-						j++;
-						if (j == 10) break;//pojistka aby se netisklo donekonecna
-					} while (i == 0 && Konfigurace.OpakovanyTisk);
+						zarazka++;
+						if (zarazka == 10) break;//pojistka aby se netisklo donekonecna
+					} while (nhVyplnSablonu == 0 && Konfigurace.OpakovanyTisk);
 				}
 			}
 			//Tisk vice souboru vymezenych hledanim
@@ -72,13 +79,12 @@ namespace TiskStitku
 				do
 				{
 					vybraneEplPrikazy = eplPrikazy.Vyber(Konfigurace.HledanyText);
-					//eplPrikaz = eplPrikazy.Vyber(Konfigurace.HledanyText);
 					if (vybraneEplPrikazy != null)
 					{
 						foreach (EplPrikaz epl in vybraneEplPrikazy)
 						{
-							int i = epl.VyplnSablonu();
-							if (i == 0)
+							int nhVyplnSablonu = epl.VyplnSablonu();
+							if (nhVyplnSablonu == 0)
 							{
 								Tisk.TiskniStitek(epl.Telo);
 							}
@@ -88,7 +94,7 @@ namespace TiskStitku
 			}
 			else //Zobrazi nebo prohleda cely adresar
 			{
-				string hledanyText = "";
+				string hledanyText;
 				do
 				{
 					string telo = " Konfigurační soubor: " + Konfigurace.KonfiguracniSoubor + Environment.NewLine
