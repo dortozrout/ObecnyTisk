@@ -78,7 +78,7 @@ namespace TiskStitku
 			{
 				do
 				{
-					vybraneEplPrikazy = eplPrikazy.Vyber(Konfigurace.HledanyText);
+					vybraneEplPrikazy = eplPrikazy.UzivVyber(Konfigurace.HledanyText);
 					if (vybraneEplPrikazy != null)
 					{
 						foreach (EplPrikaz epl in vybraneEplPrikazy)
@@ -106,7 +106,7 @@ namespace TiskStitku
 					hledanyText = UzivRozhrani.VratText(" Tisk štítků na EPL tiskárně", telo, " Zadej část názvu hledaného souboru" + Environment.NewLine + " nebo * pro zobrazení všech souborů " + Environment.NewLine + " (prázdný vstup ukončí program): ", "");
 					if (!string.IsNullOrEmpty(hledanyText))
 					{
-						vybraneEplPrikazy = eplPrikazy.Vyber(hledanyText);
+						vybraneEplPrikazy = eplPrikazy.UzivVyber(hledanyText);
 						//eplPrikaz = eplPrikazy.Vyber(Konfigurace.HledanyText);
 						if (vybraneEplPrikazy != null)
 						{

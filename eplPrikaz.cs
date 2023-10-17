@@ -8,13 +8,15 @@ namespace TiskStitku
 {
 	class EplPrikaz
 	{
-		public string NazevSouboru { get; private set; }
+		public string AdresaSouboru { get; private set; }
+		public string JmenoSouboru { get; private set; }
 		public string Sablona { get; private set; }
 		public string Telo { get; private set; }
 		public List<Dotaz> ListDotazu { get; set; }
-		public EplPrikaz(string nazevSouboru, string sablona) //konstruktor
+		public EplPrikaz(string adresaSouboru, string sablona) //konstruktor
 		{
-			NazevSouboru = nazevSouboru;
+			AdresaSouboru = adresaSouboru;
+			JmenoSouboru = Path.GetFileName(AdresaSouboru);
 			Sablona = sablona;
 		}
 		//Pokud eplPrikaz je sablona tj. obsahuje <vzor> nebo P na konci
@@ -39,7 +41,7 @@ namespace TiskStitku
 				//sablona s P na konci
 				else if (dotaz.Otazka == "počet štítků")
 				{
-					pocetStitku = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", " Tisk šablony " + Path.GetFileName(NazevSouboru), " Zadej počet štítků od 1 do 20 (přednastaveno 1): ", 0, 20, 1);
+					pocetStitku = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", " Tisk šablony " + Path.GetFileName(AdresaSouboru), " Zadej počet štítků od 1 do 20 (přednastaveno 1): ", 0, 20, 1);
 					dotaz.Odpoved = pocetStitku.ToString();
 				}
 				//otazka typu <pocet|12> prednastaveny pocet 12
@@ -48,7 +50,7 @@ namespace TiskStitku
 					string[] pole = dotaz.Otazka.Split('|');
 					int prednastPocet = 1;
 					int.TryParse(pole[1], out prednastPocet);
-					pocetStitku = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", " Tisk šablony " + Path.GetFileName(NazevSouboru), " Zadej počet štítků od 1 do 30 (přednastaveno " + prednastPocet + "): ", 0, 30, prednastPocet);
+					pocetStitku = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", " Tisk šablony " + Path.GetFileName(AdresaSouboru), " Zadej počet štítků od 1 do 30 (přednastaveno " + prednastPocet + "): ", 0, 30, prednastPocet);
 					dotaz.Odpoved = pocetStitku.ToString();
 				}
 				//uzivatel
@@ -88,7 +90,7 @@ namespace TiskStitku
 				//pokud se nenajde prednastavena odpoved polozi se otazka uzivateli
 				else
 				{
-					dotaz.Odpoved = UzivRozhrani.VratText(" Tisk štítků na EPL tiskárně", " Tisk šablony " + Path.GetFileName(NazevSouboru), " Zadej " + dotaz.Otazka + ": ", "");
+					dotaz.Odpoved = UzivRozhrani.VratText(" Tisk štítků na EPL tiskárně", " Tisk šablony " + Path.GetFileName(AdresaSouboru), " Zadej " + dotaz.Otazka + ": ", "");
 				}
 			}
 			foreach (Dotaz dotaz in ListDotazu) //vepsani odpovedi do sablony
@@ -122,7 +124,7 @@ namespace TiskStitku
 			if (castiOtazky.Length > 1) //Cas s posunem
 			{
 				if (!double.TryParse(castiOtazky[1], out Posun))
-					Posun = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", " Tisk šablony " + Path.GetFileName(NazevSouboru), " Zadej " + castiOtazky[1] + ": ", 0, int.MaxValue, 0);
+					Posun = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", " Tisk šablony " + Path.GetFileName(AdresaSouboru), " Zadej " + castiOtazky[1] + ": ", 0, int.MaxValue, 0);
 			}
 			if (castiOtazky.Length > 2) //Cas s posunem a expiraci
 				DateTime.TryParse(castiOtazky[2], out expiraceSarze);
@@ -140,7 +142,7 @@ namespace TiskStitku
 					odpoved = "netisknout";
 					UzivRozhrani.OznameniChyby(
 						" Tisk štítků na EPL tiskárně",
-						string.Format(" Tisk šablony {0} " + Environment.NewLine + " Materiál je proexpirovaný, expirace {1}," + Environment.NewLine + " štítek se nevytiskne!", Path.GetFileName(NazevSouboru), expiraceSarze.ToString("d.M.yyyy")),
+						string.Format(" Tisk šablony {0} " + Environment.NewLine + " Materiál je proexpirovaný, expirace {1}," + Environment.NewLine + " štítek se nevytiskne!", Path.GetFileName(AdresaSouboru), expiraceSarze.ToString("d.M.yyyy")),
 						" Pokračuj stisknutím libovolné klávesy...");
 				}
 				else //material ktery expiruje drive nez je trvanlivost po otevreni
@@ -148,7 +150,7 @@ namespace TiskStitku
 					odpoved = expiraceSarze.ToString("d.M.yyyy");
 					UzivRozhrani.OznameniChyby(
 						" Tisk štítků na EPL tiskárně",
-						string.Format(" Tisk šablony {0}" + Environment.NewLine + " Materiál expiruje již za {1} dní ({2})!", Path.GetFileName(NazevSouboru), (expiraceSarze - DateTime.Today).Days, expiraceSarze.ToString("d.M.yyyy")),
+						string.Format(" Tisk šablony {0}" + Environment.NewLine + " Materiál expiruje již za {1} dní ({2})!", Path.GetFileName(AdresaSouboru), (expiraceSarze - DateTime.Today).Days, expiraceSarze.ToString("d.M.yyyy")),
 						" Pokračuj stisknutím libovolné klávesy...");
 				}
 			}
