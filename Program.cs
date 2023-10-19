@@ -26,7 +26,7 @@ namespace TiskStitku
 			List<EplPrikaz> vybraneEplPrikazy;
 			EplPrikaz eplPrikaz;
 			//Konstruktor - nacte soubory z Adresare do privatniho seznamu (eplPrikazy.seznam)
-			EplPrikazy eplPrikazy = new EplPrikazy(Konfigurace.Adresar);
+			SouborEplPrikazu eplPrikazy = new SouborEplPrikazu(Konfigurace.Adresar);
 			//Program muze bezet ve 3 modech - tisk pouze jednoho souboru podle konfiguraku
 			//                               - vyber ze souboru vyfiltrovanych jiz v konfiguraku
 			//                               - vyber ze souboru vyfiltrovanych zadanim filtru

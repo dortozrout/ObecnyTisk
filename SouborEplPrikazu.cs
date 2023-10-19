@@ -6,11 +6,11 @@ using System.Linq;
 
 namespace TiskStitku
 {
-	class EplPrikazy
+	class SouborEplPrikazu
 	{
 		private List<EplPrikaz> seznam = new List<EplPrikaz>();
 		//konstruktor vytvori list epl prikazu ze souboru v danem umisteni
-		public EplPrikazy(string AdresaSlozky)
+		public SouborEplPrikazu(string AdresaSlozky)
 		{
 			var adresySouboru = Directory.EnumerateFiles(AdresaSlozky, "*").OrderBy(filename => filename); //jmena souboru jsou vcetne cesty
 			foreach (string adresaSouboru in adresySouboru)

@@ -6,29 +6,30 @@ using System.IO;
 namespace TiskStitku
 {
 
-	public class Dotazy
+	public class SouborUloh
 	{
-		public static List<Dotaz> Data;
-		public Dotazy()
+		//staticky list slouzi k ulozeni udaju ze souboru dat definovanem v konfiguraku
+		public static List<Uloha> Data;
+		public SouborUloh()
 		{
 			//pokud je v config souboru zadana adresa souboru s daty - otazka:odpoved
 			//vyplni se pri prvnim vytvoreni instance statický list Dotazy.Data
 			if (!string.IsNullOrEmpty(Konfigurace.AdresaDat) && (Data == null))
 			{
-				List<Dotaz> data = new List<Dotaz>();
+				List<Uloha> data = new List<Uloha>();
 				try
 				{
 					string[] dataArray = File.ReadAllLines(Path.GetFullPath(Konfigurace.AdresaDat));
 					foreach (string s in dataArray)
 					{
-						Dotaz datapar;
+						Uloha datapar;
 						string[] radekDat;
 						if (!s.StartsWith("#")) //ignoruje radky zakomentovane pomoci #
 						{
 							if (s.ToLower().Contains(":"))
 							{
 								radekDat = s.Split(':');
-								datapar = new Dotaz(radekDat[0].ToLower().Trim(), radekDat[1].Trim());
+								datapar = new Uloha(radekDat[0].ToLower().Trim(), radekDat[1].Trim());
 								data.Add(datapar);
 							}
 						}
@@ -45,31 +46,31 @@ namespace TiskStitku
 				}
 			}
 		}
-		// seznam dotazu pro jeden soubor s epl prikazem
+		// seznam uloh pro jeden soubor s epl prikazem
 		// ktery je napsan jako sablona k doplneni
 		// tj. obsahuje P na konci, nebo <vzor> 
-		public List<Dotaz> GenerujListDotazu(string teloEPLprikazu)
+		public List<Uloha> GenerujListUloh(string teloEPLprikazu)
 		{
-			List<Dotaz> listDotazu = new List<Dotaz>();
+			List<Uloha> listUloh = new List<Uloha>();
 			int pocatek; //pocatek vzoru
 			int konec; //konec vzoru
-			Dotaz dotaz;
+			Uloha uloha;
 			while (teloEPLprikazu.Contains("<"))
 			{
 				pocatek = teloEPLprikazu.IndexOf('<');
 				konec = teloEPLprikazu.IndexOf('>', pocatek);
-				dotaz = new Dotaz(teloEPLprikazu.Substring(pocatek + 1, konec - pocatek - 1));
+				uloha = new Uloha(teloEPLprikazu.Substring(pocatek + 1, konec - pocatek - 1));
 				teloEPLprikazu = teloEPLprikazu.Substring(konec);
-				listDotazu.Add(dotaz);
+				listUloh.Add(uloha);
 			}
 			if (teloEPLprikazu.TrimEnd(new char[] { '\r', '\n' }).EndsWith("P"))
 			{
-				dotaz = new Dotaz("počet štítků");
-				listDotazu.Add(dotaz);
+				uloha = new Uloha("počet štítků");
+				listUloh.Add(uloha);
 			}
 			//odstaneni duplicitnich dotazu
-			listDotazu = listDotazu.GroupBy(p => p.Otazka).Select(g => g.First()).ToList();
-			return listDotazu;
+			listUloh = listUloh.GroupBy(p => p.Zadani).Select(g => g.First()).ToList();
+			return listUloh;
 		}
 	}
 }
