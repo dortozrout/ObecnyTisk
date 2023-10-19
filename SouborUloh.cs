@@ -19,18 +19,18 @@ namespace TiskStitku
 				List<Uloha> data = new List<Uloha>();
 				try
 				{
-					string[] dataArray = File.ReadAllLines(Path.GetFullPath(Konfigurace.AdresaDat));
-					foreach (string s in dataArray)
+					string[] obsahSouboruDat = File.ReadAllLines(Path.GetFullPath(Konfigurace.AdresaDat));
+					foreach (string s in obsahSouboruDat)
 					{
-						Uloha datapar;
+						Uloha uloha;
 						string[] radekDat;
 						if (!s.StartsWith("#")) //ignoruje radky zakomentovane pomoci #
 						{
 							if (s.ToLower().Contains(":"))
 							{
 								radekDat = s.Split(':');
-								datapar = new Uloha(radekDat[0].ToLower().Trim(), radekDat[1].Trim());
-								data.Add(datapar);
+								uloha = new Uloha(radekDat[0].ToLower().Trim(), radekDat[1].Trim());
+								data.Add(uloha);
 							}
 						}
 					}
@@ -55,14 +55,20 @@ namespace TiskStitku
 			int pocatek; //pocatek vzoru
 			int konec; //konec vzoru
 			Uloha uloha;
-			while (teloEPLprikazu.Contains("<"))
+			//parsovani sablony dokud obsahuje "<"
+			while (teloEPLprikazu.Contains('<'))
 			{
+				//definice pocatku a konce ulohy - vzoru
 				pocatek = teloEPLprikazu.IndexOf('<');
 				konec = teloEPLprikazu.IndexOf('>', pocatek);
+				//definice ulohy vymezene pocatkem a koncem
 				uloha = new Uloha(teloEPLprikazu.Substring(pocatek + 1, konec - pocatek - 1));
-				teloEPLprikazu = teloEPLprikazu.Substring(konec);
+				//odstrizeni zbytku eplPrikazu
+				teloEPLprikazu = teloEPLprikazu.Substring(konec + 1);
+				//pridani ulohy do listu
 				listUloh.Add(uloha);
 			}
+			//osetreni pripadu, kdy sablona konci na "P"
 			if (teloEPLprikazu.TrimEnd(new char[] { '\r', '\n' }).EndsWith("P"))
 			{
 				uloha = new Uloha("počet štítků");

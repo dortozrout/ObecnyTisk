@@ -13,8 +13,6 @@ namespace TiskStitku
 			// Printer IP Address and communication port
 			string ipAddress = adresaTiskarny;
 			int port = 9100;
-			// EPL Command(s)
-			//string EPLString = File.ReadAllText(@args[0], Encoding.GetEncoding("windows-1250"));
 			try
 			{
 				// Open connection
@@ -23,6 +21,7 @@ namespace TiskStitku
 
 				// Write ZPL String to connection
 				StreamWriter writer = new StreamWriter(client.GetStream(), Encoding.GetEncoding("windows-1250"));
+				//pridavam "N" na zacatek kvuli vymazani predchoziho stitku
 				writer.Write("N" + Environment.NewLine);
 				writer.Write(EPLString);
 				writer.Flush();

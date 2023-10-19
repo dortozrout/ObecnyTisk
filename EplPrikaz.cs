@@ -20,7 +20,7 @@ namespace TiskStitku
 			Sablona = sablona;
 		}
 		//Pokud eplPrikaz je sablona tj. obsahuje <vzor> nebo P na konci
-		//souboru, je treba doplnit potrebne udaje
+		//souboru, je treba doplnit potrebne udaje, vzoru rikam uloha
 		public int VyplnSablonu()
 		{
 			Telo = Sablona;
