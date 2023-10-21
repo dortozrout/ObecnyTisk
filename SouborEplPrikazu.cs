@@ -8,10 +8,16 @@ namespace TiskStitku
 {
 	class SouborEplPrikazu
 	{
-		private List<EplPrikaz> seznam = new List<EplPrikaz>();
+		private static List<EplPrikaz> seznam = new List<EplPrikaz>();
 		//konstruktor vytvori list epl prikazu ze souboru v danem umisteni
 		public SouborEplPrikazu(string AdresaSlozky)
 		{
+			NactiEplSablony(AdresaSlozky);
+		}
+		//metoda pro konstruktor a pro spravce
+		public static void NactiEplSablony(string AdresaSlozky)
+		{
+			seznam.Clear();
 			var adresySouboru = Directory.EnumerateFiles(AdresaSlozky, "*").OrderBy(filename => filename); //jmena souboru jsou vcetne cesty
 			foreach (string adresaSouboru in adresySouboru)
 			{

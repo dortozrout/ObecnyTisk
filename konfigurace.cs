@@ -98,8 +98,8 @@ namespace TiskStitku
 					" Konfigurační soubor bude otevřen v editoru, uprav ho podle svých potřeb.",
 					" Pokračuj stisknutím libovolné klávesy.");
 					Process externiProces = new Process();
-					externiProces.StartInfo.FileName = "Notepad.exe";
-					//externiProces.StartInfo.FileName = "mousepad";
+					//externiProces.StartInfo.FileName = "Notepad.exe";
+					externiProces.StartInfo.FileName = "mousepad";
 					externiProces.StartInfo.Arguments = Path.GetFullPath(Path.Combine(cesta, konfiguracniSoubor));
 					externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 					externiProces.Start();
@@ -153,7 +153,7 @@ namespace TiskStitku
 			}
 			KonfiguracniSoubor = Path.GetFullPath(Path.Combine(cesta, konfiguracniSoubor));
 			//nacteni konfigurace pokud byl konfig soubor nove vytvoren 
-			if(navratovaHodnota==1) Nacti(KonfiguracniSoubor);
+			if (navratovaHodnota == 1) Nacti(KonfiguracniSoubor);
 			return navratovaHodnota;
 		}
 	}

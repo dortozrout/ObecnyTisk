@@ -22,6 +22,8 @@ namespace TiskStitku
 			{
 				Konfigurace.Nacti(args[0]);
 			}
+			Spravce spravce = new Spravce();
+			spravce.Rozhrani();
 			//deklarace promennych
 			List<EplPrikaz> vybraneEplPrikazy;
 			EplPrikaz eplPrikaz;
