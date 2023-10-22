@@ -22,8 +22,6 @@ namespace TiskStitku
 			{
 				Konfigurace.Nacti(args[0]);
 			}
-			Spravce spravce = new Spravce();
-			spravce.Rozhrani();
 			//deklarace promennych
 			List<EplPrikaz> vybraneEplPrikazy;
 			EplPrikaz eplPrikaz;
@@ -106,7 +104,12 @@ namespace TiskStitku
 						+ " Kódování souborů: " + Konfigurace.Kodovani + Environment.NewLine
 						+ " " + RuntimeInformation.FrameworkDescription;
 					hledanyText = UzivRozhrani.VratText(" Tisk štítků na EPL tiskárně", telo, " Zadej část názvu hledaného souboru" + Environment.NewLine + " nebo * pro zobrazení všech souborů " + Environment.NewLine + " (prázdný vstup ukončí program): ", "");
-					if (!string.IsNullOrEmpty(hledanyText))
+					if (hledanyText.ToLower() == "edit")
+					{
+						Spravce spravce = new Spravce();
+						spravce.Rozhrani();
+					}
+					else if (!string.IsNullOrEmpty(hledanyText))
 					{
 						vybraneEplPrikazy = eplPrikazy.UzivVyber(hledanyText);
 						//eplPrikaz = eplPrikazy.Vyber(Konfigurace.HledanyText);
