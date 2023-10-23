@@ -16,35 +16,41 @@ namespace TiskStitku
 			//vyplni se pri prvnim vytvoreni instance statický list Dotazy.Data
 			if (!string.IsNullOrEmpty(Konfigurace.AdresaDat) && (Data == null))
 			{
-				List<Uloha> data = new List<Uloha>();
-				try
+				NactiData();
+			}
+		}
+		public static void NactiData()
+		{
+			if (Data != null) Data.Clear();
+			List<Uloha> data = new List<Uloha>();
+			try
+			{
+				string[] obsahSouboruDat = File.ReadAllLines(Path.GetFullPath(Konfigurace.AdresaDat));
+				foreach (string s in obsahSouboruDat)
 				{
-					string[] obsahSouboruDat = File.ReadAllLines(Path.GetFullPath(Konfigurace.AdresaDat));
-					foreach (string s in obsahSouboruDat)
+					Uloha uloha;
+					string[] radekDat;
+					if (!s.StartsWith("#")) //ignoruje radky zakomentovane pomoci #
 					{
-						Uloha uloha;
-						string[] radekDat;
-						if (!s.StartsWith("#")) //ignoruje radky zakomentovane pomoci #
+						if (s.ToLower().Contains(":"))
 						{
-							if (s.ToLower().Contains(":"))
-							{
-								radekDat = s.Split(':');
-								uloha = new Uloha(radekDat[0].ToLower().Trim(), radekDat[1].Trim());
-								data.Add(uloha);
-							}
+							radekDat = s.Split(':');
+							uloha = new Uloha(radekDat[0].ToLower().Trim(), radekDat[1].Trim());
+							data.Add(uloha);
 						}
 					}
-					Data = data;
 				}
-				catch (Exception ex)
-				{
-					UzivRozhrani.OznameniChyby("  Tisk štítků na EPL tiskárně",
-										" Při zpracování souboru: " + Environment.NewLine +
-										 Path.GetFullPath(Konfigurace.AdresaDat) + Environment.NewLine +
-										" Došlo k chybě: " + Environment.NewLine + ex.Message,
-										" Pokračuj stisknutím libovolné klávesy.");
-				}
+				Data = data;
 			}
+			catch (Exception ex)
+			{
+				UzivRozhrani.OznameniChyby("  Tisk štítků na EPL tiskárně",
+									" Při zpracování souboru: " + Environment.NewLine +
+									 Path.GetFullPath(Konfigurace.AdresaDat) + Environment.NewLine +
+									" Došlo k chybě: " + Environment.NewLine + ex.Message,
+									" Pokračuj stisknutím libovolné klávesy.");
+			}
+
 		}
 		// seznam uloh pro jeden soubor s epl prikazem
 		// ktery je napsan jako sablona k doplneni

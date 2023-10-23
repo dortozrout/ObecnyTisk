@@ -216,7 +216,7 @@ namespace TiskStitku
 				VypisLogo();
 				Console.Write(zprava);
 				string vstup = Console.ReadLine();
-				if (vstup.ToLower() == "edit")
+				if (vstup.ToLower() == "edit")//vložení možnosti konfigurace z programu
 				{
 					Spravce spravce = new Spravce();
 					spravce.Rozhrani();

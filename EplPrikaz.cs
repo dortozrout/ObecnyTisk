@@ -29,39 +29,39 @@ namespace TiskStitku
 			int pocetStitku = 1;
 			//list obsahujicí jeden člen pokud se dotaz.Otazka najde v listu Dotazy.Data
 			List<Uloha> dataVyhledana = new List<Uloha>();
-			foreach (Uloha dotaz in ListUloh) //ziskani odpovedi
+			foreach (Uloha uloha in ListUloh) //ziskani odpovedi
 			{
 				//nejprve se hleda odpoved v souboru s daty (Dotazy.Data)
 				if (SouborUloh.Data != null)
-					dataVyhledana = SouborUloh.Data.Where(x => x.Zadani.Equals(dotaz.Zadani.ToLower())).ToList();
+					dataVyhledana = SouborUloh.Data.Where(x => x.Zadani.Equals(uloha.Zadani.ToLower())).ToList();
 				if (dataVyhledana.Count != 0)
 				{
-					dotaz.Vysledek = dataVyhledana[0].Vysledek;
+					uloha.Vysledek = dataVyhledana[0].Vysledek;
 				}
 				//sablona s P na konci
-				else if (dotaz.Zadani == "počet štítků")
+				else if (uloha.Zadani == "počet štítků")
 				{
 					pocetStitku = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", " Tisk šablony " + Path.GetFileName(AdresaSouboru), " Zadej počet štítků od 1 do 20 (přednastaveno 1): ", 0, 20, 1);
-					dotaz.Vysledek = pocetStitku.ToString();
+					uloha.Vysledek = pocetStitku.ToString();
 				}
 				//otazka typu <pocet|12> prednastaveny pocet 12
-				else if (dotaz.Zadani.Contains("pocet|"))
+				else if (uloha.Zadani.Contains("pocet|"))
 				{
-					string[] pole = dotaz.Zadani.Split('|');
+					string[] pole = uloha.Zadani.Split('|');
 					int prednastPocet = 1;
 					int.TryParse(pole[1], out prednastPocet);
 					pocetStitku = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", " Tisk šablony " + Path.GetFileName(AdresaSouboru), " Zadej počet štítků od 1 do 30 (přednastaveno " + prednastPocet + "): ", 0, 30, prednastPocet);
-					dotaz.Vysledek = pocetStitku.ToString();
+					uloha.Vysledek = pocetStitku.ToString();
 				}
 				//uzivatel
-				else if (Konfigurace.Prihlasit && dotaz.Zadani == "uzivatel")
+				else if (Konfigurace.Prihlasit && uloha.Zadani == "uzivatel")
 				{
-					dotaz.Vysledek = Konfigurace.Uzivatel;
+					uloha.Vysledek = Konfigurace.Uzivatel;
 				}
 				//dotaz na datum nebo cas
-				else if (DatumNCas(dotaz.Zadani))
+				else if (DatumNCas(uloha.Zadani))
 				{
-					string otazka = dotaz.Zadani;
+					string otazka = uloha.Zadani;
 					if (otazka.Contains('|'))//otazka hlidajici prekroceni expirace sarze
 					{
 						string dotazNaExpiraci = otazka.Split('|')[1];
@@ -82,15 +82,15 @@ namespace TiskStitku
 							}
 						}
 					}
-					dotaz.Vysledek = VratDatumNCas(otazka);
-					if (dotaz.Vysledek == "netisknout") return 1;
+					uloha.Vysledek = VratDatumNCas(otazka);
+					if (uloha.Vysledek == "netisknout") return 1;
 
 
 				}
 				//pokud se nenajde prednastavena odpoved polozi se otazka uzivateli
 				else
 				{
-					dotaz.Vysledek = UzivRozhrani.VratText(" Tisk štítků na EPL tiskárně", " Tisk šablony " + Path.GetFileName(AdresaSouboru), " Zadej " + dotaz.Zadani + ": ", "");
+					uloha.Vysledek = UzivRozhrani.VratText(" Tisk štítků na EPL tiskárně", " Tisk šablony " + Path.GetFileName(AdresaSouboru), " Zadej " + uloha.Zadani + ": ", "");
 				}
 			}
 			foreach (Uloha dotaz in ListUloh) //vepsani odpovedi do sablony
