@@ -29,6 +29,7 @@ namespace TiskStitku
 		public static bool Prihlasit { get; private set; }
 		public static string Uzivatel { get; private set; }
 		public static string AdresaDat { get; private set; }
+		public const string Editace = "edit";
 		public static int Nacti(string konfiguracniSoubor) //jmeno konfig souboru v adresari %appdata%/TiskStitku
 		{
 			HledanyText = "";

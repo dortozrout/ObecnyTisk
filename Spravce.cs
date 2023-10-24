@@ -12,27 +12,27 @@ namespace TiskStitku
 		{
 			string telo = " Správce:"
 				   + Environment.NewLine
-				   + "\t 1. Editace šablon"
+				   + "\t 1. Editace souboru s daty"
 				   + Environment.NewLine
-				   + "\t 2. Editace konfiguračního souboru"
+				   + "\t 2. Editace šablon"
 				   + Environment.NewLine
-				   + "\t 3. Editace souboru s daty";
+				   + "\t 3. Editace konfiguračního souboru";
 			int volba = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", telo, " Vyber akci zadáním čísla: 1 - 5: ", 1, 5, 0);
-			if (volba == 1) EditujSablony();
-			else if (volba == 2) EditujKonfSoubor();
-			else if (volba == 3) EditujData();
+			if (volba == 2) EditujSablony();
+			else if (volba == 3) EditujKonfSoubor();
+			else if (volba == 1) EditujData();
 		}
 		public void EditujSablony()
 		{
 			Process externiProces = new Process();
 			//externiProces.StartInfo.FileName = "pcmanfm";
-			externiProces.StartInfo.FileName = "explorer";
+			//externiProces.StartInfo.FileName = "explorer";
+			externiProces.StartInfo.FileName = @"C:\Program Files (x86)\FreeCommander\FreeCommander.exe";
 			externiProces.StartInfo.Arguments = Path.GetFullPath(Konfigurace.Adresar);
 			externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 			externiProces.Start();
-			externiProces.WaitForExit();
-			Console.ReadKey();
-			//SouborEplPrikazu.NactiEplSablony(Konfigurace.Adresar);
+			externiProces.WaitForExit(); //u exploreru nafunguje
+										 //UzivRozhrani.Oznameni(" Tisk štítků na EPL tiskárně", " Editace šablon.", " Pro pokračování stiskni libovolnou klávesu...");
 			Restart();
 		}
 		public void EditujKonfSoubor()
@@ -45,7 +45,7 @@ namespace TiskStitku
 			externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 			externiProces.Start();
 			externiProces.WaitForExit();
-			Konfigurace.Nacti(Konfigurace.KonfiguracniSoubor);
+			Restart();
 		}
 		public void EditujData()
 		{
@@ -57,11 +57,14 @@ namespace TiskStitku
 			externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 			externiProces.Start();
 			externiProces.WaitForExit();
-			if (!string.IsNullOrEmpty(Konfigurace.AdresaDat)) SouborUloh.NactiData();
+			//if (!string.IsNullOrEmpty(Konfigurace.AdresaDat)) SouborUloh.NactiData();
+			Restart();
+
 		}
 		private void Restart()
 		{
-			Program.Run(new string[]{Konfigurace.KonfiguracniSoubor});
+			Program.Run(new string[] { Konfigurace.KonfiguracniSoubor });
+			Environment.Exit(0);
 		}
 	}
 }
