@@ -107,7 +107,7 @@ namespace TiskStitku
 						+ " Adresář se soubory: " + Path.GetFullPath(Konfigurace.Adresar) + Environment.NewLine
 						+ " Kódování souborů: " + Konfigurace.Kodovani + Environment.NewLine
 						+ " " + RuntimeInformation.FrameworkDescription;
-					hledanyText = UzivRozhrani.VratText(" Tisk štítků na EPL tiskárně", telo, " Zadej část názvu hledaného souboru" + Environment.NewLine + " nebo * pro zobrazení všech souborů " + Environment.NewLine + " (prázdný vstup ukončí program): ", "");
+					hledanyText = UzivRozhrani.VratText(" Tisk štítků na EPL tiskárně", telo, " Zadej část názvu hledaného souboru nebo * pro zobrazení všech souborů " + Environment.NewLine + " (edit = konfigurace, prázdný vstup = konec): ", "");
 					if (hledanyText.ToLower() == Konfigurace.Editace) //vložení konfigurace po zadání "edit"
 					{
 						Spravce spravce = new Spravce();

@@ -80,6 +80,11 @@ namespace TiskStitku
 								zjistenaExpirace = dataVyhledana[0].Vysledek;
 								otazka = otazka.Replace(dotazNaExpiraci, zjistenaExpirace);
 							}
+							else
+							{
+								zjistenaExpirace = DateTime.MaxValue.ToString();
+								otazka = otazka.Replace(dotazNaExpiraci, zjistenaExpirace);
+							}
 						}
 					}
 					uloha.Vysledek = VratDatumNCas(otazka);

@@ -10,17 +10,20 @@ namespace TiskStitku
 	{
 		public void Rozhrani()
 		{
-			string telo = " Správce:"
+			string telo = " Správce nastavení:"
 				   + Environment.NewLine
 				   + "\t 1. Editace souboru s daty"
 				   + Environment.NewLine
 				   + "\t 2. Editace šablon"
 				   + Environment.NewLine
-				   + "\t 3. Editace konfiguračního souboru";
+				   + "\t 3. Editace konfiguračního souboru"
+				   + Environment.NewLine
+				   + "\t 4. Zobrazení nápovědy";
 			int volba = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", telo, " Vyber akci zadáním čísla: 1 - 5: ", 1, 5, 0);
-			if (volba == 2) EditujSablony();
+			if (volba == 1) EditujData();
+			else if (volba == 2) EditujSablony();
 			else if (volba == 3) EditujKonfSoubor();
-			else if (volba == 1) EditujData();
+			else if (volba == 4) ZobrazReadme();
 		}
 		public void EditujSablony()
 		{
@@ -49,21 +52,50 @@ namespace TiskStitku
 		}
 		public void EditujData()
 		{
-			Process externiProces = new Process();
-			externiProces.StartInfo.FileName = "Notepad.exe";
-			//externiProces.StartInfo.FileName = "mousepad";
-			//externiProces.StartInfo.FileName = "leafpad";
-			externiProces.StartInfo.Arguments = Path.GetFullPath(Konfigurace.AdresaDat);
-			externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-			externiProces.Start();
-			externiProces.WaitForExit();
-			//if (!string.IsNullOrEmpty(Konfigurace.AdresaDat)) SouborUloh.NactiData();
-			Restart();
-
+			try
+			{
+				Process externiProces = new Process();
+				externiProces.StartInfo.FileName = "Notepad.exe";
+				//externiProces.StartInfo.FileName = "mousepad";
+				//externiProces.StartInfo.FileName = "leafpad";
+				externiProces.StartInfo.Arguments = Path.GetFullPath(Konfigurace.AdresaDat);
+				externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+				externiProces.Start();
+				externiProces.WaitForExit();
+				Restart();
+			}
+			catch (Exception ex)
+			{
+				UzivRozhrani.OznameniChyby(" Tisk štítků na EPL tiskárně",
+							   " Při pokusu o otevření souboru dat došlo k chybě:" + Environment.NewLine + ex.Message,
+							   " Pokračuj stisknutím libovolné klávesy");
+			}
+		}
+		public void ZobrazReadme()
+		{
+			//string adrReadMe = @".\Readme.txt";
+			string adrReadMe = @".\zdrojak\Readme.txt";
+			if (File.Exists(adrReadMe))
+			{
+				Process externiProces = new Process();
+				externiProces.StartInfo.FileName = "Notepad.exe";
+				//externiProces.StartInfo.FileName = "mousepad";
+				//externiProces.StartInfo.FileName = "leafpad";
+				externiProces.StartInfo.Arguments = Path.GetFullPath(adrReadMe);
+				externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+				externiProces.Start();
+				externiProces.WaitForExit();
+				//Restart();
+			}
+			else UzivRozhrani.OznameniChyby(" Tisk štítků na EPL tiskárně"," Nenašel jsem soubor s nápovědou:" + Path.GetFullPath(adrReadMe)," Pokračuj stisknutím libovolné klávesy...");
 		}
 		private void Restart()
 		{
+			//vyresetovani listu dat pri restartu
+			SouborUloh.Data = null;
+			//novy beh programu
 			Program.Run(new string[] { Konfigurace.KonfiguracniSoubor });
+			//aby stary beh nepokracoval
 			Environment.Exit(0);
 		}
 	}
