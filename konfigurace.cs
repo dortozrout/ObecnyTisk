@@ -27,17 +27,23 @@ namespace TiskStitku
 		public static string TypTiskarnySlovy { get; private set; }
 		//jestli vyzadovat zadani login
 		public static bool Prihlasit { get; private set; }
+		//uzivatelske jmeno
 		public static string Uzivatel { get; private set; }
+		//adresa souboru s daty expirace, sarze atd.
 		public static string AdresaDat { get; private set; }
+		//klicove slovo pro spusteni spravce konfigurace
 		public const string Editace = "edit";
+		//metoda slouzici pro nacteni konfigurace
 		public static int Nacti(string konfiguracniSoubor) //jmeno konfig souboru v adresari %appdata%/TiskStitku
 		{
+			//deklarace promennych
 			HledanyText = "";
 			int navratovaHodnota = 0;
 			string cesta = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TiskStitku");
-			if (!Directory.Exists(cesta))
-				Directory.CreateDirectory(cesta);
-			if (File.Exists(Path.Combine(cesta, konfiguracniSoubor))) //pokud konfig soubor existuje
+			//jestlize neexistuje adresar TiskStitku v %appdata% vytvori se
+			if (!Directory.Exists(cesta)) Directory.CreateDirectory(cesta);
+			//jestlize existuje konfiguracni soubor nacte se
+			if (File.Exists(Path.Combine(cesta, konfiguracniSoubor))) 
 			{
 				string[] konfArray = File.ReadAllLines(Path.Combine(cesta, konfiguracniSoubor));
 				bool jedenSoubor = false;
@@ -116,7 +122,7 @@ namespace TiskStitku
 				if (TypTiskarny == 3)
 					TypTiskarnySlovy = "výstup na obrazovku";
 			}
-			else //pokud konfig soubor neexistuje, vytvori novy
+			else //pokud konfig soubor neexistuje, vytvori se novy a otevre v editoru
 			{
 				File.WriteAllText(Path.Combine(cesta, konfiguracniSoubor),
 					"# IP adresa nebo jmeno tiskarny" + Environment.NewLine +
@@ -142,6 +148,7 @@ namespace TiskStitku
 					" " + Path.GetFullPath(Path.Combine(cesta, konfiguracniSoubor)) + Environment.NewLine +
 					" Konfigurační soubor bude otevřen v editoru, uprav ho podle svých potřeb.",
 					" Pokračuj stisknutím libovolné klávesy.");
+				//otevreni konfig souboru v editoru pri prvnim spusteni
 				Process externiProces = new Process();
 				externiProces.StartInfo.FileName = "Notepad.exe";
 				//externiProces.StartInfo.FileName = "mousepad";

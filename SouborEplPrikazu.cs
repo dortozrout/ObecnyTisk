@@ -14,7 +14,7 @@ namespace TiskStitku
 		{
 			NactiEplSablony(AdresaSlozky);
 		}
-		//metoda pro konstruktor a pro spravce
+		//metoda pro konstruktor a pro restart
 		public static void NactiEplSablony(string AdresaSlozky)
 		{
 			seznam.Clear();
@@ -51,7 +51,7 @@ namespace TiskStitku
 			{
 				for (int i = 0; i < vstupniSeznam.Count; i++)
 				{
-					telo += string.Format(("{0}.").PadLeft(5) + "\t{1}" + Environment.NewLine, i + 1, Path.GetFileName(vstupniSeznam[i].AdresaSouboru));
+					telo += string.Format(("{0}.").PadLeft(5) + "\t{1}" + Environment.NewLine, i + 1, vstupniSeznam[i].JmenoSouboru);
 				}
 				telo = telo.TrimEnd('\n');
 				vybranaCisla = UzivRozhrani.VratCisla(" Tisk štítků na EPL tiskárně", telo, " Vyber soubor zadáním čísla (1 - " + vstupniSeznam.Count + "): ", 1, vstupniSeznam.Count, "0");
