@@ -132,7 +132,7 @@ namespace TiskStitku
 					Posun = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", " Tisk šablony " + Path.GetFileName(AdresaSouboru), " Zadej " + castiOtazky[1] + ": ", 0, int.MaxValue, 0);
 			}
 			if (castiOtazky.Length > 2) //Cas s posunem a expiraci
-				DateTime.TryParse(castiOtazky[2], out expiraceSarze);
+				if (!DateTime.TryParse(castiOtazky[2], out expiraceSarze)) expiraceSarze = DateTime.MaxValue;
 			DateTime expiraceVypoctena = DateTime.Now;
 			if (casTyp.Equals("date")) //vyhodnoceni dotazu na datum
 			{

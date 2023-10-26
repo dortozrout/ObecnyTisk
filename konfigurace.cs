@@ -43,7 +43,7 @@ namespace TiskStitku
 			//jestlize neexistuje adresar TiskStitku v %appdata% vytvori se
 			if (!Directory.Exists(cesta)) Directory.CreateDirectory(cesta);
 			//jestlize existuje konfiguracni soubor nacte se
-			if (File.Exists(Path.Combine(cesta, konfiguracniSoubor))) 
+			if (File.Exists(Path.Combine(cesta, konfiguracniSoubor)))
 			{
 				string[] konfArray = File.ReadAllLines(Path.Combine(cesta, konfiguracniSoubor));
 				bool jedenSoubor = false;
@@ -90,7 +90,7 @@ namespace TiskStitku
 					Environment.Exit(-1);
 				}
 				Prihlasit = prihlasit;
-				if (prihlasit)
+				if (prihlasit && Uzivatel == null)
 				{
 					do
 					{
