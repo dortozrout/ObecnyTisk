@@ -39,7 +39,7 @@ namespace TiskStitku
 			externiProces.StartInfo.Arguments = Path.GetFullPath(Konfigurace.Adresar);
 			externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 			externiProces.Start();
-			externiProces.WaitForExit();
+			//externiProces.WaitForExit();
 			//u exploreru nafunguje
 			//UzivRozhrani.Oznameni(" Tisk štítků na EPL tiskárně", " Editace šablon.", " Pro pokračování stiskni libovolnou klávesu...");
 		}
@@ -48,11 +48,10 @@ namespace TiskStitku
 			Process externiProces = new Process();
 			externiProces.StartInfo.FileName = "Notepad.exe";
 			//externiProces.StartInfo.FileName = "mousepad";
-			//externiProces.StartInfo.FileName = "leafpad";
 			externiProces.StartInfo.Arguments = Path.GetFullPath(Path.Combine(Konfigurace.KonfiguracniSoubor));
 			externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 			externiProces.Start();
-			externiProces.WaitForExit();
+			//externiProces.WaitForExit();
 		}
 		public void EditujData()
 		{
@@ -65,7 +64,7 @@ namespace TiskStitku
 				externiProces.StartInfo.Arguments = Path.GetFullPath(Konfigurace.AdresaDat);
 				externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 				externiProces.Start();
-				externiProces.WaitForExit();
+				//externiProces.WaitForExit();
 			}
 			catch (Exception ex)
 			{
@@ -83,12 +82,9 @@ namespace TiskStitku
 				Process externiProces = new Process();
 				externiProces.StartInfo.FileName = "Notepad.exe";
 				//externiProces.StartInfo.FileName = "mousepad";
-				//externiProces.StartInfo.FileName = "leafpad";
 				externiProces.StartInfo.Arguments = Path.GetFullPath(adrReadMe);
 				externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 				externiProces.Start();
-				//externiProces.WaitForExit();
-				//Restart();
 			}
 			else UzivRozhrani.OznameniChyby(" Tisk štítků na EPL tiskárně", " Nenašel jsem soubor s nápovědou:" + Path.GetFullPath(adrReadMe), " Pokračuj stisknutím libovolné klávesy...");
 		}
