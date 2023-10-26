@@ -19,11 +19,16 @@ namespace TiskStitku
 				   + "\t 3. Editace konfiguračního souboru"
 				   + Environment.NewLine
 				   + "\t 4. Zobrazení nápovědy";
-			int volba = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", telo, " Vyber akci zadáním čísla 1 - 4 (prázdný vstup = návrat): ", 1, 4, 0);
-			if (volba == 1) EditujData();
-			else if (volba == 2) EditujSablony();
-			else if (volba == 3) EditujKonfSoubor();
-			else if (volba == 4) ZobrazReadme();
+			int volba;
+			do
+			{
+				volba = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", telo, " Vyber akci zadáním čísla 1 - 4 (prázdný vstup = návrat): ", 1, 4, 0);
+				if (volba == 1) EditujData();
+				else if (volba == 2) EditujSablony();
+				else if (volba == 3) EditujKonfSoubor();
+				else if (volba == 4) ZobrazReadme();
+			} while (volba != 0);
+			Restart();
 		}
 		public void EditujSablony()
 		{
@@ -34,9 +39,9 @@ namespace TiskStitku
 			externiProces.StartInfo.Arguments = Path.GetFullPath(Konfigurace.Adresar);
 			externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 			externiProces.Start();
-			externiProces.WaitForExit(); //u exploreru nafunguje
-										 //UzivRozhrani.Oznameni(" Tisk štítků na EPL tiskárně", " Editace šablon.", " Pro pokračování stiskni libovolnou klávesu...");
-			Restart();
+			externiProces.WaitForExit();
+			//u exploreru nafunguje
+			//UzivRozhrani.Oznameni(" Tisk štítků na EPL tiskárně", " Editace šablon.", " Pro pokračování stiskni libovolnou klávesu...");
 		}
 		public void EditujKonfSoubor()
 		{
@@ -48,7 +53,6 @@ namespace TiskStitku
 			externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 			externiProces.Start();
 			externiProces.WaitForExit();
-			Restart();
 		}
 		public void EditujData()
 		{
@@ -62,7 +66,6 @@ namespace TiskStitku
 				externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 				externiProces.Start();
 				externiProces.WaitForExit();
-				Restart();
 			}
 			catch (Exception ex)
 			{
@@ -86,9 +89,8 @@ namespace TiskStitku
 				externiProces.Start();
 				//externiProces.WaitForExit();
 				//Restart();
-				Rozhrani();
 			}
-			else UzivRozhrani.OznameniChyby(" Tisk štítků na EPL tiskárně"," Nenašel jsem soubor s nápovědou:" + Path.GetFullPath(adrReadMe)," Pokračuj stisknutím libovolné klávesy...");
+			else UzivRozhrani.OznameniChyby(" Tisk štítků na EPL tiskárně", " Nenašel jsem soubor s nápovědou:" + Path.GetFullPath(adrReadMe), " Pokračuj stisknutím libovolné klávesy...");
 		}
 		private void Restart()
 		{
