@@ -89,8 +89,10 @@ namespace TiskStitku
 					}
 					uloha.Vysledek = VratDatumNCas(otazka);
 					if (uloha.Vysledek == "netisknout") return 1;
-
-
+				}
+				else if (uloha.Zadani == "GS1")
+				{
+					uloha.Vysledek = "\u001D";
 				}
 				//pokud se nenajde prednastavena odpoved polozi se otazka uzivateli
 				else
