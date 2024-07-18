@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace TiskStitku
 {
-	class EplPrikaz
+	public class EplPrikaz : IComparable
 	{
 		public string AdresaSouboru { get; private set; }
 		public string JmenoSouboru { get; private set; }
@@ -164,5 +164,16 @@ namespace TiskStitku
 			else odpoved = expiraceVypoctena.AddMinutes(Posun).ToString("H:mm"); //dotaz na cas
 			return odpoved;
 		}
-	}
+
+        public int CompareTo(object obj)
+        {
+			EplPrikaz anotherEplPrikaz=(EplPrikaz)obj;
+			int rv = string.Compare(JmenoSouboru,anotherEplPrikaz.JmenoSouboru);
+            return rv;
+        }
+        public override string ToString()
+        {
+            return JmenoSouboru;
+        }
+    }
 }

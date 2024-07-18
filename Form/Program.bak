@@ -1,0 +1,68 @@
+﻿using System;
+using System.Runtime.ExceptionServices;
+using System.Collections.Generic;
+using System.Text;
+using Form;
+using CCData;
+namespace test
+{
+
+    class Program
+    {
+        private static void Main(string[] args)
+        {
+            //Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            Console.OutputEncoding = Encoding.UTF8;
+            //ushort windowWidth = 35;
+            //ushort windowHeight = 14;
+            //Console.SetWindowSize(1, 1);
+            //Console.SetBufferSize(windowWidth, windowHeight);
+            //Console.SetWindowSize(windowWidth, windowHeight);
+            //Console.CursorVisible=false;
+            List<string> itemList = new List<string>();
+            itemList.AddRange(new string[] { "abbott", "biorad", "tecom", "promedica", "biovendor", "roche", "lekarna", "imunotech" });
+            //SelectFromList<string> selectList = new SelectFromList<string>();
+            //string vyber = selectList.Select(itemList);
+            List<int> intList = new List<int>(); //{ 1566, 1288, 35558, 212123, 122, 4556, 75888, 11, 885213, 1212, 555, 467, 3154, 288, 1289, 112127 };
+            Random random = new Random();
+            for (int i = 0; i < 60; i++)
+            {
+                //intList.Add(random.Next(0, 5000));
+                intList.Add(i);
+            }
+            //SelectFromList<int> selectList1 = new SelectFromList<int>();
+            //int vyber1 = selectList1.Select(intList);
+            List<Polozka> polozky = new List<Polozka>();
+            for (int i = 0; i < 25; i++)
+            {
+                polozky.Add(new Polozka()
+                {
+                    Kid = random.Next(26690000, 26700000).ToString(),
+                    Jmeno = "Polozka " + random.Next(10, 50),
+                    KatCislo = "ABCD" + random.Next(10, 99),
+                    Sarze = random.Next(1000, 9999) + "LF00",
+                    Expirace = random.Next(1, 28) + "." + random.Next(1, 12) + "." + random.Next(2023, 2035),
+                    Mnozstvi = random.Next(1, 30).ToString()
+                });
+            }
+            SelectFromList<Polozka> selectList2 = new SelectFromList<Polozka>();
+            Polozka vybrana = null;
+            do
+            {
+                vybrana = selectList2.Select(polozky);
+                Console.Clear();
+                if (vybrana != null)
+                {
+                    Console.WriteLine("Vybrana polozka " + vybrana.ToString("text"));
+                    polozky.Remove(vybrana);
+                }
+                else Console.WriteLine("Nebyla vybrana zadna polozka");
+                Console.ReadKey();
+            } while (vybrana != null);
+            //if (vyber != null)
+            //    Console.WriteLine("Byl vybran dodavatel " + vyber);
+            //else Console.WriteLine("Nebyl vybran zadny dodavatel");
+            //Console.WriteLine("Bylo vybrano cislo " + vyber1);
+        }
+    }
+}
