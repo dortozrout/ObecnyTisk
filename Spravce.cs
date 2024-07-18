@@ -36,7 +36,7 @@ namespace TiskStitku
 			//externiProces.StartInfo.FileName = "pcmanfm";
 			//externiProces.StartInfo.FileName = "explorer";
 			externiProces.StartInfo.FileName = @"C:\Program Files (x86)\FreeCommander\FreeCommander.exe";
-			externiProces.StartInfo.Arguments = Path.GetFullPath(Konfigurace.Adresar);
+			externiProces.StartInfo.Arguments = Path.GetFullPath(Configuration.TemplatesDirectory);
 			externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 			externiProces.Start();
 			//externiProces.WaitForExit();
@@ -48,7 +48,7 @@ namespace TiskStitku
 			Process externiProces = new Process();
 			externiProces.StartInfo.FileName = "Notepad.exe";
 			//externiProces.StartInfo.FileName = "mousepad";
-			externiProces.StartInfo.Arguments = Path.GetFullPath(Path.Combine(Konfigurace.KonfiguracniSoubor));
+			externiProces.StartInfo.Arguments = Path.GetFullPath(Path.Combine(Configuration.ConfigFile));
 			externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 			externiProces.Start();
 			//externiProces.WaitForExit();
@@ -61,7 +61,7 @@ namespace TiskStitku
 				externiProces.StartInfo.FileName = "Notepad.exe";
 				//externiProces.StartInfo.FileName = "mousepad";
 				//externiProces.StartInfo.FileName = "leafpad";
-				externiProces.StartInfo.Arguments = Path.GetFullPath(Konfigurace.AdresaDat);
+				externiProces.StartInfo.Arguments = Path.GetFullPath(Configuration.AdresaDat);
 				externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 				externiProces.Start();
 				//externiProces.WaitForExit();
@@ -93,7 +93,7 @@ namespace TiskStitku
 			//vyresetovani listu dat pri restartu
 			SouborUloh.Data = null;
 			//novy beh programu
-			Program.Run(new string[] { Konfigurace.KonfiguracniSoubor });
+			Program.Run(new string[] { Configuration.ConfigFile });
 			//aby stary beh nepokracoval
 			Environment.Exit(0);
 		}

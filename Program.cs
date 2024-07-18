@@ -24,37 +24,37 @@ namespace TiskStitku
 			Console.OutputEncoding = Encoding.UTF8;
 			if (args.Length == 0) //pokud je program spusten bez parametru
 			{
-				Konfigurace.Nacti("conf.txt"); //pouzije se vychozi konfigurak
+				Configuration.Load("conf.txt"); //pouzije se vychozi konfigurak
 			}
 			else //jinak se prvni parametr bere jako jmeno konfiguraku v %appdata%\TiskStitku
 			{
-				Konfigurace.Nacti(args[0]);
+				Configuration.Load(args[0]);
 			}
 			//deklarace promennych
 			List<EplPrikaz> vybraneEplPrikazy;
 			EplPrikaz eplPrikaz;
 			//Konstruktor - nacte soubory z Adresare do privatniho seznamu (eplPrikazy.seznam)
-			SouborEplPrikazu eplPrikazy = new SouborEplPrikazu(Konfigurace.Adresar);
+			SouborEplPrikazu eplPrikazy = new SouborEplPrikazu(Configuration.TemplatesDirectory);
 			//Program muze bezet ve 3 modech - tisk pouze jednoho souboru podle konfiguraku
 			//                               - vyber ze souboru vyfiltrovanych jiz v konfiguraku
 			//                               - vyber ze souboru vyfiltrovanych zadanim filtru
 			//Tisk pouze jednoho souboru
-			if (Konfigurace.JedenSoubor)
+			if (Configuration.PrintOneFile)
 			{
 				//osetreni pripadu kdy se nenajde soubor definovaný v konfiguráku
-				if (eplPrikazy.VratSeznam(Konfigurace.HledanyText).Count == 0)
+				if (eplPrikazy.VratSeznam(Configuration.HledanyText).Count == 0)
 				{
 					UzivRozhrani.Oznameni(" Tisk štítků na EPL tiskárně",
 						" Program je nakonfigurován na tisk jednoho souboru"
 						+ Environment.NewLine
 						+ " ale soubor "
-						+ Konfigurace.HledanyText
+						+ Configuration.HledanyText
 						+ " se v adresari "
-						+ Konfigurace.Adresar
+						+ Configuration.TemplatesDirectory
 						+ " nenašel."
 						+ Environment.NewLine
 						+ " Zkontroluj nastavení v konfiguračním souboru: "
-						+ Path.GetFullPath(Konfigurace.KonfiguracniSoubor),
+						+ Path.GetFullPath(Configuration.ConfigFile),
 						" Pokračuj stisknutím libovolné klávesy...");
 				}
 				//pokud se soubor najde vytiskne se
@@ -66,7 +66,7 @@ namespace TiskStitku
 					do
 					{
 						//vyberou se sablony odpovidajici hledanemu textu
-						vybraneEplPrikazy = eplPrikazy.VratSeznam(Konfigurace.HledanyText);
+						vybraneEplPrikazy = eplPrikazy.VratSeznam(Configuration.HledanyText);
 						//z nich se vybere 1. nalezena
 						eplPrikaz = vybraneEplPrikazy[0];
 						//sablona se vyplni
@@ -78,7 +78,7 @@ namespace TiskStitku
 						}
 						zarazka++;
 						if (zarazka == 10) break;//pojistka aby se netisklo donekonecna
-					} while (nhVyplnSablonu == 0 && Konfigurace.OpakovanyTisk);
+					} while (nhVyplnSablonu == 0 && Configuration.Repeate);
 				}
 			}
 			else

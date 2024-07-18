@@ -54,9 +54,9 @@ namespace TiskStitku
 					uloha.Vysledek = pocetStitku.ToString();
 				}
 				//uzivatel
-				else if (Konfigurace.Prihlasit && uloha.Zadani == "uzivatel")
+				else if (Configuration.Prihlasit && uloha.Zadani == "uzivatel")
 				{
-					uloha.Vysledek = Konfigurace.Uzivatel;
+					uloha.Vysledek = Configuration.Uzivatel;
 				}
 				//dotaz na datum nebo cas
 				else if (DatumNCas(uloha.Zadani))

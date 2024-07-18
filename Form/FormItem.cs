@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using CCData;
+using TiskStitku;
 
 namespace Form
 {
@@ -18,8 +18,8 @@ namespace Form
         //delka pole
         public int Length { get; protected set; }
         //ulozeni puvodnich barev konzole do promennych
-        protected ConsoleColor defaultBgColor = Konfigurace.defaultBgColor;
-        protected ConsoleColor defaultFgColor = Konfigurace.defaultFgColor;
+        protected ConsoleColor defaultBgColor = Configuration.defaultBackgroundColor;
+        protected ConsoleColor defaultFgColor = Configuration.defaultForegroundColor;
         //varovne barvy konzole
         protected const ConsoleColor warningBg = ConsoleColor.DarkRed;
         protected const ConsoleColor warningFg = ConsoleColor.White;

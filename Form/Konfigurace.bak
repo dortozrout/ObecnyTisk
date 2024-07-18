@@ -3,7 +3,7 @@ using System.IO;
 using Form;
 using System.Collections.Generic;
 
-namespace CCData
+namespace TiskStitku
 {
 	//staticka trida s konfiguraci programu
 	class Konfigurace

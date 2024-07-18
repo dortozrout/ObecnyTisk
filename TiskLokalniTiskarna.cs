@@ -75,7 +75,7 @@ namespace TiskStitku
 				UzivRozhrani.Oznameni(" Tisk štítků na EPL tiskárně", " Chyba při tisku: " + Environment.NewLine
 					+ " " + dwError + Environment.NewLine
 					+ " Zkontroluj nastavení tiskárny v konfiguračním souboru:" + Environment.NewLine
-					+ " " + Konfigurace.KonfiguracniSoubor, " Pokračuj stisknutím libovolné klávesy.");
+					+ " " + Configuration.ConfigFile, " Pokračuj stisknutím libovolné klávesy.");
 			}
 			return bSuccess;
 		}

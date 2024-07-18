@@ -21,7 +21,7 @@ namespace TiskStitku
 			var adresySouboru = Directory.EnumerateFiles(AdresaSlozky, "*").OrderBy(filename => filename); //jmena souboru jsou vcetne cesty
 			foreach (string adresaSouboru in adresySouboru)
 			{
-				string teloSouboru = File.ReadAllText(adresaSouboru, Encoding.GetEncoding(Konfigurace.Kodovani));
+				string teloSouboru = File.ReadAllText(adresaSouboru, Encoding.GetEncoding(Configuration.Encoding));
 				seznam.Add(new EplPrikaz(adresaSouboru, teloSouboru));
 			}
 		}

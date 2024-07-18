@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using CCData;
+using TiskStitku;
 
 namespace Form
 {
@@ -62,7 +62,7 @@ namespace Form
             {
                 DateTime datum;
                 if (DateTime.TryParse(Text, out datum))
-                    Text = datum.ToString(Konfigurace.Format);
+                    Text = datum.ToString(Configuration.DateFormat);
             }
             //prirazeni metod k udalosti
             inputEvent += inputEv;
@@ -100,7 +100,7 @@ namespace Form
             {
                 DateTime datum;
                 if (DateTime.TryParse(Text, out datum))
-                    Text = datum.ToString(Konfigurace.Format);
+                    Text = datum.ToString(Configuration.DateFormat);
             }
             //prirazeni metod k udalosti
             inputEvent += inputEv;
@@ -139,8 +139,8 @@ namespace Form
         public virtual void Activate()
         {
             //nastaveni barev podle skladu
-            Console.BackgroundColor = Konfigurace.BgColor;
-            Console.ForegroundColor = Konfigurace.FgColor;
+            Console.BackgroundColor = Configuration.BackgroundColor;
+            Console.ForegroundColor = Configuration.ForegroundColor;
             //nastaveni pozice kurzoru
             Console.SetCursorPosition(LeftPosition, TopPosition);
             //deklarace argumentu udalosti prirazeni default textu do OldTex
@@ -154,7 +154,7 @@ namespace Form
             //formatovani data
             if (Value.GetType() == typeof(DateTime))
                 //Text = string.Format("{0:yyyy-MM-dd}", Value);
-                Text = ((DateTime)(object)Value).ToString(Konfigurace.Format);
+                Text = ((DateTime)(object)Value).ToString(Configuration.DateFormat);
             else if (Value.GetType() == typeof(bool))
             {
                 bool yes = (bool)Convert.ChangeType(Value, typeof(bool));

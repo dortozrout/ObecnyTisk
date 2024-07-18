@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Xml;
 using System.Linq;
-using CCData;
+using TiskStitku;
 using System.Text;
 using System.Globalization;
 
@@ -31,7 +31,7 @@ namespace Form
         //konstruktory
         public SelectFromList()
         {
-            displayHeight = Konfigurace.MaxPocetRadku;
+            displayHeight = Configuration.MaxLines;
             visibleRows = displayHeight;
             xStartPos = 0;
             yStartPos = 5;
@@ -45,10 +45,10 @@ namespace Form
                 switchToPrevious = new List<ConsoleKeyInfo>(),
                 switchToNext = new List<ConsoleKeyInfo>() { new ConsoleKeyInfo('\r', ConsoleKey.Enter, false, false, false) }
             });
-            header = new FieldReadOnly(0, 4, "".PadRight(Polozka.col1)
-                + "Název".PadRight(Polozka.col2)
-                + "Katalogové číslo".PadRight(Polozka.col3)
-                + "     Počet ks.".PadLeft(Polozka.col4), Console.WindowWidth, null);
+            // header = new FieldReadOnly(0, 4, "".PadRight(Polozka.col1)
+            //     + "Název".PadRight(Polozka.col2)
+            //     + "Katalogové číslo".PadRight(Polozka.col3)
+            //     + "     Počet ks.".PadLeft(Polozka.col4), Console.WindowWidth, null);
         }
 
         //metoda ktera vraci vybranou polozku z listu
@@ -302,8 +302,8 @@ namespace Form
             //zvyrazneni aktivniho radku
             Console.SetCursorPosition(xStartPos, yStartPos + positionInTable + 1);
             //Console.BackgroundColor = ConsoleColor.DarkYellow; //hodit do konfigurace
-            Console.BackgroundColor = Konfigurace.BgColor;
-            Console.ForegroundColor = Konfigurace.FgColor;
+            Console.BackgroundColor = Configuration.BackgroundColor;
+            Console.ForegroundColor = Configuration.ForegroundColor;
             //vypsani zvyrazneneho radku
             if (items.Count != 0)
                 //Console.Write((string.Empty.PadRight(Polozka.col1) + itemList[poziceVListu]).PadRight(Console.WindowWidth));

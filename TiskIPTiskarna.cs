@@ -37,7 +37,7 @@ namespace TiskStitku
 				UzivRozhrani.Oznameni(" Tisk štítků na EPL tiskárně", " Chyba při tisku: " + Environment.NewLine
 					+ " " + ex.Message + Environment.NewLine
 					+ " Zkontroluj nastavení tiskárny v konfiguračním souboru:" + Environment.NewLine
-					+ " " + Konfigurace.KonfiguracniSoubor, " Pokračuj stisknutím libovolné klávesy.");
+					+ " " + Configuration.ConfigFile, " Pokračuj stisknutím libovolné klávesy.");
 				//MessageBox.Show(ex.Message, "Network Printer", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return 1;
 			}

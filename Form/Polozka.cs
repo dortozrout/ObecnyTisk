@@ -1,6 +1,6 @@
 using System;
 
-namespace CCData
+namespace TiskStitku
 {
 
 	public class Polozka : IComparable //trida pro ulozeni polozky
