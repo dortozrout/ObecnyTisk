@@ -11,7 +11,7 @@ namespace TiskStitku
 		public string AdresaSouboru { get; private set; }
 		public string JmenoSouboru { get; private set; }
 		public string Sablona { get; private set; }
-		public string Telo { get; private set; }
+		public string Telo { get; set; }
 		public List<Uloha> ListUloh { get; set; }
 		public EplPrikaz(string adresaSouboru, string sablona) //konstruktor
 		{

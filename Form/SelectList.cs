@@ -25,7 +25,7 @@ namespace Form
         private int lastCursorPos = -1;
         private bool saveCursosPosition = true; //zda ukladat posledni pozici
         private bool saveFilter = true;
-        private readonly FieldReadOnly header;
+        // private readonly FieldReadOnly header;
         private readonly FieldReadOnly help;
         private readonly UInputField<string> filterInput;
         //konstruktory
@@ -407,7 +407,7 @@ namespace Form
                 filterInput.Label = "Filtr: ";
             }
             filterInput.Display();
-            if (typeof(T) == typeof(Polozka)) header.Display();
+            // if (typeof(T) == typeof(Polozka)) header.Display();
         }
     }
 }
