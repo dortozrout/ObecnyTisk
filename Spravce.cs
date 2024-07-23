@@ -34,8 +34,8 @@ namespace TiskStitku
 		{
 			Process externiProces = new Process();
 			//externiProces.StartInfo.FileName = "pcmanfm";
-			//externiProces.StartInfo.FileName = "explorer";
-			externiProces.StartInfo.FileName = @"C:\Program Files (x86)\FreeCommander\FreeCommander.exe";
+			externiProces.StartInfo.FileName = "explorer";
+			//externiProces.StartInfo.FileName = @"C:\Program Files (x86)\FreeCommander\FreeCommander.exe";
 			externiProces.StartInfo.Arguments = Path.GetFullPath(Configuration.TemplatesDirectory);
 			externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 			externiProces.Start();
@@ -48,7 +48,7 @@ namespace TiskStitku
 			Process externiProces = new Process();
 			externiProces.StartInfo.FileName = "Notepad.exe";
 			//externiProces.StartInfo.FileName = "mousepad";
-			externiProces.StartInfo.Arguments = Path.GetFullPath(Path.Combine(Configuration.ConfigFile));
+			externiProces.StartInfo.Arguments = Path.GetFullPath(Path.Combine(Configuration.ConfigPath,Configuration.ConfigFile));
 			externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 			externiProces.Start();
 			//externiProces.WaitForExit();

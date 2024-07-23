@@ -258,6 +258,11 @@ namespace Form
             if (filterInput.Quit == true) filter = "";
             else filter = filterInput.Text;
             filterInput.Text = "";
+            if (filter==Configuration.Editace)
+            {
+                Spravce spravce = new Spravce();
+                spravce.Rozhrani();
+            }
             //odchytneme ciselne zadani
             int inputNumber;
             int startOfTable = currentPosition - (currentPosition % visibleRows);

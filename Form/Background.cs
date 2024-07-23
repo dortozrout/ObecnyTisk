@@ -12,7 +12,7 @@ namespace Form
         {
             LeftPosition = 0;
             TopPosition = 5;
-            header = new FieldReadOnly(0, 1, Configuration.Header, 60, null, Configuration.ForegroundColor, Configuration.BackgroundColor);
+            header = new FieldReadOnly(0, 1, Configuration.Header, 60, null, Configuration.BackgroundColor, Configuration.ForegroundColor);
         }
         public override void Display()
         {
