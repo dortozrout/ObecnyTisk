@@ -44,7 +44,7 @@ namespace TiskStitku
 		//uzivatelske jmeno
 		public static string Uzivatel { get; private set; }
 		//adresa souboru s daty expirace, sarze atd.
-		public static string AdresaDat { get; private set; }
+		public static string PrimaryDataAdress { get; private set; }
 		//klicove slovo pro spusteni spravce konfigurace
 		public const string Editace = "edit";
 
@@ -129,7 +129,7 @@ namespace TiskStitku
 									PrinterType = typTiskarny;
 									break;
 								case "adresar":
-									TemplatesDirectory = value;
+									TemplatesDirectory = Path.GetFullPath(value);
 									break;
 								case "hledanytext":
 									HledanyText = value;
@@ -147,7 +147,7 @@ namespace TiskStitku
 									Prihlasit = bool.Parse(value);
 									break;
 								case "data":
-									AdresaDat = value;
+									PrimaryDataAdress = Path.GetFullPath(value);
 									break;
 							}
 						}

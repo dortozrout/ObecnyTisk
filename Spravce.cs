@@ -61,7 +61,7 @@ namespace TiskStitku
 				externiProces.StartInfo.FileName = "Notepad.exe";
 				//externiProces.StartInfo.FileName = "mousepad";
 				//externiProces.StartInfo.FileName = "leafpad";
-				externiProces.StartInfo.Arguments = Path.GetFullPath(Configuration.AdresaDat);
+				externiProces.StartInfo.Arguments = Path.GetFullPath(Configuration.PrimaryDataAdress);
 				externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 				externiProces.Start();
 				//externiProces.WaitForExit();

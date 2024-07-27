@@ -14,7 +14,7 @@ namespace TiskStitku
 		{
 			//pokud je v config souboru zadana adresa souboru s daty - otazka:odpoved
 			//vyplni se pri prvnim vytvoreni instance statický list Dotazy.Data
-			if (!string.IsNullOrEmpty(Configuration.AdresaDat) && (Data == null))
+			if (!string.IsNullOrEmpty(Configuration.PrimaryDataAdress) && (Data == null))
 			{
 				NactiData();
 			}
@@ -25,7 +25,7 @@ namespace TiskStitku
 			List<Uloha> data = new List<Uloha>();
 			try
 			{
-				string[] obsahSouboruDat = File.ReadAllLines(Path.GetFullPath(Configuration.AdresaDat));
+				string[] obsahSouboruDat = File.ReadAllLines(Path.GetFullPath(Configuration.PrimaryDataAdress));
 				foreach (string s in obsahSouboruDat)
 				{
 					Uloha uloha;
@@ -46,7 +46,7 @@ namespace TiskStitku
 			{
 				UzivRozhrani.OznameniChyby("  Tisk štítků na EPL tiskárně",
 									" Při zpracování souboru: " + Environment.NewLine +
-									 Path.GetFullPath(Configuration.AdresaDat) + Environment.NewLine +
+									 Path.GetFullPath(Configuration.PrimaryDataAdress) + Environment.NewLine +
 									" Došlo k chybě: " + Environment.NewLine + ex.Message,
 									" Pokračuj stisknutím libovolné klávesy.");
 			}

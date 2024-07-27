@@ -84,13 +84,15 @@ namespace TiskStitku
 			else
 			{
 				SelectFromList<EplPrikaz> selectList = new SelectFromList<EplPrikaz>();
+				Parser parser=new Parser();
 				eplPrikaz = selectList.Select(eplPrikazy.VratSeznam());
 				while (eplPrikaz != null)
 				{
-					if (eplPrikaz.VyplnSablonu() == 0)
-					{
-						Tisk.TiskniStitek(eplPrikaz.Telo);
-					}
+					parser.Process(ref eplPrikaz);
+					// if (eplPrikaz.VyplnSablonu() == 0)
+					// {
+					Tisk.TiskniStitek(eplPrikaz.Telo);
+					// }
 					eplPrikaz = selectList.Select(eplPrikazy.VratSeznam());
 				}
 			}
