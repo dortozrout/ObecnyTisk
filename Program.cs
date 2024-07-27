@@ -84,7 +84,8 @@ namespace TiskStitku
 			else
 			{
 				SelectFromList<EplPrikaz> selectList = new SelectFromList<EplPrikaz>();
-				Parser parser=new Parser();
+				//Parser parser=new Parser();
+				Parser1 parser=new Parser1();
 				eplPrikaz = selectList.Select(eplPrikazy.VratSeznam());
 				while (eplPrikaz != null)
 				{

@@ -1,3 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Form;
+
 namespace TiskStitku
 {
     public class Parser
@@ -39,14 +45,13 @@ namespace TiskStitku
         private string FillOutTemplate(string template)
         {
             if (template.Trim().EndsWith('P'))
-                template = string.Format("{0}<počet štítků>{1}", template.TrimEnd(), Environment.NewLine);
+                template = string.Format("{0}<pocet>{1}", template.TrimEnd(), Environment.NewLine);
             List<string> keys = ReadKeys(template);
             Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
             foreach (string key in keys)
             {
                 keyValuePairs.Add(key, FindValue(key));
             }
-            Dictionary<string, string> emptyValues = findEmptyValues(keyValuePairs);
 
             string eplString = template;
             foreach (var keyValue in keyValuePairs)
@@ -54,16 +59,6 @@ namespace TiskStitku
                 eplString = eplString.Replace(keyValue.Key, keyValue.Value);
             }
             return eplString;
-        }
-        private Dictionary<string, string> findEmptyValues(Dictionary<string, string> keyValues)
-        {
-            Dictionary<string, string> emptyValues = new Dictionary<string, string>();
-            foreach (var kv in keyValues)
-            {
-                if (kv.Value == string.Empty)
-                    emptyValues = emptyValues.Append(kv).ToDictionary();
-            }
-            return emptyValues;
         }
 
         private List<string> ReadKeys(string template)
@@ -75,11 +70,10 @@ namespace TiskStitku
             {
                 string key = template.Substring(start, end - start + 1);
                 rv.Add(key);
-                //if (template.Length > end) template = template.Substring(end + 1);
                 start = template.IndexOf('<', end + 1);
                 end = template.IndexOf('>', end + 1);
             }
-            return rv;
+            return rv.Distinct().ToList();
         }
         private string FindValue(string key)
         {
@@ -109,6 +103,12 @@ namespace TiskStitku
                 int drift;
                 if (int.TryParse(key.Substring(indexOfPlus + 1).TrimEnd('>'), out drift))
                     return DateTime.Now.AddMinutes(drift).ToString("H:mm");
+                else 
+                {
+                    InputForm<int> inputForm=new InputForm<int>();
+                    drift = inputForm.Fill("Zadej počet minut: ","30");
+                    return DateTime.Now.AddMinutes(drift).ToString("H:mm");
+                }
             }
             if (key.StartsWith("<date"))
             {
@@ -138,7 +138,18 @@ namespace TiskStitku
                     }
                 }
             }
-            return string.Empty;
+            if (key.StartsWith("<pocet"))
+            {
+                InputForm<int> inputForm = new InputForm<int>();
+                int indexOfSeparator = key.IndexOf('|');
+                if (indexOfSeparator < 1)
+                    return inputForm.Fill("Zadej počet štítků: ", "1").ToString();
+                int defaultQuantity;
+                if (int.TryParse(key.Substring(indexOfSeparator + 1).TrimEnd('>'), out defaultQuantity))
+                    return inputForm.Fill("Zadej počet štítků: ", defaultQuantity.ToString()).ToString();
+            }
+            InputForm<string> inputForm1 = new InputForm<string>();
+            return inputForm1.Fill("Zadej " + key.Trim(['<', '>']) + ": ", "");
         }
     }
 }

@@ -285,7 +285,8 @@ namespace Form
             }
             else if (typeof(T) == typeof(int)) //int
             {
-                int maxQuantity = int.Parse(DefaulText);
+                //int maxQuantity = int.Parse(DefaulText);
+                int maxQuantity = Configuration.maxQuantity;
                 int number;
                 do
                 {

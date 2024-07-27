@@ -62,6 +62,9 @@ namespace TiskStitku
 
 		public static string Header { get; private set; }
 
+		//maximalni pocet stitku ktery lze vytisknout najednou
+		public const int maxQuantity = 50;
+
 		//metoda slouzici pro nacteni konfigurace
 		public static int Load(string configFile) //jmeno konfig souboru v adresari %appdata%/TiskStitku
 		{
