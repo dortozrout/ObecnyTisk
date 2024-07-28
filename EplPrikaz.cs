@@ -12,6 +12,8 @@ namespace TiskStitku
 		public string JmenoSouboru { get; private set; }
 		public string Sablona { get; private set; }
 		public string Telo { get; set; }
+
+		public bool print = true;
 		public EplFile(string adresaSouboru, string sablona) //konstruktor
 		{
 			AdresaSouboru = adresaSouboru;

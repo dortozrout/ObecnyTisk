@@ -90,8 +90,6 @@ namespace TiskStitku
 		}
 		private void Restart()
 		{
-			//vyresetovani listu dat pri restartu
-			SouborUloh.Data = null;
 			//novy beh programu
 			Program.Run(new string[] { Configuration.ConfigFile });
 			//aby stary beh nepokracoval

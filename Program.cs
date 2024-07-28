@@ -52,14 +52,17 @@ namespace TiskStitku
 						while (i < 20)
 						{
 							parser.Process(ref eplFile);
-							Tisk.TiskniStitek(eplFile.Telo);
+							if (eplFile.print)
+								Tisk.TiskniStitek(eplFile.Telo);
+							else return;
 							i++;
 						}
 					}
 					else
 					{
 						parser.Process(ref eplFile);
-						Tisk.TiskniStitek(eplFile.Telo);
+						if (eplFile.print)
+							Tisk.TiskniStitek(eplFile.Telo);
 					}
 				}
 				catch (Exception ex)
@@ -91,7 +94,8 @@ namespace TiskStitku
 				while (eplPrikaz != null)
 				{
 					parser.Process(ref eplPrikaz);
-					Tisk.TiskniStitek(eplPrikaz.Telo);
+					if (eplPrikaz.print)
+						Tisk.TiskniStitek(eplPrikaz.Telo);
 					eplPrikaz = selectList.Select(eplFiles);
 				}
 			}
