@@ -31,131 +31,70 @@ namespace TiskStitku
 				Configuration.Load(args[0]);
 			}
 			//deklarace promennych
-			//List<EplFile> vybraneEplPrikazy;
 			EplFile eplPrikaz;
-			//Konstruktor - nacte soubory z Adresare do privatniho seznamu (eplPrikazy.seznam)
-			//SouborEplPrikazu eplPrikazy = new SouborEplPrikazu(Configuration.TemplatesDirectory);
-			EplFileLoader fileLoader=new EplFileLoader();
-			List<EplFile> eplFiles = fileLoader.LoadFiles(Configuration.TemplatesDirectory);
+			//nacteni epl prikazu
+			List<EplFile> eplFiles = Configuration.HledanyText == "" ? new EplFileLoader().LoadFiles(Configuration.TemplatesDirectory) : new EplFileLoader().LoadFiles(Configuration.TemplatesDirectory, Configuration.HledanyText);
 
 			//Program muze bezet ve 3 modech - tisk pouze jednoho souboru podle konfiguraku
 			//                               - vyber ze souboru vyfiltrovanych jiz v konfiguraku
-			//                               - vyber ze souboru vyfiltrovanych zadanim filtru
+			//                               - vyber ze vsech souboru v zadanem adresari
 			//Tisk pouze jednoho souboru
 			if (Configuration.PrintOneFile)
 			{
-				// //osetreni pripadu kdy se nenajde soubor definovaný v konfiguráku
-				// if (eplPrikazy.VratSeznam(Configuration.HledanyText).Count == 0)
-				// {
-				// 	UzivRozhrani.Oznameni(" Tisk štítků na EPL tiskárně",
-				// 		" Program je nakonfigurován na tisk jednoho souboru"
-				// 		+ Environment.NewLine
-				// 		+ " ale soubor "
-				// 		+ Configuration.HledanyText
-				// 		+ " se v adresari "
-				// 		+ Configuration.TemplatesDirectory
-				// 		+ " nenašel."
-				// 		+ Environment.NewLine
-				// 		+ " Zkontroluj nastavení v konfiguračním souboru: "
-				// 		+ Path.GetFullPath(Configuration.ConfigFile),
-				// 		" Pokračuj stisknutím libovolné klávesy...");
-				// }
-				// //pokud se soubor najde vytiskne se
-				// else
-				// {
-				// 	//deklarace promennych
-				// 	int nhVyplnSablonu;
-				// 	int zarazka = 0;
-				// 	do
-				// 	{
-				// 		//vyberou se sablony odpovidajici hledanemu textu
-				// 		vybraneEplPrikazy = eplPrikazy.VratSeznam(Configuration.HledanyText);
-				// 		//z nich se vybere 1. nalezena
-				// 		eplPrikaz = vybraneEplPrikazy[0];
-				// 		//sablona se vyplni
-				// 		// //nhVyplnSablonu = eplPrikaz.VyplnSablonu();
-				// 		// //pokud je vse ok vytiskne se
-				// 		// if (nhVyplnSablonu == 0)
-				// 		// {
-				// 		// 	Tisk.TiskniStitek(eplPrikaz.Telo);
-				// 		// }
-				// 		zarazka++;
-				// 		if (zarazka == 10) break;//pojistka aby se netisklo donekonecna
-				// 	} while (nhVyplnSablonu == 0 && Configuration.Repeate);
-				// }
+				try
+				{
+					EplFile eplFile = eplFiles[0];
+					Parser1 parser = new Parser1();
+					//new Parser1().Process(ref eplFile);
+					if (Configuration.Repeate)
+					{
+						int i = 0;
+						while (i < 20)
+						{
+							parser.Process(ref eplFile);
+							Tisk.TiskniStitek(eplFile.Telo);
+							i++;
+						}
+					}
+					else
+					{
+						parser.Process(ref eplFile);
+						Tisk.TiskniStitek(eplFile.Telo);
+					}
+				}
+				catch (Exception ex)
+				{
+					switch (ex)
+					{
+						case ArgumentOutOfRangeException:
+							ErrorHandler.HandleError("Program", new IndexOutOfRangeException(string.Format("File not found \"{0}\"!",
+							Path.GetFullPath(Path.Combine(Configuration.TemplatesDirectory, Configuration.HledanyText)))));
+							break;
+						default:
+							ErrorHandler.HandleError("Program", ex);
+							break;
+					}
+				}
 			}
-			else
+			else //vyber pomoci tridy SelectList
 			{
+				if (eplFiles.Count == 0)
+				{
+					ErrorHandler.HandleError("Program",
+					 new FileNotFoundException(string.Format("No file containing \"{0}\" in directory \"{1}\"!",
+					  Configuration.HledanyText, Configuration.TemplatesDirectory)));
+				}
 				SelectFromList<EplFile> selectList = new SelectFromList<EplFile>();
 				//Parser parser=new Parser();
-				Parser1 parser=new Parser1();
+				Parser1 parser = new Parser1();
 				eplPrikaz = selectList.Select(eplFiles);
 				while (eplPrikaz != null)
 				{
 					parser.Process(ref eplPrikaz);
-					// if (eplPrikaz.VyplnSablonu() == 0)
-					// {
 					Tisk.TiskniStitek(eplPrikaz.Telo);
-					// }
 					eplPrikaz = selectList.Select(eplFiles);
 				}
 			}
-			// //Tisk vice souboru vymezenych hledanim
-			// else if (!Konfigurace.JedenSoubor && !string.IsNullOrEmpty(Konfigurace.HledanyText))
-			// {
-			// 	do
-			// 	{
-			// 		// SelectFromList<string> selectList = new SelectFromList<string>();
-			// 		// vybraneEplPrikazy = selectList.Select(eplPrikazy);
-			// 		vybraneEplPrikazy = eplPrikazy.UzivVyber(Konfigurace.HledanyText);
-			// 		if (vybraneEplPrikazy != null)
-			// 		{
-			// 			foreach (EplPrikaz epl in vybraneEplPrikazy)
-			// 			{
-			// 				int nhVyplnSablonu = epl.VyplnSablonu();
-			// 				if (nhVyplnSablonu == 0)
-			// 				{
-			// 					Tisk.TiskniStitek(epl.Telo);
-			// 				}
-			// 			}
-			// 		}
-			// 	} while (vybraneEplPrikazy != null);
-			// }
-			// else //Zobrazi nebo prohleda cely adresar
-			// {
-			// 	string hledanyText;
-			// 	do
-			// 	{
-			// 		string telo = " Konfigurační soubor: " + Konfigurace.KonfiguracniSoubor + Environment.NewLine
-			// 			+ " Adresa tiskárny: " + Konfigurace.AdresaTiskarny + Environment.NewLine
-			// 			+ " Typ tiskárny: " + Konfigurace.TypTiskarnySlovy + Environment.NewLine
-			// 			+ " Adresář se soubory: " + Path.GetFullPath(Konfigurace.Adresar) + Environment.NewLine
-			// 			+ " Kódování souborů: " + Konfigurace.Kodovani + Environment.NewLine
-			// 			+ " " + RuntimeInformation.FrameworkDescription;
-			// 		hledanyText = UzivRozhrani.VratText(" Tisk štítků na EPL tiskárně", telo, " Zadej část názvu hledaného souboru nebo * pro zobrazení všech souborů " + Environment.NewLine + " (" + Konfigurace.Editace + " = konfigurace, prázdný vstup = konec): ", "");
-			// 		if (hledanyText.ToLower() == Konfigurace.Editace) //vložení konfigurace po zadání "edit"
-			// 		{
-			// 			Spravce spravce = new Spravce();
-			// 			spravce.Rozhrani();
-			// 		}
-			// 		else if (!string.IsNullOrEmpty(hledanyText))
-			// 		{
-			// 			vybraneEplPrikazy = eplPrikazy.UzivVyber(hledanyText);
-			// 			//eplPrikaz = eplPrikazy.Vyber(Konfigurace.HledanyText);
-			// 			if (vybraneEplPrikazy != null)
-			// 			{
-			// 				foreach (EplPrikaz epl in vybraneEplPrikazy)
-			// 				{
-			// 					int i = epl.VyplnSablonu();
-			// 					if (i == 0)
-			// 					{
-			// 						Tisk.TiskniStitek(epl.Telo);
-			// 					}
-			// 				}
-			// 			}
-			// 		}
-			// 	} while (!string.IsNullOrEmpty(hledanyText));
-			// }
 		}
 	}
 }

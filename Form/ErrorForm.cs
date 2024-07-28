@@ -11,9 +11,9 @@ namespace Form
         private FieldReadOnly Notification { get; set; }
         public ErrorForm()
         {
-            Label = new FieldReadOnly(3, 4, "Chybka se vloudila!", 25, this, ConsoleColor.White, ConsoleColor.Red);
-            Source = new FieldReadOnly(3, 7, "Zdroj: ", 25, this);
-            Message = new FieldReadOnly(3, 10, "Popis: ", 25, this);
+            Label = new FieldReadOnly(3, 6, "Chybka se vloudila!", 25, this, ConsoleColor.White, ConsoleColor.Red);
+            Source = new FieldReadOnly(3, 8, "Zdroj: ", 25, this);
+            Message = new FieldReadOnly(3, 11, "Popis: ", 25, this);
             Notification = new FieldReadOnly(3, Configuration.MaxLines + 7, "Stisknutím libovolné klávesy program ukončíš...", 25, this);
         }
         public void Display(object sender, TiskStitku.ErrorEventArgs eventArgs)
