@@ -8,7 +8,7 @@ namespace TiskStitku
 {
 	class SouborEplPrikazu
 	{
-		private static List<EplPrikaz> seznam = new List<EplPrikaz>();
+		private static List<EplFile> seznam = new List<EplFile>();
 		//konstruktor vytvori list epl prikazu ze souboru v danem umisteni
 		public SouborEplPrikazu(string AdresaSlozky)
 		{
@@ -22,25 +22,25 @@ namespace TiskStitku
 			foreach (string adresaSouboru in adresySouboru)
 			{
 				string teloSouboru = File.ReadAllText(adresaSouboru, Encoding.GetEncoding(Configuration.Encoding));
-				seznam.Add(new EplPrikaz(adresaSouboru, teloSouboru));
+				seznam.Add(new EplFile(adresaSouboru, teloSouboru));
 			}
 		}
 		//vraci cely seznam
-		public List<EplPrikaz> VratSeznam()
+		public List<EplFile> VratSeznam()
 		{
 			return seznam;
 		}
 		//vraci seznam vyhledanych prikazu
-		public List<EplPrikaz> VratSeznam(string hledanyText)
+		public List<EplFile> VratSeznam(string hledanyText)
 		{
-			List<EplPrikaz> seznamZuzeny = seznam.FindAll(e => e.JmenoSouboru.ToLower().Contains(hledanyText.ToLower()));
+			List<EplFile> seznamZuzeny = seznam.FindAll(e => e.JmenoSouboru.ToLower().Contains(hledanyText.ToLower()));
 			return seznamZuzeny;
 		}
 		//uzivatel vybere jeden nebo vice eplPrikazu ze seznamu vymezeneho hledanym textem
-		public List<EplPrikaz> UzivVyber(string hledanyText)
+		public List<EplFile> UzivVyber(string hledanyText)
 		{
 			//nejprve se vytvori vstupni seznam vsechny soubory|vyber na zaklade textu
-			List<EplPrikaz> vstupniSeznam;
+			List<EplFile> vstupniSeznam;
 			if (hledanyText == "*") vstupniSeznam = VratSeznam();
 			else vstupniSeznam = VratSeznam(hledanyText);
 			//deklarace promennych
@@ -69,7 +69,7 @@ namespace TiskStitku
 			//vytvoreni vystupniho seznamu podle uzivatelem zadanych cisel
 			if (vybranaCisla.Count != 0 && vybranaCisla[0] != 0) //osetreni prazdneho vstupu
 			{
-				List<EplPrikaz> vystupniSeznam = new List<EplPrikaz>();
+				List<EplFile> vystupniSeznam = new List<EplFile>();
 				foreach (int i in vybranaCisla)
 				{
 					vystupniSeznam.Add(vstupniSeznam[i - 1]);

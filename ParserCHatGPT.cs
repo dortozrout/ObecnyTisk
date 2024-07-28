@@ -42,9 +42,9 @@ namespace TiskStitku
             return rv;
         }
 
-        public void Process(ref EplPrikaz eplPrikaz)
+        public void Process(ref EplFile eplFile)
         {
-            eplPrikaz.Telo = FillOutTemplate(eplPrikaz.Sablona);
+            eplFile.Telo = FillOutTemplate(eplFile.Sablona);
         }
 
         private string FillOutTemplate(string template)

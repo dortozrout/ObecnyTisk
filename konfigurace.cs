@@ -65,6 +65,11 @@ namespace TiskStitku
 		//maximalni pocet stitku ktery lze vytisknout najednou
 		public const int maxQuantity = 50;
 
+		static Configuration()
+		{
+			Header = string.Empty;
+		}
+
 		//metoda slouzici pro nacteni konfigurace
 		public static int Load(string configFile) //jmeno konfig souboru v adresari %appdata%/TiskStitku
 		{
@@ -133,6 +138,7 @@ namespace TiskStitku
 									break;
 								case "adresar":
 									TemplatesDirectory = Path.GetFullPath(value);
+									//TemplatesDirectory = value==""?"":Path.GetFullPath(value);
 									break;
 								case "hledanytext":
 									HledanyText = value;
@@ -150,12 +156,18 @@ namespace TiskStitku
 									Prihlasit = bool.Parse(value);
 									break;
 								case "data":
-									PrimaryDataAdress = Path.GetFullPath(value);
+									// PrimaryDataAdress = value;
+									PrimaryDataAdress = value == "" ? "" : Path.GetFullPath(value);
 									break;
 							}
 						}
 					}
 				}
+			}
+			catch (ArgumentException)
+			{
+				ErrorHandler.HandleError("Configuration", new ArgumentException("Zkontroluj nastaveni adresare v konfig souboru!"));
+				result = 1;
 			}
 			catch (Exception ex)
 			{
