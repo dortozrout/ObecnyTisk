@@ -67,16 +67,12 @@ namespace TiskStitku
 				}
 				catch (Exception ex)
 				{
-					switch (ex)
-					{
-						case ArgumentOutOfRangeException:
-							ErrorHandler.HandleError("Program", new IndexOutOfRangeException(string.Format("File not found \"{0}\"!",
-							Path.GetFullPath(Path.Combine(Configuration.TemplatesDirectory, Configuration.HledanyText)))));
-							break;
-						default:
-							ErrorHandler.HandleError("Program", ex);
-							break;
-					}
+					if (ex is ArgumentOutOfRangeException)
+						ErrorHandler.HandleError("Program",
+						 new IndexOutOfRangeException(string.Format("File not found \"{0}\"!",
+						  Path.GetFullPath(Path.Combine(Configuration.TemplatesDirectory, Configuration.HledanyText)))));
+					else
+						ErrorHandler.HandleError("Program", ex);
 				}
 			}
 			else //vyber pomoci tridy SelectList

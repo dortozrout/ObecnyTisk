@@ -3,6 +3,9 @@ using System.IO;
 using System.Diagnostics;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Linq;
+using System.Collections.Generic;
+using Form;
 
 namespace TiskStitku
 {
@@ -30,6 +33,35 @@ namespace TiskStitku
 			} while (volba != 0);
 			Restart();
 		}
+		public void RozhraniNew()
+		{
+			List<string> seznamVoleb = new List<string>() { "Editace souboru s daty", "Editace šablon", "Editace konfiguračního souboru", "Nápověda" };
+			string volba;
+			SelectFromList<string> selecList = new SelectFromList<string>();
+			do
+			{
+				volba = selecList.Select(seznamVoleb);
+				switch (seznamVoleb.IndexOf(volba))
+				{
+					case 1:
+						EditujData();
+						break;
+					case 2:
+						EditujSablony();
+						break;
+					case 0:
+						EditujKonfSoubor();
+						break;
+					case 3:
+						ZobrazReadme();
+						break;
+					default:
+						break;
+				}
+
+			} while (volba != null);
+			Restart();
+		}
 		public void EditujSablony()
 		{
 			Process externiProces = new Process();
@@ -48,7 +80,7 @@ namespace TiskStitku
 			Process externiProces = new Process();
 			externiProces.StartInfo.FileName = "Notepad.exe";
 			//externiProces.StartInfo.FileName = "mousepad";
-			externiProces.StartInfo.Arguments = Path.GetFullPath(Path.Combine(Configuration.ConfigPath,Configuration.ConfigFile));
+			externiProces.StartInfo.Arguments = Path.GetFullPath(Path.Combine(Configuration.ConfigPath, Configuration.ConfigFile));
 			externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 			externiProces.Start();
 			//externiProces.WaitForExit();
@@ -68,9 +100,10 @@ namespace TiskStitku
 			}
 			catch (Exception ex)
 			{
-				UzivRozhrani.OznameniChyby(" Tisk štítků na EPL tiskárně",
-							   " Při pokusu o otevření souboru dat došlo k chybě:" + Environment.NewLine + ex.Message,
-							   " Pokračuj stisknutím libovolné klávesy");
+				ErrorHandler.HandleError(this, ex);
+				// UzivRozhrani.OznameniChyby(" Tisk štítků na EPL tiskárně",
+				// 			   " Při pokusu o otevření souboru dat došlo k chybě:" + Environment.NewLine + ex.Message,
+				// 			   " Pokračuj stisknutím libovolné klávesy");
 			}
 		}
 		public void ZobrazReadme()
@@ -86,7 +119,7 @@ namespace TiskStitku
 				externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 				externiProces.Start();
 			}
-			else UzivRozhrani.OznameniChyby(" Tisk štítků na EPL tiskárně", " Nenašel jsem soubor s nápovědou:" + Path.GetFullPath(adrReadMe), " Pokračuj stisknutím libovolné klávesy...");
+			else ErrorHandler.HandleError(this, new FileNotFoundException(" Nenašel jsem soubor s nápovědou:" + Path.GetFullPath(adrReadMe)));
 		}
 		private void Restart()
 		{

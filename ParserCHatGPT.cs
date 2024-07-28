@@ -9,7 +9,7 @@ namespace TiskStitku
     public class Parser1
     {
         private readonly Dictionary<string, string> primaryData;
-        private  EplFile CurrentEplFile { get; set; }
+        private EplFile CurrentEplFile { get; set; }
 
         public Parser1()
         {
@@ -45,12 +45,13 @@ namespace TiskStitku
 
         public void Process(ref EplFile eplFile)
         {
-            CurrentEplFile=eplFile;
+            CurrentEplFile = eplFile;
             eplFile.Telo = FillOutTemplate(eplFile.Sablona);
         }
 
         private string FillOutTemplate(string template)
         {
+            template = RemoveCommentedLines(template);
             if (template.Trim().EndsWith("P"))
             {
                 template = string.Format("{0}<pocet>{1}", template.TrimEnd(), Environment.NewLine);
@@ -128,7 +129,7 @@ namespace TiskStitku
                 return DateTime.Now.AddMinutes(drift).ToString("H:mm");
 
             var inputForm = new InputForm<int>();
-            drift = inputForm.Fill( CurrentEplFile, "Zadej počet minut: ", "30");
+            drift = inputForm.Fill(CurrentEplFile, "Zadej počet minut: ", "30");
             return DateTime.Now.AddMinutes(drift).ToString("H:mm");
         }
 
@@ -166,11 +167,11 @@ namespace TiskStitku
             var inputForm = new InputForm<int>();
             int indexOfSeparator = key.IndexOf('|');
             if (indexOfSeparator < 1)
-                return inputForm.Fill(CurrentEplFile,"Zadej počet štítků: ", "1").ToString();
+                return inputForm.Fill(CurrentEplFile, "Zadej počet štítků: ", "1").ToString();
 
             int defaultQuantity;
             if (int.TryParse(key.Substring(indexOfSeparator + 1).TrimEnd('>'), out defaultQuantity))
-                return inputForm.Fill(CurrentEplFile,"Zadej počet štítků: ", defaultQuantity.ToString()).ToString();
+                return inputForm.Fill(CurrentEplFile, "Zadej počet štítků: ", defaultQuantity.ToString()).ToString();
 
             return "1";
         }
@@ -179,7 +180,18 @@ namespace TiskStitku
         {
             var inputForm = new InputForm<string>();
             //return inputForm.Fill($"Zadej {key.Trim('<', '>')}: ", "");
-            return inputForm.Fill(CurrentEplFile,"Zadej " + key.Trim('<', '>') + ": ", "");
+            return inputForm.Fill(CurrentEplFile, "Zadej " + key.Trim('<', '>') + ": ", "");
+        }
+        private string RemoveCommentedLines(string input)
+        {
+            // Split the input string into lines
+            var lines = input.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+
+            // Filter out lines that start with '#', after trimming leading whitespace
+            var filteredLines = lines.Where(line => !line.TrimStart().StartsWith("#"));
+
+            // Join the filtered lines back into a single string
+            return string.Join(Environment.NewLine, filteredLines);
         }
     }
 }

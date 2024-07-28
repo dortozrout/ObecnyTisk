@@ -36,7 +36,8 @@ namespace Form
             xStartPos = 0;
             yStartPos = 5;
             pageDU = displayHeight;
-            string text = string.Format("Výběr \"ENTER\", návrat \"ESC\", pohyb \"\u2191, \u2193, pgUp, pgDown, Home, End\"\n     ukládání filtru: {0} přepnout: \"BackSpace\".", saveFilter == true ? "ON" : "OFF");
+            //string text = string.Format("Výběr \"ENTER\", návrat \"ESC\", pohyb \"\u2191, \u2193, pgUp, pgDown, Home, End\"\n     ukládání filtru: {0} přepnout: \"BackSpace\".", saveFilter == true ? "ON" : "OFF");
+            string text = string.Format("Výběr \"ENTER\", návrat \"ESC\", pohyb \"\u2191, \u2193, pgUp, pgDown, Home, End\"\n     Pro editaci nastavení zadej: {0}", Configuration.Editace);
             help = new FieldReadOnly(5, displayHeight + yStartPos + 2, text, text.Length + 1, null);
             filterInput = new UInputField<string>("filter", xStartPos + 5, displayHeight + yStartPos + 4, "Filtr: ", 40, null, "", null, new AditionalParms()
             {
@@ -226,8 +227,8 @@ namespace Form
         private void saveFilterToggle()
         {
             saveFilter = !saveFilter;
-            help.Label = string.Format("Výběr \"ENTER\", návrat \"ESC\", pohyb \"\u2191, \u2193, pgUp, pgDown, Home, End\"\n     ukládání filtru: {0} přepnout: \"BackSpace\".", saveFilter == true ? "ON" : "OFF");
-            help.Display();
+            //help.Label = string.Format("Výběr \"ENTER\", návrat \"ESC\", pohyb \"\u2191, \u2193, pgUp, pgDown, Home, End\"\n     ukládání filtru: {0} přepnout: \"BackSpace\".", saveFilter == true ? "ON" : "OFF");
+            //help.Display();
         }
         private void saveCursosPositionToggle()
         {
@@ -258,10 +259,9 @@ namespace Form
             if (filterInput.Quit == true) filter = "";
             else filter = filterInput.Text;
             filterInput.Text = "";
-            if (filter==Configuration.Editace)
+            if (filter == Configuration.Editace)
             {
-                Spravce spravce = new Spravce();
-                spravce.Rozhrani();
+                new Spravce().RozhraniNew();
             }
             //odchytneme ciselne zadani
             int inputNumber;
