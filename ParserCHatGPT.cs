@@ -10,6 +10,7 @@ namespace TiskStitku
     {
         private readonly Dictionary<string, string> primaryData;
         private EplFile CurrentEplFile { get; set; }
+        private bool continueProcessing;
 
         public Parser1()
         {
@@ -45,6 +46,7 @@ namespace TiskStitku
 
         public void Process(ref EplFile eplFile)
         {
+            continueProcessing = true;
             CurrentEplFile = eplFile;
             eplFile.Telo = FillOutTemplate(eplFile.Sablona);
         }
@@ -55,11 +57,10 @@ namespace TiskStitku
             if (template.Trim().EndsWith("P"))
             {
                 template = string.Format("{0}<pocet>{1}", template.TrimEnd(), Environment.NewLine);
-                //template = $"{template.TrimEnd()}<pocet>{Environment.NewLine}";
             }
 
             List<string> keys = ReadKeys(template);
-            var keyValuePairs = keys.ToDictionary(key => key, key => FindValue(key));
+            var keyValuePairs = keys.ToDictionary(key => key, key => continueProcessing ? FindValue(key) : "");
 
             foreach (var keyValue in keyValuePairs)
             {
@@ -130,6 +131,11 @@ namespace TiskStitku
 
             var inputForm = new InputForm<int>();
             drift = inputForm.Fill(CurrentEplFile, "Zadej počet minut: ", "30");
+            if (inputForm.Quit)
+            {
+                continueProcessing = false;
+                return string.Empty;
+            }
             return DateTime.Now.AddMinutes(drift).ToString("H:mm");
         }
 
@@ -171,8 +177,15 @@ namespace TiskStitku
 
             int defaultQuantity;
             if (int.TryParse(key.Substring(indexOfSeparator + 1).TrimEnd('>'), out defaultQuantity))
-                return inputForm.Fill(CurrentEplFile, "Zadej počet štítků: ", defaultQuantity.ToString()).ToString();
-
+            {
+                defaultQuantity = inputForm.Fill(CurrentEplFile, "Zadej počet štítků: ", defaultQuantity.ToString());
+                if (inputForm.Quit)
+                {
+                    continueProcessing = false;
+                    return string.Empty;
+                }
+                return defaultQuantity.ToString();
+            }
             return "1";
         }
 
@@ -180,7 +193,13 @@ namespace TiskStitku
         {
             var inputForm = new InputForm<string>();
             //return inputForm.Fill($"Zadej {key.Trim('<', '>')}: ", "");
-            return inputForm.Fill(CurrentEplFile, "Zadej " + key.Trim('<', '>') + ": ", "");
+            string rv = inputForm.Fill(CurrentEplFile, "Zadej " + key.Trim('<', '>') + ": ", "");
+            if (inputForm.Quit)
+            {
+                continueProcessing = false;
+                return string.Empty;
+            }
+            return rv;
         }
         private string RemoveCommentedLines(string input)
         {

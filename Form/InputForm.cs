@@ -39,7 +39,6 @@ namespace Form
             if (Quit)
             {
                 eplFile.print = false;
-                Quit = false;
                 return default(T);
             }
             return InputField.Value;
