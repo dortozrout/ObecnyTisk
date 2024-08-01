@@ -64,47 +64,16 @@ namespace TiskStitku
 		}
 		public void EditujSablony()
 		{
-			Process externiProces = new Process();
-			//externiProces.StartInfo.FileName = "pcmanfm";
-			externiProces.StartInfo.FileName = "explorer";
-			//externiProces.StartInfo.FileName = @"C:\Program Files (x86)\FreeCommander\FreeCommander.exe";
-			externiProces.StartInfo.Arguments = Path.GetFullPath(Configuration.TemplatesDirectory);
-			externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-			externiProces.Start();
-			//externiProces.WaitForExit();
-			//u exploreru nafunguje
-			//UzivRozhrani.Oznameni(" Tisk štítků na EPL tiskárně", " Editace šablon.", " Pro pokračování stiskni libovolnou klávesu...");
+			//RunExternalProcess("explorer",Path.GetFullPath(Configuration.TemplatesDirectory));
+			RunExternalProcess(@"C:\Program Files (x86)\FreeCommander\FreeCommander.exe", Path.GetFullPath(Configuration.TemplatesDirectory));
 		}
 		public void EditujKonfSoubor(bool waitForExit = false)
 		{
-			Process externiProces = new Process();
-			externiProces.StartInfo.FileName = "Notepad.exe";
-			//externiProces.StartInfo.FileName = "mousepad";
-			externiProces.StartInfo.Arguments = Path.GetFullPath(Path.Combine(Configuration.ConfigPath, Configuration.ConfigFile));
-			externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-			externiProces.Start();
-			if (waitForExit) externiProces.WaitForExit();
+			RunExternalProcess(path: Path.GetFullPath(Path.Combine(Configuration.ConfigPath, Configuration.ConfigFile)), waitForExit: waitForExit);
 		}
 		public void EditujData()
 		{
-			try
-			{
-				Process externiProces = new Process();
-				externiProces.StartInfo.FileName = "Notepad.exe";
-				//externiProces.StartInfo.FileName = "mousepad";
-				//externiProces.StartInfo.FileName = "leafpad";
-				externiProces.StartInfo.Arguments = Path.GetFullPath(Configuration.PrimaryDataAdress);
-				externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-				externiProces.Start();
-				//externiProces.WaitForExit();
-			}
-			catch (Exception ex)
-			{
-				ErrorHandler.HandleError(this, ex);
-				// UzivRozhrani.OznameniChyby(" Tisk štítků na EPL tiskárně",
-				// 			   " Při pokusu o otevření souboru dat došlo k chybě:" + Environment.NewLine + ex.Message,
-				// 			   " Pokračuj stisknutím libovolné klávesy");
-			}
+			RunExternalProcess(path: Configuration.PrimaryDataAdress);
 		}
 		public void ZobrazReadme()
 		{
@@ -112,12 +81,7 @@ namespace TiskStitku
 			string adrReadMe = @".\zdrojak\Readme.txt";
 			if (File.Exists(adrReadMe))
 			{
-				Process externiProces = new Process();
-				externiProces.StartInfo.FileName = "Notepad.exe";
-				//externiProces.StartInfo.FileName = "mousepad";
-				externiProces.StartInfo.Arguments = Path.GetFullPath(adrReadMe);
-				externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-				externiProces.Start();
+				RunExternalProcess(path: Path.GetFullPath(adrReadMe));
 			}
 			else ErrorHandler.HandleError(this, new FileNotFoundException(" Nenašel jsem soubor s nápovědou:" + Path.GetFullPath(adrReadMe)));
 		}
@@ -128,5 +92,45 @@ namespace TiskStitku
 			//aby stary beh nepokracoval
 			Environment.Exit(0);
 		}
+		// private void RunExternalProcess(string command = "notepad.exe", string path = "", bool waitForExit = false)
+		// {
+		// 	Process process = new Process();
+		// 	process.StartInfo.FileName = command;
+		// 	process.StartInfo.Arguments = Path.GetFullPath(path);
+		// 	process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+		// 	if (waitForExit) process.WaitForExit();
+		// 	process.Start();
+		// }
+		private void RunExternalProcess(string command = "notepad.exe", string path = "", bool waitForExit = false)
+		{
+			try
+			{
+				using (Process process = new Process())
+				{
+					process.StartInfo.FileName = command;
+					process.StartInfo.Arguments = Path.GetFullPath(path);
+					process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+
+					bool isStarted = process.Start();
+
+					if (isStarted)
+					{
+						if (waitForExit)
+						{
+							process.WaitForExit(6000000); // Wait for the process to exit with a timeout
+						}
+					}
+					else
+					{
+						Console.WriteLine("The process could not be started.");
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				ErrorHandler.HandleError(this, ex);
+			}
+		}
+
 	}
 }

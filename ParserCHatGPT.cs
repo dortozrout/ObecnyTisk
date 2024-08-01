@@ -78,6 +78,7 @@ namespace TiskStitku
 
             while (start != -1 && end != -1)
             {
+                if (end < start) ErrorHandler.HandleError(this, new ArgumentOutOfRangeException());
                 string key = template.Substring(start, end - start + 1);
                 rv.Add(key);
                 start = template.IndexOf('<', end + 1);

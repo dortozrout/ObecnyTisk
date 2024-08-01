@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Runtime.InteropServices;
 using TiskStitku;
+using Form;
 
 namespace TiskStitku
 {
@@ -207,6 +208,7 @@ namespace TiskStitku
 					+ "# adresa souboru s daty{0}"
 					+ "data: {0}", Environment.NewLine);
 				File.WriteAllText(configFilePath, content);
+				//ConfigFile = configFilePath;
 				UserEdit(configFilePath);
 			}
 			catch (Exception ex)
@@ -218,20 +220,26 @@ namespace TiskStitku
 		}
 		private static void UserEdit(string configFilePath)
 		{
-			UzivRozhrani.Oznameni("  Tisk štítků na EPL tiskárně",
-					" První spuštění programu s konfiguračním souborem " + Environment.NewLine +
-					" " + Path.GetFullPath(configFilePath) + Environment.NewLine +
-					" Konfigurační soubor bude otevřen v editoru, uprav ho podle svých potřeb.",
-					" Pokračuj stisknutím libovolné klávesy.");
-			//otevreni konfig souboru v editoru pri prvnim spusteni
-			Process externiProces = new Process();
-			externiProces.StartInfo.FileName = "Notepad.exe";
-			//externiProces.StartInfo.FileName = "mousepad";
-			//externiProces.StartInfo.FileName = "leafpad";
-			externiProces.StartInfo.Arguments = Path.GetFullPath(configFilePath);
-			externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-			externiProces.Start();
-			externiProces.WaitForExit();
+			NotificationForm notification = new NotificationForm("NOVÝ KONFIGURÁK", string.Format("První spuštění programu s konfiguračním souborem:\n\n      {0}.\n\n   Konfigurační soubor bude otevřen v editoru, uprav ho podle svých potřeb.", Path.GetFullPath(configFilePath)));
+			// UzivRozhrani.Oznameni("  Tisk štítků na EPL tiskárně",
+			// 		" První spuštění programu s konfiguračním souborem " + Environment.NewLine +
+			// 		" " + Path.GetFullPath(configFilePath) + Environment.NewLine +
+			// 		" Konfigurační soubor bude otevřen v editoru, uprav ho podle svých potřeb.",
+			// 		" Pokračuj stisknutím libovolné klávesy.");
+			// //otevreni konfig souboru v editoru pri prvnim spusteni
+			notification.Display();
+			Console.ReadKey();
+			Spravce spravce = new Spravce();
+			spravce.EditujKonfSoubor(true);
+			spravce.Restart();
+			// Process externiProces = new Process();
+			// externiProces.StartInfo.FileName = "Notepad.exe";
+			// //externiProces.StartInfo.FileName = "mousepad";
+			// //externiProces.StartInfo.FileName = "leafpad";
+			// externiProces.StartInfo.Arguments = Path.GetFullPath(configFilePath);
+			// externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+			// externiProces.Start();
+			// externiProces.WaitForExit();
 		}
 		private static void Initialize()
 		{

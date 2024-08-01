@@ -39,7 +39,10 @@ namespace TiskStitku
                 Spravce spravce = new Spravce();
                 spravce.EditujKonfSoubor(true);
                 spravce.Restart();
-
+            }
+            else if(exception is ArgumentException && sourceOfEx.GetType() == typeof(Spravce))
+            {
+                //continue
             }
             else Environment.Exit(1);
         }
