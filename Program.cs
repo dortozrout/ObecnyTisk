@@ -44,7 +44,7 @@ namespace TiskStitku
 				try
 				{
 					EplFile eplFile = eplFiles[0];
-					Parser1 parser = new Parser1();
+					Parser parser = new Parser();
 					//new Parser1().Process(ref eplFile);
 					if (Configuration.Repeate)
 					{
@@ -85,13 +85,14 @@ namespace TiskStitku
 				}
 				SelectFromList<EplFile> selectList = new SelectFromList<EplFile>();
 				//Parser parser=new Parser();
-				Parser1 parser = new Parser1();
+				Parser parser = new Parser();
 				eplPrikaz = selectList.Select(eplFiles);
 				while (eplPrikaz != null)
 				{
 					parser.Process(ref eplPrikaz);
 					if (eplPrikaz.print)
 						Tisk.TiskniStitek(eplPrikaz.Telo);
+					else eplPrikaz.print = true; //reset
 					eplPrikaz = selectList.Select(eplFiles);
 				}
 			}

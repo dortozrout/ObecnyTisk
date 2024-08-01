@@ -6,13 +6,13 @@ using Form;
 
 namespace TiskStitku
 {
-    public class Parser1
+    public class Parser
     {
         private readonly Dictionary<string, string> primaryData;
         private EplFile CurrentEplFile { get; set; }
         private bool continueProcessing;
 
-        public Parser1()
+        public Parser()
         {
             primaryData = LoadPrimaryData();
         }
@@ -118,7 +118,17 @@ namespace TiskStitku
 
             return HandleDefaultKey(key);
         }
-
+        private T HandleInput<T>(EplFile eplFile, string prompt, string defaultValue)
+        {
+            InputForm<T> inputForm = new InputForm<T>();
+            T rv = inputForm.Fill(eplFile, prompt, defaultValue);
+            if (inputForm.Quit)
+            {
+                continueProcessing = false;
+                return default(T);
+            }
+            return rv;
+        }
         private string HandleTimeKey(string key)
         {
             int indexOfPlus = key.IndexOf('+');
@@ -129,13 +139,7 @@ namespace TiskStitku
             if (int.TryParse(key.Substring(indexOfPlus + 1).TrimEnd('>'), out drift))
                 return DateTime.Now.AddMinutes(drift).ToString("H:mm");
 
-            var inputForm = new InputForm<int>();
-            drift = inputForm.Fill(CurrentEplFile, "Zadej počet minut: ", "30");
-            if (inputForm.Quit)
-            {
-                continueProcessing = false;
-                return string.Empty;
-            }
+            drift = HandleInput<int>(CurrentEplFile, "Zadej počet minut: ", "30");
             return DateTime.Now.AddMinutes(drift).ToString("H:mm");
         }
 
@@ -178,27 +182,14 @@ namespace TiskStitku
             int defaultQuantity;
             if (int.TryParse(key.Substring(indexOfSeparator + 1).TrimEnd('>'), out defaultQuantity))
             {
-                defaultQuantity = inputForm.Fill(CurrentEplFile, "Zadej počet štítků: ", defaultQuantity.ToString());
-                if (inputForm.Quit)
-                {
-                    continueProcessing = false;
-                    return string.Empty;
-                }
+                defaultQuantity = HandleInput<int>(CurrentEplFile, "Zadej počet štítků: ", defaultQuantity.ToString());
                 return defaultQuantity.ToString();
             }
             return "1";
         }
-
         private string HandleDefaultKey(string key)
         {
-            var inputForm = new InputForm<string>();
-            //return inputForm.Fill($"Zadej {key.Trim('<', '>')}: ", "");
-            string rv = inputForm.Fill(CurrentEplFile, "Zadej " + key.Trim('<', '>') + ": ", "");
-            if (inputForm.Quit)
-            {
-                continueProcessing = false;
-                return string.Empty;
-            }
+            string rv = HandleInput<string>(CurrentEplFile, "Zadej " + key.Trim('<', '>') + ": ", "");
             return rv;
         }
         private string RemoveCommentedLines(string input)
