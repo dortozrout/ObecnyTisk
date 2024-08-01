@@ -75,7 +75,7 @@ namespace TiskStitku
 			//u exploreru nafunguje
 			//UzivRozhrani.Oznameni(" Tisk štítků na EPL tiskárně", " Editace šablon.", " Pro pokračování stiskni libovolnou klávesu...");
 		}
-		public void EditujKonfSoubor()
+		public void EditujKonfSoubor(bool waitForExit = false)
 		{
 			Process externiProces = new Process();
 			externiProces.StartInfo.FileName = "Notepad.exe";
@@ -83,7 +83,7 @@ namespace TiskStitku
 			externiProces.StartInfo.Arguments = Path.GetFullPath(Path.Combine(Configuration.ConfigPath, Configuration.ConfigFile));
 			externiProces.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 			externiProces.Start();
-			//externiProces.WaitForExit();
+			if (waitForExit) externiProces.WaitForExit();
 		}
 		public void EditujData()
 		{
@@ -121,7 +121,7 @@ namespace TiskStitku
 			}
 			else ErrorHandler.HandleError(this, new FileNotFoundException(" Nenašel jsem soubor s nápovědou:" + Path.GetFullPath(adrReadMe)));
 		}
-		private void Restart()
+		public void Restart()
 		{
 			//novy beh programu
 			Program.Run(new string[] { Configuration.ConfigFile });

@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using Form;
 
 namespace TiskStitku
@@ -21,21 +22,30 @@ namespace TiskStitku
             ErrorForm errorForm = new ErrorForm();
             string textLog = String.Format("{0}|Vyjímka: {1}|Zdroj: {2}", DateTime.Now, exception.Message, source);
             ErrorEventArgs eventArgs = new ErrorEventArgs { LogText = textLog, Source = source, Message = exception.Message };
-            
+
             Error = null;
-            
+
             //if (className != "Configuration" && className != "Log")
-              //  Error += Log.Zapis;
+            //  Error += Log.Zapis;
             Error += errorForm.Display;
 
             OnError(eventArgs);
+            if (exception is FileNotFoundException)
+            {
+                //continue
+            }
+            else if(exception is DirectoryNotFoundException)
+            {
+                Spravce spravce = new Spravce();
+                spravce.EditujKonfSoubor(true);
+                spravce.Restart();
 
-            Environment.Exit(1);
+            }
+            else Environment.Exit(1);
         }
         private static void OnError(ErrorEventArgs eventArgs)
         {
-            if (Error != null)
-                Error(null, eventArgs);
+            Error?.Invoke(null, eventArgs);
         }
     }
 }

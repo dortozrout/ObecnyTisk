@@ -42,7 +42,7 @@ namespace TiskStitku
 		//jestli vyzadovat zadani login
 		public static bool Prihlasit { get; private set; }
 		//uzivatelske jmeno
-		public static string Uzivatel { get; private set; }
+		public static string Uzivatel { get; set; }
 		//adresa souboru s daty expirace, sarze atd.
 		public static string PrimaryDataAdress { get; private set; }
 		//klicove slovo pro spusteni spravce konfigurace

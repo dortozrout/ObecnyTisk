@@ -30,6 +30,17 @@ namespace TiskStitku
 			{
 				Configuration.Load(args[0]);
 			}
+			if (Configuration.Prihlasit)
+			{
+				LoginForm loginForm = new LoginForm();
+				string user;
+				do
+				{
+					user = loginForm.Fill();
+					if (loginForm.Quit) return;
+				} while (user == string.Empty);
+				Configuration.Uzivatel = user;
+			}
 			//deklarace promennych
 			EplFile eplPrikaz;
 			//nacteni epl prikazu

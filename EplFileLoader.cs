@@ -11,11 +11,6 @@ namespace TiskStitku
         {
             var eplFiles = new List<EplFile>();
 
-            // if (string.IsNullOrEmpty(directoryPath) || !Directory.Exists(directoryPath))
-            // {
-            //     throw new DirectoryNotFoundException("The directory path is invalid or does not exist.");
-            // }
-
             try
             {
                 var files = Directory.GetFiles(directoryPath);
