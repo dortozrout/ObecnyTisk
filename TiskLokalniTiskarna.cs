@@ -72,10 +72,7 @@ namespace TiskStitku
 			if (bSuccess == false)
 			{
 				dwError = Marshal.GetLastWin32Error();
-				UzivRozhrani.Oznameni(" Tisk štítků na EPL tiskárně", " Chyba při tisku: " + Environment.NewLine
-					+ " " + dwError + Environment.NewLine
-					+ " Zkontroluj nastavení tiskárny v konfiguračním souboru:" + Environment.NewLine
-					+ " " + Configuration.ConfigFile, " Pokračuj stisknutím libovolné klávesy.");
+				ErrorHandler.HandleError("TiskLokalniTiskarna",new Exception($"Tisk na mistní tiskárně se nezdařil, kód chyby: {dwError}"));
 			}
 			return bSuccess;
 		}

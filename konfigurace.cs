@@ -222,8 +222,8 @@ namespace TiskStitku
 			NotificationForm notification = new NotificationForm("NOVÝ KONFIGURÁK", string.Format("První spuštění programu s konfiguračním souborem:\n\n      {0}.\n\n   Konfigurační soubor bude otevřen v editoru, uprav ho podle svých potřeb.", Path.GetFullPath(configFilePath)));
 			notification.Display();
 			Console.ReadKey();
-			Spravce spravce = new Spravce();
-			spravce.EditujKonfSoubor(true);
+			Manager spravce = new Manager();
+			spravce.EditConfigFile(true);
 			spravce.Restart();
 		}
 		private static void Initialize()

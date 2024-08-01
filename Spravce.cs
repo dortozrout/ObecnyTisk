@@ -9,31 +9,9 @@ using Form;
 
 namespace TiskStitku
 {
-	public class Spravce
+	public class Manager
 	{
-		public void Rozhrani()
-		{
-			string telo = " Správce nastavení:"
-				   + Environment.NewLine
-				   + "\t 1. Editace souboru s daty"
-				   + Environment.NewLine
-				   + "\t 2. Editace šablon"
-				   + Environment.NewLine
-				   + "\t 3. Editace konfiguračního souboru"
-				   + Environment.NewLine
-				   + "\t 4. Zobrazení nápovědy";
-			int volba;
-			do
-			{
-				volba = UzivRozhrani.VratCislo(" Tisk štítků na EPL tiskárně", telo, " Vyber akci zadáním čísla 1 - 4 (prázdný vstup = návrat): ", 1, 4, 0);
-				if (volba == 1) EditujData();
-				else if (volba == 2) EditujSablony();
-				else if (volba == 3) EditujKonfSoubor();
-				else if (volba == 4) ZobrazReadme();
-			} while (volba != 0);
-			Restart();
-		}
-		public void RozhraniNew()
+		public void Interface()
 		{
 			List<string> seznamVoleb = new List<string>() { "Editace souboru s daty", "Editace šablon", "Editace konfiguračního souboru", "Nápověda" };
 			string volba;
@@ -44,16 +22,16 @@ namespace TiskStitku
 				switch (seznamVoleb.IndexOf(volba))
 				{
 					case 1:
-						EditujData();
+						EditData();
 						break;
 					case 2:
-						EditujSablony();
+						EditTemplates();
 						break;
 					case 0:
-						EditujKonfSoubor();
+						EditConfigFile();
 						break;
 					case 3:
-						ZobrazReadme();
+						ShowReadme();
 						break;
 					default:
 						break;
@@ -62,20 +40,20 @@ namespace TiskStitku
 			} while (volba != null);
 			Restart();
 		}
-		public void EditujSablony()
+		public void EditTemplates()
 		{
-			//RunExternalProcess("explorer",Path.GetFullPath(Configuration.TemplatesDirectory));
-			RunExternalProcess(@"C:\Program Files (x86)\FreeCommander\FreeCommander.exe", Path.GetFullPath(Configuration.TemplatesDirectory));
+			RunExternalProcess("explorer",Path.GetFullPath(Configuration.TemplatesDirectory));
+			//RunExternalProcess(@"C:\Program Files (x86)\FreeCommander\FreeCommander.exe", Path.GetFullPath(Configuration.TemplatesDirectory));
 		}
-		public void EditujKonfSoubor(bool waitForExit = false)
+		public void EditConfigFile(bool waitForExit = false)
 		{
 			RunExternalProcess(path: Path.GetFullPath(Path.Combine(Configuration.ConfigPath, Configuration.ConfigFile)), waitForExit: waitForExit);
 		}
-		public void EditujData()
+		public void EditData()
 		{
 			RunExternalProcess(path: Configuration.PrimaryDataAdress);
 		}
-		public void ZobrazReadme()
+		public void ShowReadme()
 		{
 			//string adrReadMe = @".\Readme.txt";
 			string adrReadMe = @".\zdrojak\Readme.txt";
@@ -92,15 +70,7 @@ namespace TiskStitku
 			//aby stary beh nepokracoval
 			Environment.Exit(0);
 		}
-		// private void RunExternalProcess(string command = "notepad.exe", string path = "", bool waitForExit = false)
-		// {
-		// 	Process process = new Process();
-		// 	process.StartInfo.FileName = command;
-		// 	process.StartInfo.Arguments = Path.GetFullPath(path);
-		// 	process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-		// 	if (waitForExit) process.WaitForExit();
-		// 	process.Start();
-		// }
+		
 		private void RunExternalProcess(string command = "notepad.exe", string path = "", bool waitForExit = false)
 		{
 			try

@@ -36,11 +36,11 @@ namespace TiskStitku
             }
             else if(exception is DirectoryNotFoundException)
             {
-                Spravce spravce = new Spravce();
-                spravce.EditujKonfSoubor(true);
+                Manager spravce = new Manager();
+                spravce.EditConfigFile(true);
                 spravce.Restart();
             }
-            else if(exception is ArgumentException && sourceOfEx.GetType() == typeof(Spravce))
+            else if(exception is ArgumentException && sourceOfEx.GetType() == typeof(Manager))
             {
                 //continue
             }

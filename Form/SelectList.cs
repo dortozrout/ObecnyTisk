@@ -261,7 +261,7 @@ namespace Form
             filterInput.Text = "";
             if (filter == Configuration.Editace)
             {
-                new Spravce().RozhraniNew();
+                new Manager().Interface();
             }
             //odchytneme ciselne zadani
             int inputNumber;

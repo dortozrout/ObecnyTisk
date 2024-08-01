@@ -25,11 +25,7 @@ namespace TiskStitku
 			}
 			catch (Exception ex)
 			{
-				// Catch Exception
-				UzivRozhrani.Oznameni(" Tisk štítků na EPL tiskárně", " Chyba při tisku: " + Environment.NewLine
-					+ " " + ex.Message + Environment.NewLine
-					+ " Zkontroluj nastavení tiskárny v konfiguračním souboru:" + Environment.NewLine
-					+ " " + Configuration.ConfigFile, " Pokračuj stisknutím libovolné klávesy.");
+				ErrorHandler.HandleError("TiskSdilenaTiskarna",ex);
 				IsConnected = false;
 			}
 			return IsConnected;

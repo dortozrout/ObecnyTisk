@@ -1,3 +1,5 @@
+using Form;
+
 namespace TiskStitku
 {
     public class Tisk
@@ -11,7 +13,12 @@ namespace TiskStitku
             if (Configuration.PrinterType == 2)
                 TiskIPTiskarna.TiskniStitek(Configuration.PrinterAddress, telo);
             if (Configuration.PrinterType == 3)
-                UzivRozhrani.Oznameni(" Tisk štítků na EPL tiskárně", telo, " Pokračuj stisnutím libovolné klávesy");
+            {
+                NotificationForm notification = new NotificationForm("", telo);
+                notification.Display();
+                Console.ReadKey();
+                // UzivRozhrani.Oznameni(" Tisk štítků na EPL tiskárně", telo, " Pokračuj stisnutím libovolné klávesy");
+            }
         }
     }
 }
