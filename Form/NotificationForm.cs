@@ -21,7 +21,8 @@ namespace Form
             Console.Clear();
             Background bg = new Background();
             bg.Display();
-            Label.Display();
+            if (Label.Label != "")
+                Label.Display();
             Message.Display();
             Notification.Display();
         }
