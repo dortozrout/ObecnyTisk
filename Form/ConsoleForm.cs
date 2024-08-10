@@ -1,14 +1,20 @@
 using System;
 using System.Collections.Generic;
+using TiskStitku;
 
 namespace Form
 {
-    //Konzolovy formular pro snadnejsi prijem polozky
-    //pro kazdou polozku se tvori novy
-    public abstract class ConsoleForm
+    //Konzolovy formular 
+    public abstract class ConsoleForm<T>
     {
         //promena predstavujici stisknuti ESC
-        public bool Quit{get; set;}
-        //public abstract Polozka Fill();
+        public bool Quit { get; set; }
+        public abstract void Display();
+        public abstract T Fill();
+        public static void ResetColor()
+        {
+            Console.ForegroundColor = Configuration.defaultForegroundColor;
+            Console.BackgroundColor = Configuration.defaultBackgroundColor;
+        }
     }
 }

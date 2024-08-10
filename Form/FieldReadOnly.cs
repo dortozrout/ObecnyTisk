@@ -1,45 +1,17 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using TiskStitku;
+using System.Linq.Expressions;
 
 namespace Form
 {
-    public class FieldReadOnly : FormItem
+    public class FieldReadOnly<TForm> : FormItem<TForm>
     {
         public ConsoleColor BgColor { get; protected set; }
         public ConsoleColor FgColor { get; protected set; }
-        public FieldReadOnly(int leftPosition, int topPosition, string label, int length, ConsoleForm consoleForm) : base(leftPosition, topPosition, label, length, consoleForm)
-        {
-            LeftPosition = leftPosition;
-            TopPosition = topPosition;
-            Label = label;
-            Length = length;
-            SuperiorForm = consoleForm;
-            BgColor = defaultBgColor;
-            FgColor = defaultFgColor;
-        }
-        public FieldReadOnly(int leftPosition, int topPosition, string label, int length, ConsoleForm consoleForm, ConsoleColor fgColor, ConsoleColor bgColor) : base(leftPosition, topPosition, label, length, consoleForm)
-        {
-            LeftPosition = leftPosition;
-            TopPosition = topPosition;
-            Label = label;
-            Length = length;
-            SuperiorForm = consoleForm;
-            BgColor = bgColor;
-            FgColor = fgColor;
-        }
-        public FieldReadOnly(string id, int leftPosition, int topPosition, string label, int length, ConsoleForm consoleForm) : base(id, leftPosition, topPosition, label, length, consoleForm)
-        {
-            Id = id;
-            LeftPosition = leftPosition;
-            TopPosition = topPosition;
-            Label = label;
-            Length = length;
-            SuperiorForm = consoleForm;
-            BgColor = defaultBgColor;
-            FgColor = defaultFgColor;
-        }
-        public FieldReadOnly(string id, int leftPosition, int topPosition, string label, int length, ConsoleForm consoleForm, ConsoleColor fgColor, ConsoleColor bgColor) : base(id, leftPosition, topPosition, label, length, consoleForm)
+        public FieldReadOnly(int leftPosition, int topPosition, string label, int length, ConsoleForm<TForm> consoleForm, ConsoleColor fgColor = Configuration.defaultForegroundColor, ConsoleColor bgColor = Configuration.defaultBackgroundColor) : this("", leftPosition, topPosition, label, length, consoleForm, fgColor, bgColor) { }
+        public FieldReadOnly(string id, int leftPosition, int topPosition, string label, int length, ConsoleForm<TForm> consoleForm, ConsoleColor fgColor = Configuration.defaultForegroundColor, ConsoleColor bgColor = Configuration.defaultBackgroundColor) : base(id, leftPosition, topPosition, label, length, consoleForm)
         {
             Id = id;
             LeftPosition = leftPosition;
@@ -54,23 +26,18 @@ namespace Form
         {
             Console.BackgroundColor = BgColor;
             Console.ForegroundColor = FgColor;
-            Console.SetCursorPosition(LeftPosition, TopPosition);
-            Console.Write(Label.PadRight(Length));
+            DisplayText(Label);
         }
         public virtual void Hide()
         {
-            Console.BackgroundColor = defaultBgColor;
-            Console.ForegroundColor = defaultFgColor;
+            ResetColor();
             Console.SetCursorPosition(LeftPosition, TopPosition);
-            Console.Write("".PadRight(Label.Length));
+            DisplayText(Label, true);
         }
         public virtual void ToggleVisible(object sender, MyEventArgs scanArgs)
         {
             if (scanArgs.OldText != scanArgs.NewText) Display();
             else Hide();
-            //Console.ReadKey();
-            //Console.SetCursorPosition(15, 2);
-            //Console.WriteLine("event");
         }
         public override void SwitchTo(bool forward) { }
 
@@ -78,6 +45,19 @@ namespace Form
         {
             if (display) Display();
             else Hide();
+        }
+        
+        private void DisplayText(string text, bool erase = false)
+        {
+            var textArray = text.Split(Environment.NewLine);
+            for (int i = 0; i < textArray.Length; i++)
+            {
+                textArray[i] = erase
+                    ? new string(' ', Length)
+                    : textArray[i].PadRight(Length).Substring(0, Length);
+                Console.SetCursorPosition(LeftPosition, TopPosition + i);
+                Console.Write(textArray[i]);
+            }
         }
     }
 

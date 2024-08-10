@@ -58,8 +58,8 @@ namespace TiskStitku
 		public static string line = "".PadRight(Console.WindowWidth, '\u2500');
 
 		//obarveni konzole
-		public static ConsoleColor ForegroundColor { get; set; }
-		public static ConsoleColor BackgroundColor { get; set; }
+		public static ConsoleColor ActiveForegroundColor { get; set; }
+		public static ConsoleColor ActiveBackgroundColor { get; set; }
 
 		public static string Header { get; private set; }
 
@@ -256,23 +256,8 @@ namespace TiskStitku
 						+ "{6}{0}",
 						Environment.NewLine, Path.Combine(ConfigPath, ConfigFile).PadRight(align - 22), PrinterAddress, TypTiskarnySlovy,
 						Path.GetFullPath(TemplatesDirectory).PadRight(align - 22), Encoding.PadRight(align - 22), RuntimeInformation.FrameworkDescription, AppName);
-			BackgroundColor = ConsoleColor.DarkGreen;
-			ForegroundColor = ConsoleColor.Black;
-		}
-		public static void DisplayLogo()
-		{
-			//Zjisteni barev console
-			ConsoleColor puvodniPozadi = Console.BackgroundColor;
-			ConsoleColor puvodniPismo = Console.ForegroundColor;
-			//Nastaveni novych barev
-			Console.BackgroundColor = ConsoleColor.Gray;
-			Console.ForegroundColor = ConsoleColor.Black;
-			//Vypsani barkodu
-			string barcode = "   ▌ ▌█▌█▌▌▌█▌▌▌ █▌█▌▌▌ ▌█▌▌█▌▌ ▌█▌█▌▌█▌ ▌▌▌█▌▌▌ █▌▌█▌▌█▌ ▌▌ ▌█▌█▌▌   ";
-			Console.WriteLine(barcode);
-			//Vraceni puvodnich barev
-			Console.BackgroundColor = puvodniPozadi;
-			Console.ForegroundColor = puvodniPismo;
+			ActiveBackgroundColor = ConsoleColor.DarkGreen;
+			ActiveForegroundColor = ConsoleColor.Black;
 		}
 	}
 }

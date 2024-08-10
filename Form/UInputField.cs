@@ -2,14 +2,15 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using TiskStitku;
+//using FormChatGPT;
 
 namespace Form
 {
     //genericka trida pro vstupni pole formulare
-    class UInputField<T> : FormItem
+    class UInputField<TForm,TField> : FormItem<TForm>
     {
         //hodnota, kterou pole obsahuje
-        public virtual T Value { get; protected set; }
+        public virtual TField Value { get; protected set; }
         //jestli se presunout dopredu, nebo dozadu
         public bool Forward { get; set; }
         //jestli je pole zapisovatelne 
@@ -39,72 +40,22 @@ namespace Form
         //zda nastavit kurzor na start nebo na konec textu
         public bool CursorToStart { get; set; }
         //konstruktor bez metod pro udalost switchToEvent
-        public UInputField(string id, int leftPosition, int topPosition, string label, int length, ConsoleForm consoleForm, string defaulText, EventHandler<MyEventArgs> inputEv, AditionalParms aditioNalParms) : base(id, leftPosition, topPosition, label, length, consoleForm)
-        {
-            //identifikace pole
-            Id = id;
-            //pozice, nazev a delka pole
-            LeftPosition = leftPosition;
-            TopPosition = topPosition;
-            Label = label;
-            Length = length;
-            //vychozi hodnoty
-            IsActivable = true;
-            Forward = true;
-            Quit = false;
-            //formular
-            SuperiorForm = consoleForm;
-            //vychozi text
-            DefaulText = defaulText;
-            Text = defaulText;
-            //preformatovani data
-            if (typeof(T) == typeof(DateTime))
-            {
-                DateTime datum;
-                if (DateTime.TryParse(Text, out datum))
-                    Text = datum.ToString(Configuration.DateFormat);
-            }
-            //prirazeni metod k udalosti
-            inputEvent += inputEv;
-            //data ziskana z aditionalParms
-            SwitchToNext = aditioNalParms.switchToNext;
-            SwitchToPrevious = aditioNalParms.switchToPrevious;
-            End = aditioNalParms.end;
-            EraseText = aditioNalParms.eraseText;
-            HideInputText = aditioNalParms.hidenInput;
-            IsActivable = aditioNalParms.isActivable;
-            IsHidden = aditioNalParms.isHidden;
-            CursorToStart = aditioNalParms.cursorToStart;
-        }
+        public UInputField(string id, int leftPosition, int topPosition, string label, int length, ConsoleForm<TForm> consoleForm, string defaulText, EventHandler<MyEventArgs> inputEv, AditionalParms aditioNalParms) : this(id, leftPosition, topPosition, label, length, consoleForm, defaulText, inputEv, null, aditioNalParms) { }
         //konstruktor vcetne metod pro udalost switchToEvent
-        public UInputField(string id, int leftPosition, int topPosition, string label, int length, ConsoleForm consoleForm, string defaulText, EventHandler<MyEventArgs> inputEv, EventHandler<MyEventArgs> switchToEv, AditionalParms aditioNalParms) : base(id, leftPosition, topPosition, label, length, consoleForm)
+        public UInputField(string id, int leftPosition, int topPosition, string label, int length, ConsoleForm<TForm> consoleForm, string defaulText, EventHandler<MyEventArgs> inputEv, EventHandler<MyEventArgs> switchToEv, AditionalParms aditioNalParms) : base(id, leftPosition, topPosition, label, length, consoleForm)
         {
-            //indentifikace
-            Id = id;
-            //pozice, nazev a delka pole
-            LeftPosition = leftPosition;
-            TopPosition = topPosition;
-            Label = label;
-            Length = length;
-            //vychozi hodnoty
-            IsActivable = true;
-            Forward = true;
-            Quit = false;
-            //formular
-            SuperiorForm = consoleForm;
             //vychozi text
             DefaulText = defaulText;
             Text = defaulText;
-            //preformatovani data
-            if (typeof(T) == typeof(DateTime))
-            {
-                DateTime datum;
-                if (DateTime.TryParse(Text, out datum))
-                    Text = datum.ToString(Configuration.DateFormat);
-            }
             //prirazeni metod k udalosti
             inputEvent += inputEv;
             switchToEvent += switchToEv;
+            //vychozi hodnoty
+            IsActivable = true;
+            Forward = true;
+            Quit = false;
+            //formular
+            SuperiorForm = consoleForm;
             //data ziskana z aditionalParms
             SwitchToNext = aditioNalParms.switchToNext;
             SwitchToPrevious = aditioNalParms.switchToPrevious;
@@ -114,13 +65,20 @@ namespace Form
             IsActivable = aditioNalParms.isActivable;
             IsHidden = aditioNalParms.isHidden;
             CursorToStart = aditioNalParms.cursorToStart;
+            //preformatovani data
+            if (typeof(TField) == typeof(DateTime))
+            {
+                DateTime datum;
+                if (DateTime.TryParse(Text, out datum))
+                    Text = datum.ToString(Configuration.DateFormat);
+            }
         }
         //metoda pro zobrazeni pole
         public override void Display()
         {
             if (IsHidden) return;
             //reset barev
-            Console.ResetColor();
+            ResetColor();
             //nastaveni vyraznych barev pouze pro jedno zobrazeni
             if (WarningColors)
             {
@@ -130,17 +88,14 @@ namespace Form
             }
             //nastaveni pozice kurzoru
             Console.SetCursorPosition(LeftPosition, TopPosition);
-            //vypis nazvu pole a textu
-            if (!HideInputText) Console.Write(Label + Text.PadRight(Length));
-            //nebo pouze nazvu pole 
-            else Console.Write(Label + "".PadRight(Text.Length, '*').PadRight(Length));
+            //vypis nazvu pole a textu, nebo pouze nazvu pole 
+            Console.Write(Label + (HideInputText ? "".PadRight(Text.Length, '*') : Text.PadRight(Length)));
         }
         //aktivace pole pro zapis
         public virtual void Activate()
         {
             //nastaveni barev podle skladu
-            Console.BackgroundColor = Configuration.BackgroundColor;
-            Console.ForegroundColor = Configuration.ForegroundColor;
+            SetConsoleColors();
             //nastaveni pozice kurzoru
             Console.SetCursorPosition(LeftPosition, TopPosition);
             //deklarace argumentu udalosti prirazeni default textu do OldTex
@@ -149,32 +104,14 @@ namespace Form
             if (EraseText) Text = string.Empty;
             //vstup textu s vychozi hodnotou
             Value = ReadLine(Text);
+            //formatovani data
+            if (Value != null) FormatTextValue();
             //ukonceni metody po stisknuti escape
             if (Quit) return;
-            //formatovani data
-            if (Value.GetType() == typeof(DateTime))
-                //Text = string.Format("{0:yyyy-MM-dd}", Value);
-                Text = ((DateTime)(object)Value).ToString(Configuration.DateFormat);
-            else if (Value.GetType() == typeof(bool))
-            {
-                bool yes = (bool)Convert.ChangeType(Value, typeof(bool));
-                if (yes) Text = "ANO";
-                else
-                {
-                    Text = "NE";
-                    //kvuli ukonceni pri neshodnem kat cisle
-                    if (End)
-                    {
-                        Quit = true;
-                        return;
-                    }
-                }
-            }
-            else Text = Value.ToString();
             //prirazeni zadaneho textu do eventArgs.NewText
             eventArgs.NewText = Text;
             //spusteni udalosti
-            if (inputEvent != null) inputEvent(this, eventArgs);
+            inputEvent?.Invoke(this, eventArgs);
         }
         //metoda pro pruchod polem bez aktivace
         public virtual void NonActivate()
@@ -187,7 +124,7 @@ namespace Form
                 NewText = Text,
             };
             //spusteni udalosti
-            if (inputEvent != null) inputEvent(this, eventArgs);
+            inputEvent?.Invoke(this, eventArgs);
         }
         //metoda prvku pro prepnuti na nej
         //parametr nastavuje zda jit dopredu nebo zpet
@@ -195,7 +132,7 @@ namespace Form
         {
             Forward = forward;
             MyEventArgs myEventArgs = new MyEventArgs() { Label = this.Label, Id = this.Id };
-            if (switchToEvent != null) switchToEvent(this, myEventArgs);
+            switchToEvent?.Invoke(this, myEventArgs);
             //pokud je prvek zapisovatelny|aktivovatelny
             if (IsActivable)
             {
@@ -240,18 +177,10 @@ namespace Form
         //metoda pro udalost, ktera prepina zapisovatelnos pole
         public override void ToggleVisible(bool display)
         {
-            if (display)
-            {
-                IsActivable = true;
-                IsHidden = false;
-                Display();
-            }
-            else
-            {
-                IsActivable = false;
-                IsHidden = true;
-                Hide();
-            }
+            IsActivable = display;
+            IsHidden = !display;
+            if (display) Display();
+            else Hide();
         }
         public virtual void Hide()
         {
@@ -263,59 +192,53 @@ namespace Form
         //metoda pro vstup s vychozi hodnotou
         //https://stackoverflow.com/questions/1655318/how-to-set-default-input-value-in-net-console-app
         //Matt Breckon, Efrain
-        protected T ReadLine(string text)
+        protected TField ReadLine(string text)
         {
             //secteni vsech klaves ktere ukoncuji zadavani do jednoho listu
-            List<ConsoleKeyInfo> keyInfos = SwitchToNext.Concat(SwitchToPrevious).ToList<ConsoleKeyInfo>();
+            List<ConsoleKeyInfo> keyInfos = SwitchToNext.Concat(SwitchToPrevious).ToList();
             //tohle by asi bylo lepsi nahradit tuple
             Tuple<string, ConsoleKeyInfo> stringDirection;
             //parsovani podle typu
-            if (typeof(T) == typeof(DateTime)) //DateTime
+            if (typeof(TField) == typeof(DateTime))
             {
                 DateTime dateTime;
                 do
                 {
                     stringDirection = ReadInputWithDefault(text, keyInfos.ToArray());
-                    if (stringDirection.Item2.Key == ConsoleKey.Escape) return default(T);
+                    if (stringDirection.Item2.Key == ConsoleKey.Escape) return default;
                 } while (!DateTime.TryParse(stringDirection.Item1, out dateTime));
-                //nastaveni zda se bude pokracovat na dalsi nebo na predchozi pole
-                if (SwitchToNext.Contains(stringDirection.Item2)) Forward = true;
-                else Forward = false;
-                return (T)Convert.ChangeType(dateTime, typeof(T));
+                Forward = SwitchToNext.Contains(stringDirection.Item2);
+                return (TField)Convert.ChangeType(dateTime, typeof(TField));
             }
-            else if (typeof(T) == typeof(int)) //int
+            else if (typeof(TField) == typeof(int))
             {
-                //int maxQuantity = int.Parse(DefaulText);
-                int maxQuantity = Configuration.maxQuantity;
+                //if (!int.TryParse(DefaulText, out int maxQuantity)) maxQuantity = Configuration.maxQuantity;
+                int maxQuantity=Configuration.maxQuantity;
                 int number;
                 do
                 {
                     stringDirection = ReadInputWithDefault(text, keyInfos.ToArray());
-                    if (stringDirection.Item2.Key == ConsoleKey.Escape) return default(T);
+                    if (stringDirection.Item2.Key == ConsoleKey.Escape) return default;
                 } while (!int.TryParse(stringDirection.Item1, out number) || number < 0 || number > maxQuantity);
-                if (SwitchToNext.Contains(stringDirection.Item2)) Forward = true;
-                else Forward = false;
-                return (T)Convert.ChangeType(number, typeof(T));
+                Forward = SwitchToNext.Contains(stringDirection.Item2);
+                return (TField)Convert.ChangeType(number, typeof(TField));
             }
-            else if (typeof(T) == typeof(bool)) //ano,ne
+            else if (typeof(TField) == typeof(bool))
             {
                 do
                 {
                     stringDirection = ReadInputWithDefault(text, keyInfos.ToArray());
-                    if (stringDirection.Item2.Key == ConsoleKey.Escape) return default(T);
+                    if (stringDirection.Item2.Key == ConsoleKey.Escape) return default;
                 } while (!stringDirection.Item1.ToLower().StartsWith("a") && !stringDirection.Item1.ToLower().StartsWith("n"));
-                if (SwitchToNext.Contains(stringDirection.Item2)) Forward = true;
-                else Forward = false;
-                if (stringDirection.Item1.ToLower().StartsWith("n")) return (T)Convert.ChangeType(false, typeof(T));
-                return (T)Convert.ChangeType(true, typeof(T));
+                Forward = SwitchToNext.Contains(stringDirection.Item2);
+                return (TField)Convert.ChangeType(stringDirection.Item1.ToLower().StartsWith("n") ? false : true, typeof(TField));
             }
             else
             {
                 stringDirection = ReadInputWithDefault(text, keyInfos.ToArray());
-                if (stringDirection.Item2.Key == ConsoleKey.Escape) return default(T);
-                if (SwitchToNext.Contains(stringDirection.Item2)) Forward = true;
-                else Forward = false;
-                return (T)Convert.ChangeType(stringDirection.Item1, typeof(T));
+                if (stringDirection.Item2.Key == ConsoleKey.Escape) return default;
+                Forward = SwitchToNext.Contains(stringDirection.Item2);
+                return (TField)Convert.ChangeType(stringDirection.Item1, typeof(TField));
             }
         }
         protected Tuple<string, ConsoleKeyInfo> ReadInputWithDefault(string defaultValue, ConsoleKeyInfo[] consoleKeyInfos)
@@ -334,82 +257,122 @@ namespace Form
             else Console.SetCursorPosition(CursorLeftStart + defaultValue.Length, Console.CursorTop);
             //nastaveni vychoziho prepisovani textu
             bool insert = false;
-            //nacteni stisknute klavesy
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            ConsoleKeyInfo keyInfo;
             //cyklus kde se vyhodnoti akce
-            while (!consoleKeyInfos.Contains(keyInfo))
-            //while (keyInfo.Key != ConsoleKey.Enter)
+            do
             {
-                switch (keyInfo.Key)
-                {
-                    //sipka doleva
-                    case ConsoleKey.LeftArrow:
-                        Console.SetCursorPosition(Math.Max(Console.CursorLeft - 1, CursorLeftStart), Console.CursorTop);
-                        break;
-                    //sipka doprava
-                    case ConsoleKey.RightArrow:
-                        Console.SetCursorPosition(Math.Min(Console.CursorLeft + 1, CursorLeftStart + buffer.Count), Console.CursorTop);
-                        break;
-                    //na zacatek textu
-                    case ConsoleKey.Home:
-                        Console.SetCursorPosition(CursorLeftStart, Console.CursorTop);
-                        break;
-                    //na konec textu
-                    case ConsoleKey.End:
-                        Console.SetCursorPosition(CursorLeftStart + buffer.Count, Console.CursorTop);
-                        break;
-                    //prepnuti insert
-                    case ConsoleKey.Insert:
-                        insert = !insert;
-                        break;
-                    //mazani backspace
-                    case ConsoleKey.Backspace:
-                        if (Console.CursorLeft <= CursorLeftStart)
-                        {
-                            break;
-                        }
-                        var cursorColumnAfterBackspace = Math.Max(Console.CursorLeft - 1, CursorLeftStart);
-                        buffer.RemoveAt(Console.CursorLeft - CursorLeftStart - 1);
-                        RewriteLine(CursorLeftStart, buffer);
-                        Console.SetCursorPosition(cursorColumnAfterBackspace, Console.CursorTop);
-                        break;
-                    //mazani delete
-                    case ConsoleKey.Delete:
-                        if (Console.CursorLeft >= buffer.Count + CursorLeftStart)
-                        {
-                            break;
-                        }
-                        var cursorColumnAfterDelete = Console.CursorLeft;
-                        buffer.RemoveAt(Console.CursorLeft - CursorLeftStart);
-                        RewriteLine(CursorLeftStart, buffer);
-                        Console.SetCursorPosition(cursorColumnAfterDelete, Console.CursorTop);
-                        break;
-                    //preruseni zadavani ESC
-                    case ConsoleKey.Escape:
-                        Quit = true;
-                        return new Tuple<string, ConsoleKeyInfo>(string.Empty, keyInfo);
-                    //zapis textu
-                    default:
-                        var character = keyInfo.KeyChar;
-                        if (character < 29 || (character > 29 && character < 32)) // not a printable chars
-                            break;
-                        var cursorAfterNewChar = Console.CursorLeft + 1;
-                        if (cursorAfterNewChar > Length + CursorLeftStart || buffer.Count >= Length - 1)
-                        {
-                            break; // currently only one line of input is supported
-                        }
-                        if (Console.CursorLeft - CursorLeftStart < buffer.Count && !insert)
-                            buffer.RemoveAt(Console.CursorLeft - CursorLeftStart);
-                        buffer.Insert(Console.CursorLeft - CursorLeftStart, character);
-                        RewriteLine(CursorLeftStart, buffer);
-                        Console.SetCursorPosition(cursorAfterNewChar, Console.CursorTop);
-                        break;
-                }
-                //nacteni dalsi klavesy
+                //nacteni stisknute klavesy
                 keyInfo = Console.ReadKey(true);
-            }
+                HandleKeyInput(keyInfo, CursorLeftStart, ref buffer, ref insert);
+                // osetreni klavesy ESC
+                if (Quit) return new Tuple<string, ConsoleKeyInfo>(string.Empty, keyInfo);
+            } while (!consoleKeyInfos.Contains(keyInfo));
+            // while (!consoleKeyInfos.Contains(keyInfo))
+            // //while (keyInfo.Key != ConsoleKey.Enter)
+            // {
+            //     HandleKeyInput(keyInfo, CursorLeftStart, ref buffer, ref insert);
+            //     // osetreni klavesy ESC
+            //     if (Quit) return new Tuple<string, ConsoleKeyInfo>(string.Empty, keyInfo);
+            //     //nacteni dalsi klavesy
+            //     keyInfo = Console.ReadKey(true);
+            // }
             return new Tuple<string, ConsoleKeyInfo>(new string(buffer.ToArray()), keyInfo);
         }
+        private void HandleKeyInput(ConsoleKeyInfo keyInfo, int cursorLeftStart, ref List<char> buffer, ref bool insert)
+        {
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.LeftArrow:
+                    MoveCursorLeft(cursorLeftStart);
+                    break;
+                case ConsoleKey.RightArrow:
+                    MoveCursorRight(cursorLeftStart, buffer);
+                    break;
+                case ConsoleKey.Home:
+                    Console.SetCursorPosition(cursorLeftStart, Console.CursorTop);
+                    break;
+                case ConsoleKey.End:
+                    Console.SetCursorPosition(cursorLeftStart + buffer.Count, Console.CursorTop);
+                    break;
+                case ConsoleKey.Insert:
+                    insert = !insert;
+                    break;
+                case ConsoleKey.Backspace:
+                    HandleBackspace(cursorLeftStart, ref buffer);
+                    break;
+                case ConsoleKey.Delete:
+                    HandleDelete(cursorLeftStart, ref buffer);
+                    break;
+                case ConsoleKey.Escape:
+                    Quit = true;
+                    break;
+                case ConsoleKey.Enter:
+                    return;
+                default:
+                    HandleCharacterInput(keyInfo, cursorLeftStart, ref buffer, ref insert);
+                    break;
+            }
+        }
+        private void HandleCharacterInput(ConsoleKeyInfo keyInfo, int cursorLeftStart, ref List<char> buffer, ref bool insert)
+        {
+            var character = keyInfo.KeyChar;
+            if (character < 29 || (character > 29 && character < 32) || buffer.Count >= Length - 1) return;
+
+            int index = Console.CursorLeft - cursorLeftStart;
+
+            if (insert)
+            {
+                buffer.Insert(index, keyInfo.KeyChar);
+                RewriteLine(cursorLeftStart, buffer);
+                Console.SetCursorPosition(cursorLeftStart + index + 1, Console.CursorTop);
+            }
+            else if (index < buffer.Count)
+            {
+                buffer[index] = keyInfo.KeyChar;
+                RewriteLine(cursorLeftStart, buffer);
+                Console.SetCursorPosition(cursorLeftStart + index + 1, Console.CursorTop);
+            }
+            else
+            {
+                buffer.Add(keyInfo.KeyChar);
+                RewriteLine(cursorLeftStart, buffer);
+                Console.SetCursorPosition(cursorLeftStart + index + 1, Console.CursorTop);
+            }
+        }
+
+        private void HandleDelete(int cursorLeftStart, ref List<char> buffer)
+        {
+            int index = Console.CursorLeft - cursorLeftStart;
+            if (index >= buffer.Count) return;
+
+            buffer.RemoveAt(index);
+            RewriteLine(cursorLeftStart, buffer);
+            Console.SetCursorPosition(cursorLeftStart + index, Console.CursorTop);
+        }
+
+        private void HandleBackspace(int cursorLeftStart, ref List<char> buffer)
+        {
+            int index = Console.CursorLeft - cursorLeftStart;
+            if (index <= 0) return;
+
+            buffer.RemoveAt(index - 1);
+            Console.CursorLeft--;
+            RewriteLine(cursorLeftStart, buffer);
+            Console.SetCursorPosition(cursorLeftStart + index - 1, Console.CursorTop);
+        }
+
+        private void MoveCursorRight(int cursorLeftStart, List<char> buffer)
+        {
+            if (Console.CursorLeft < cursorLeftStart + buffer.Count)
+                Console.CursorLeft++;
+        }
+
+        private void MoveCursorLeft(int cursorLeftStart)
+        {
+            if (Console.CursorLeft > cursorLeftStart)
+                Console.CursorLeft--;
+        }
+
         //metoda pro prepsani radku pole akt. stavu
         protected void RewriteLine(int startPosition, List<char> buffer)
         {
@@ -424,6 +387,37 @@ namespace Form
             else Console.Write("".PadRight(buffer.Count, '*'));
             //nastaveni kurzoru
             Console.SetCursorPosition(startPosition, Console.CursorTop);
+        }
+        private void SetConsoleColors()
+        {
+            //nastaveni barev podle skladu
+            Console.BackgroundColor = Configuration.ActiveBackgroundColor;
+            Console.ForegroundColor = Configuration.ActiveForegroundColor;
+        }
+        private void FormatTextValue()
+        {
+            //formatovani data
+            if (Value.GetType() == typeof(DateTime))
+            {
+                if (DateTime.TryParse(Value.ToString(), out DateTime date))
+                    //Text = ((DateTime)(object)Value).ToString(Configuration.DateFormat);
+                    Text = date.ToString(Configuration.DateFormat);
+            }
+            else if (Value.GetType() == typeof(bool))
+            {
+                if (bool.TryParse(Value.ToString(), out bool yes))
+                    if (yes) Text = "ANO";
+                    else
+                    {
+                        Text = "NE";
+                        //kvuli ukonceni pri neshodnem kat cisle
+                        if (End)
+                        {
+                            Quit = true;
+                        }
+                    }
+            }
+            else Text = Value.ToString();
         }
     }
 }

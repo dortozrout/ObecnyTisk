@@ -5,7 +5,7 @@ using TiskStitku;
 
 namespace Form
 {
-    public abstract class FormItem
+    public abstract class FormItem<TForm>
     {
         //identifikace prvku
         public string Id { get; protected set; }
@@ -24,20 +24,13 @@ namespace Form
         protected const ConsoleColor warningBg = ConsoleColor.DarkRed;
         protected const ConsoleColor warningFg = ConsoleColor.White;
         //nadrazeny formular
-        public ConsoleForm SuperiorForm { get; set; }
+        public ConsoleForm<TForm> SuperiorForm { get; set; }
         public string Text { get; set; }
-        public FormItem Next { get; set; }
-        public FormItem Previous { get; set; }
+        public FormItem<TForm> Next { get; set; }
+        public FormItem<TForm> Previous { get; set; }
         public FormItem() { }
-        public FormItem(int leftPosition, int topPosition, string label, int length, ConsoleForm consoleForm)
-        {
-            LeftPosition = leftPosition;
-            TopPosition = topPosition;
-            Label = label;
-            Length = length;
-            SuperiorForm = consoleForm;
-        }
-        public FormItem(string id, int leftPosition, int topPosition, string label, int length, ConsoleForm consoleForm)
+        public FormItem(int leftPosition, int topPosition, string label, int length, ConsoleForm<TForm> consoleForm) : this("", leftPosition, topPosition, label, length, consoleForm) { }
+        public FormItem(string id, int leftPosition, int topPosition, string label, int length, ConsoleForm<TForm> consoleForm)
         {
             Id = id;
             LeftPosition = leftPosition;
@@ -49,5 +42,9 @@ namespace Form
         public abstract void Display();
         public abstract void SwitchTo(bool forward);
         public abstract void ToggleVisible(bool display);
+        public static void ResetColor()
+        {
+            ConsoleForm<string>.ResetColor();
+        }
     }
 }

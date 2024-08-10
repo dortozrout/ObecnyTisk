@@ -1,25 +1,26 @@
 using System;
 using TiskStitku;
-//using TiskStitku;
 
 namespace Form
 {
-    public class Background : FormItem
+    public class Background<TForm> : FormItem<TForm>
     {
 
-        private readonly FieldReadOnly header;
+        private readonly FieldReadOnly<TForm> header;
+        private readonly FieldReadOnly<TForm> barcode;
         public Background()
         {
             LeftPosition = 0;
             TopPosition = 5;
-            header = new FieldReadOnly(0, 1, Configuration.Header, 60, null, Configuration.BackgroundColor, Configuration.ForegroundColor);
+            string barcode39 = "   ▌ ▌█▌█▌▌▌█▌▌▌ █▌█▌▌▌ ▌█▌▌█▌▌ ▌█▌█▌▌█▌ ▌▌▌█▌▌▌ █▌▌█▌▌█▌ ▌▌ ▌█▌█▌▌   ";
+            barcode = new FieldReadOnly<TForm>(0, 0, barcode39, barcode39.Length, null);
+            header = new FieldReadOnly<TForm>(0, 1, Configuration.Header, 60, null, Configuration.ActiveBackgroundColor, Configuration.ActiveForegroundColor);
         }
         public override void Display()
         {
-            Configuration.DisplayLogo();
+            barcode.Display();
             header.Display();
-            //hlavicka.Display();
-            Console.ResetColor();
+            ResetColor();
             Console.SetCursorPosition(LeftPosition, TopPosition);
             Console.Write(Configuration.line);
             Console.SetCursorPosition(LeftPosition, TopPosition + 1 + Configuration.MaxLines);

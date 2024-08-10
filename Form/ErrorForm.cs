@@ -3,18 +3,18 @@ using TiskStitku;
 
 namespace Form
 {
-    public class ErrorForm : ConsoleForm
+    public class ErrorForm : ConsoleForm<string>
     {
-        private FieldReadOnly Label { get; set; }
-        private FieldReadOnly Source { get; set; }
-        private FieldReadOnly Message { get; set; }
-        private FieldReadOnly Notification { get; set; }
+        private FieldReadOnly<string> Label { get; set; }
+        private FieldReadOnly<string> Source { get; set; }
+        private FieldReadOnly<string> Message { get; set; }
+        private FieldReadOnly<string> Notification { get; set; }
         public ErrorForm()
         {
-            Label = new FieldReadOnly(3, 6, "Chybka se vloudila!", 25, this, ConsoleColor.White, ConsoleColor.Red);
-            Source = new FieldReadOnly(3, 8, "Zdroj: ", 25, this);
-            Message = new FieldReadOnly(3, 11, "Popis: ", 25, this);
-            Notification = new FieldReadOnly(3, Configuration.MaxLines + 7, "Pokračuj stisknutím libovolné klávesy...", 25, this);
+            Label = new FieldReadOnly<string>(3, 4, "Chybička se vloudila!", 25, this, ConsoleColor.White, ConsoleColor.Red);
+            Source = new FieldReadOnly<string>(3, 7, "Zdroj: ", 25, this);
+            Message = new FieldReadOnly<string>(3, 10, "Popis: ", 25, this);
+            Notification = new FieldReadOnly<string>(3, Configuration.MaxLines + 7, "Stisknutím libovolné klávesy program ukončíš...", 25, this);
         }
         public void Display(object sender, TiskStitku.ErrorEventArgs eventArgs)
         {
@@ -40,15 +40,25 @@ namespace Form
             }
             Source.Label += eventArgs.Source;
             Message.Label += messageFormated;
-            Console.ResetColor();
+            ResetColor();
             Console.Clear();
-            Background bg = new Background();
+            Background<string> bg = new Background<string>();
             bg.Display();
             Label.Display();
             Source.Display();
             Message.Display();
             Notification.Display();
             Console.ReadKey();
+        }
+
+        public override void Display()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string Fill()
+        {
+            throw new NotImplementedException();
         }
     }
 }

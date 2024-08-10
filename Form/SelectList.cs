@@ -11,7 +11,7 @@ namespace Form
 {
     //genericka trida pro vyber polozky z listu pomoci 
     //kurzorovych sipek a enter
-    class SelectFromList<T> : FormItem where T : IComparable
+    class SelectFromList<T> : ConsoleForm<string> where T : IComparable
     {
         private List<T> primaryItems;
         private List<T> items = new List<T>(); //interni list polozek
@@ -26,8 +26,8 @@ namespace Form
         private bool saveCursosPosition = true; //zda ukladat posledni pozici
         private bool saveFilter = true;
         // private readonly FieldReadOnly header;
-        private readonly FieldReadOnly help;
-        private readonly UInputField<string> filterInput;
+        private readonly FieldReadOnly<string> help;
+        private readonly UInputField<string,string> filterInput;
         //konstruktory
         public SelectFromList()
         {
@@ -38,8 +38,8 @@ namespace Form
             pageDU = displayHeight;
             //string text = string.Format("Výběr \"ENTER\", návrat \"ESC\", pohyb \"\u2191, \u2193, pgUp, pgDown, Home, End\"\n     ukládání filtru: {0} přepnout: \"BackSpace\".", saveFilter == true ? "ON" : "OFF");
             string text = string.Format("Výběr \"ENTER\", návrat \"ESC\", pohyb \"\u2191, \u2193, pgUp, pgDown, Home, End\"\n     Pro editaci nastavení zadej: {0}", Configuration.Editace);
-            help = new FieldReadOnly(5, displayHeight + yStartPos + 2, text, text.Length + 1, null);
-            filterInput = new UInputField<string>("filter", xStartPos + 5, displayHeight + yStartPos + 4, "Filtr: ", 40, null, "", null, new AditionalParms()
+            help = new FieldReadOnly<string>(5, displayHeight + yStartPos + 2, text, text.Length + 1, null);
+            filterInput = new UInputField<string,string>("filter", xStartPos + 5, displayHeight + yStartPos + 4, "Filtr: ", 40, null, "", null, new AditionalParms()
             {
                 cursorToStart = false,
                 end = true,
@@ -234,7 +234,7 @@ namespace Form
         {
             saveCursosPosition = !saveCursosPosition;
         }
-        private T Quit()
+        private new T Quit()
         {
             if (isRecusive || (saveFilter && !string.IsNullOrEmpty(FilterInfo)))
             {
@@ -291,7 +291,7 @@ namespace Form
             int positionInTable = currentPosition % visibleRows;
             int startOfTable = currentPosition - positionInTable;
             //reset barev konzole
-            Console.ResetColor();
+            ResetColor();
             //vypis radku podle visible rows
             for (int i = 0; i < visibleRows; i++)
             {
@@ -307,13 +307,13 @@ namespace Form
             //zvyrazneni aktivniho radku
             Console.SetCursorPosition(xStartPos, yStartPos + positionInTable + 1);
             //Console.BackgroundColor = ConsoleColor.DarkYellow; //hodit do konfigurace
-            Console.BackgroundColor = Configuration.BackgroundColor;
-            Console.ForegroundColor = Configuration.ForegroundColor;
+            Console.BackgroundColor = Configuration.ActiveBackgroundColor;
+            Console.ForegroundColor = Configuration.ActiveForegroundColor;
             //vypsani zvyrazneneho radku
             if (items.Count != 0)
                 //Console.Write((string.Empty.PadRight(Polozka.col1) + itemList[poziceVListu]).PadRight(Console.WindowWidth));
                 Console.Write((string.Format("{0,3}.", positionInTable + 1).PadRight(Polozka.col1) + items[currentPosition]).PadRight(Console.WindowWidth));
-            Console.ResetColor();
+            ResetColor();
         }
         //https://stackoverflow.com/questions/249087/how-do-i-remove-diacritics-accents-from-a-string-in-net
         static string RemoveDiacritics(string text)
@@ -338,15 +338,7 @@ namespace Form
         {
             throw new NotImplementedException();
         }
-        public override void SwitchTo(bool forward)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void ToggleVisible(bool display)
-        {
-            throw new NotImplementedException();
-        }
+        
         private List<T> FilterItems(List<T> items, string filter)
         {
             filter = RemoveDiacritics(filter.ToLower());
@@ -387,10 +379,10 @@ namespace Form
         }
         private void ResetConsole()
         {
-            Console.ResetColor();
+            ResetColor();
             Console.Clear();
             Console.CursorVisible = false;
-            new Background().Display();
+            new Background<string>().Display();
             help.Display();
             //zobrazeni vstupniho pole pro filtr
             if (isRecusive)
@@ -408,6 +400,11 @@ namespace Form
             }
             filterInput.Display();
             // if (typeof(T) == typeof(Polozka)) header.Display();
+        }
+
+        public override string Fill()
+        {
+            throw new NotImplementedException();
         }
     }
 }
