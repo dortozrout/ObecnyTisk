@@ -42,7 +42,7 @@ namespace TiskStitku
 		}
 		public void EditTemplates()
 		{
-			RunExternalProcess("explorer",Path.GetFullPath(Configuration.TemplatesDirectory));
+			RunExternalProcess("explorer", Path.GetFullPath(Configuration.TemplatesDirectory));
 			//RunExternalProcess(@"C:\Program Files (x86)\FreeCommander\FreeCommander.exe", Path.GetFullPath(Configuration.TemplatesDirectory));
 		}
 		public void EditConfigFile(bool waitForExit = false)
@@ -56,12 +56,13 @@ namespace TiskStitku
 		public void ShowReadme()
 		{
 			//string adrReadMe = @".\Readme.txt";
-			string adrReadMe = @".\zdrojak\Readme.txt";
+			//string adrReadMe = @".\zdrojak\Readme.txt";
+			string adrReadMe = Path.Combine(".", "zdrojak", "Readme.txt");
 			if (File.Exists(adrReadMe))
 			{
 				RunExternalProcess(path: Path.GetFullPath(adrReadMe));
 			}
-			else ErrorHandler.HandleError(this, new FileNotFoundException(" Nenašel jsem soubor s nápovědou:" + Path.GetFullPath(adrReadMe)));
+			else ErrorHandler.HandleError(this, new FileNotFoundException("Nenašel jsem soubor s nápovědou:" + Path.GetFullPath(adrReadMe)));
 		}
 		public void Restart()
 		{
@@ -70,9 +71,9 @@ namespace TiskStitku
 			//aby stary beh nepokracoval
 			Environment.Exit(0);
 		}
-		
-		// private void RunExternalProcess(string command = "notepad.exe", string path = "", bool waitForExit = false)
-		private void RunExternalProcess(string command = "mousepad", string path = "", bool waitForExit = false)
+
+		//private void RunExternalProcess(string command = "mousepad", string path = "", bool waitForExit = false)
+		private void RunExternalProcess(string command = "notepad.exe", string path = "", bool waitForExit = false)
 		{
 			try
 			{

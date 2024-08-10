@@ -13,8 +13,8 @@ namespace Form
             LeftPosition = 0;
             TopPosition = 5;
             string barcode39 = "   ▌ ▌█▌█▌▌▌█▌▌▌ █▌█▌▌▌ ▌█▌▌█▌▌ ▌█▌█▌▌█▌ ▌▌▌█▌▌▌ █▌▌█▌▌█▌ ▌▌ ▌█▌█▌▌   ";
-            barcode = new FieldReadOnly<TForm>(0, 0, barcode39, barcode39.Length, null);
-            header = new FieldReadOnly<TForm>(0, 1, Configuration.Header, 60, null, Configuration.ActiveBackgroundColor, Configuration.ActiveForegroundColor);
+            barcode = new FieldReadOnly<TForm>(0, 0, barcode39, barcode39.Length, null,ConsoleColor.Black,ConsoleColor.Gray);
+            header = new FieldReadOnly<TForm>(0, 1, Configuration.Header, Console.WindowWidth, null, Configuration.ActiveBackgroundColor, Configuration.ActiveForegroundColor);
         }
         public override void Display()
         {

@@ -27,7 +27,7 @@ namespace Form
         private bool saveFilter = true;
         // private readonly FieldReadOnly header;
         private readonly FieldReadOnly<string> help;
-        private readonly UInputField<string,string> filterInput;
+        private readonly UInputField<string, string> filterInput;
         //konstruktory
         public SelectFromList()
         {
@@ -37,9 +37,9 @@ namespace Form
             yStartPos = 5;
             pageDU = displayHeight;
             //string text = string.Format("Výběr \"ENTER\", návrat \"ESC\", pohyb \"\u2191, \u2193, pgUp, pgDown, Home, End\"\n     ukládání filtru: {0} přepnout: \"BackSpace\".", saveFilter == true ? "ON" : "OFF");
-            string text = string.Format("Výběr \"ENTER\", návrat \"ESC\", pohyb \"\u2191, \u2193, pgUp, pgDown, Home, End\"\n     Pro editaci nastavení zadej: {0}", Configuration.Editace);
-            help = new FieldReadOnly<string>(5, displayHeight + yStartPos + 2, text, text.Length + 1, null);
-            filterInput = new UInputField<string,string>("filter", xStartPos + 5, displayHeight + yStartPos + 4, "Filtr: ", 40, null, "", null, new AditionalParms()
+            string text = string.Format("Výběr \"ENTER\", návrat \"ESC\", pohyb \"\u2191, \u2193, pgUp, pgDown, Home, End\"\nPro editaci nastavení zadej: {0}", Configuration.Editace);
+            help = new FieldReadOnly<string>(5, displayHeight + yStartPos + 2, text, Console.WindowWidth - 5, null);
+            filterInput = new UInputField<string, string>("filter", xStartPos + 5, displayHeight + yStartPos + 4, "Filtr: ", 40, null, "", null, new AditionalParms()
             {
                 cursorToStart = false,
                 end = true,
@@ -338,7 +338,7 @@ namespace Form
         {
             throw new NotImplementedException();
         }
-        
+
         private List<T> FilterItems(List<T> items, string filter)
         {
             filter = RemoveDiacritics(filter.ToLower());
