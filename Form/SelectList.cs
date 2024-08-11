@@ -53,7 +53,7 @@ namespace Form
         }
 
         //metoda ktera vraci vybranou polozku z listu
-        public T Select(List<T> values)
+        public List<T> Select(List<T> values)
         {
             //reset konzole
             ResetConsole();
@@ -69,7 +69,7 @@ namespace Form
                     return Select(primaryItems);
                 }
                 ShowEmptySelectionMessage();
-                return default(T);
+                return default;
             }
 
             //setrideni
@@ -113,7 +113,7 @@ namespace Form
             }
             return NavigateSelection(currentPosition);
         }
-        private T NavigateSelection(int currentPosition)
+        private List<T> NavigateSelection(int currentPosition)
         {
             ConsoleKeyInfo keyPress;
             //int poziceVListu = 0;
@@ -158,7 +158,7 @@ namespace Form
                         return HandleFilterInput(keyPress, currentPosition);
                 }
             } while (keyPress.Key != ConsoleKey.Enter); //ceka se ne stisknuti ENTER
-            return selectedItem;
+            return new List<T>() { selectedItem }; ;
         }
         private void MoveDown(ref int currentPosition)
         {
@@ -234,7 +234,7 @@ namespace Form
         {
             saveCursosPosition = !saveCursosPosition;
         }
-        private new T Quit()
+        private new List<T> Quit()
         {
             if (isRecusive || (saveFilter && !string.IsNullOrEmpty(FilterInfo)))
             {
@@ -242,9 +242,9 @@ namespace Form
                 FilterInfo = string.Empty;
                 return Select(primaryItems);
             }
-            return default(T);
+            return default;
         }
-        private T HandleFilterInput(ConsoleKeyInfo keyPress, int currentPosition)
+        private List<T> HandleFilterInput(ConsoleKeyInfo keyPress, int currentPosition)
         {
             //zviditelneni kurzoru
             Console.CursorVisible = true;
@@ -264,26 +264,36 @@ namespace Form
                 new Manager().Interface();
             }
             //odchytneme ciselne zadani
-            int inputNumber;
             int startOfTable = currentPosition - (currentPosition % visibleRows);
-            if (int.TryParse(filter, out inputNumber))
+            if (TrySelectItems(filter, startOfTable, items, out List<T> selectedItems1))
             {
-                if (inputNumber > 0 && inputNumber <= visibleRows && startOfTable + inputNumber <= items.Count)
-                {
-                    int positionOfItem = startOfTable + inputNumber - 1;
-                    return SelectCurrentItem(ref positionOfItem);
-                }
+                if (saveFilter) lastCursorPos = currentPosition;
+                else lastCursorPos = primaryItems.FindIndex(p => p.Equals(selectedItems1[0]));
+                isRecusive = false;
+                return selectedItems1;
             }
+
+            // int inputNumber;
+            // int startOfTable = currentPosition - (currentPosition % visibleRows);
+            // if (int.TryParse(filter, out inputNumber))
+            // {
+            //     if (inputNumber > 0 && inputNumber <= visibleRows && startOfTable + inputNumber <= items.Count)
+            //     {
+            //         int positionOfItem = startOfTable + inputNumber - 1;
+            //         return SelectCurrentItem(ref positionOfItem);
+            //     }
+            // }
+
             //aplikujeme filtr na polozky
-            List<T> selectedItems = FilterItems(items, filter);
+            List<T> fileredItems = FilterItems(items, filter);
             //pro osetreni zadaneho navratu z rekurze
             isRecusive = true;
             //zobrazeni aplikovaneho filtru
             FilterInfo += "+" + filter;
             FilterInfo = string.Format("{0}", FilterInfo.Trim('+'));
             //vyber z vyfiltrovanych polozek
-            T selectedItem = Select(selectedItems);
-            return selectedItem;
+            List<T> selectedItems = Select(fileredItems);
+            return selectedItems;
         }
         //pomocna metoda pro vypis radku seznamu
         private void Display(int visibleRows, int currentPosition)
@@ -405,6 +415,81 @@ namespace Form
         public override string Fill()
         {
             throw new NotImplementedException();
+        }
+        private bool TrySelectItems(
+        string input,
+        int startOfTable,
+        List<T> availableItems,
+        out List<T> selectedItems)
+        {
+            selectedItems = new List<T>();
+
+            try
+            {
+                var ranges = input.Split(',');
+                foreach (var range in ranges)
+                {
+                    if (range.Contains('-'))
+                    {
+                        var bounds = range.Split('-');
+                        int startIndex = int.Parse(bounds[0]);
+                        int endIndex = int.Parse(bounds[1]);
+
+                        // Validate bounds are within 1 to visibleRows
+                        if (startIndex < 1 || startIndex > visibleRows || endIndex < 1 || endIndex > visibleRows)
+                        {
+                            return false;
+                        }
+
+                        int adjustedStartIndex = startIndex - 1 + startOfTable;  // Convert to zero-based index
+                        int adjustedEndIndex = endIndex - 1 + startOfTable;
+
+                        // Validate adjusted indices within availableItems
+                        if (adjustedStartIndex < 0 || adjustedEndIndex >= availableItems.Count || adjustedStartIndex > adjustedEndIndex)
+                        {
+                            return false;
+                        }
+
+                        for (int i = adjustedStartIndex; i <= adjustedEndIndex; i++)
+                        {
+                            selectedItems.Add(availableItems[i]);
+                        }
+                    }
+                    else
+                    {
+                        int index = int.Parse(range);
+
+                        // Validate index is within 1 to visibleRows
+                        if (index < 1 || index > visibleRows)
+                        {
+                            return false;
+                        }
+
+                        int adjustedIndex = index - 1 + startOfTable; // Convert to zero-based index
+
+                        // Validate adjusted index within availableItems
+                        if (adjustedIndex >= availableItems.Count)
+                        {
+                            return false;
+                        }
+
+                        selectedItems.Add(availableItems[adjustedIndex]);
+                    }
+                }
+
+                return true;
+            }
+            catch (FormatException)
+            {
+                // Handle parsing errors
+                return false;
+            }
+            catch (Exception ex)
+            {
+                // Handle any other unexpected exceptions
+                ErrorHandler.HandleError(this, ex);
+                return false;
+            }
         }
     }
 }

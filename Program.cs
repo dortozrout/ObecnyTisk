@@ -42,7 +42,7 @@ namespace TiskStitku
 				Configuration.Uzivatel = user;
 			}
 			//deklarace promennych
-			EplFile eplPrikaz;
+			List<EplFile> eplPrikazy;
 			//nacteni epl prikazu
 			List<EplFile> eplFiles = Configuration.HledanyText == "" ? new EplFileLoader().LoadFiles(Configuration.TemplatesDirectory) : new EplFileLoader().LoadFiles(Configuration.TemplatesDirectory, Configuration.HledanyText);
 
@@ -97,14 +97,17 @@ namespace TiskStitku
 				SelectFromList<EplFile> selectList = new SelectFromList<EplFile>();
 				//Parser parser=new Parser();
 				Parser parser = new Parser();
-				eplPrikaz = selectList.Select(eplFiles);
-				while (eplPrikaz != null)
+				eplPrikazy = selectList.Select(eplFiles);
+				while (eplPrikazy.Count != 0)
 				{
-					parser.Process(ref eplPrikaz);
-					if (eplPrikaz.print)
-						Tisk.TiskniStitek(eplPrikaz.Telo);
-					else eplPrikaz.print = true; //reset
-					eplPrikaz = selectList.Select(eplFiles);
+					for (int i = 0; i < eplPrikazy.Count; i++)
+					{
+						parser.Process(ref eplPrikazy[i]);
+						if (eplPrikazy.print)
+							Tisk.TiskniStitek(eplPrikazy.Telo);
+						else eplPrikazy.print = true; //reset
+					}
+					eplPrikazy = selectList.Select(eplFiles);
 				}
 			}
 		}
