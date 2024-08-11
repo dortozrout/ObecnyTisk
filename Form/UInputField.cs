@@ -94,6 +94,8 @@ namespace Form
         //aktivace pole pro zapis
         public virtual void Activate()
         {
+            //reset Quit
+            Quit=false;
             //nastaveni barev podle skladu
             SetConsoleColors();
             //nastaveni pozice kurzoru
