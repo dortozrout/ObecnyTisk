@@ -18,7 +18,8 @@ namespace TiskStitku
 			SelectFromList<string> selecList = new SelectFromList<string>();
 			do
 			{
-				volba = selecList.Select(seznamVoleb);
+				var selection = selecList.Select(seznamVoleb);
+				volba = selection?[0];
 				switch (seznamVoleb.IndexOf(volba))
 				{
 					case 1:

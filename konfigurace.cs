@@ -248,11 +248,11 @@ namespace TiskStitku
 					break;
 			}
 			int align = 72;
-			Header = string.Format(" {7}{0} Konfigurační soubor: {1}"
+			Header = string.Format("{7}{0}Konfigurační soubor: {1}"
 						+ "Adresa tiskárny: {2}{0}"
-						+ " Adresář se soubory:  {4}"
+						+ "Adresář se soubory:  {4}"
 						+ "Typ tiskárny:    {3}{0}"
-						+ " Kódování souborů:    {5}"
+						+ "Kódování souborů:    {5}"
 						+ "{6}{0}",
 						Environment.NewLine, Path.Combine(ConfigPath, ConfigFile).PadRight(align - 22), PrinterAddress, TypTiskarnySlovy,
 						Path.GetFullPath(TemplatesDirectory).PadRight(align - 22), Encoding.PadRight(align - 22), RuntimeInformation.FrameworkDescription, AppName);

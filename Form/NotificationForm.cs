@@ -10,9 +10,9 @@ namespace Form
         private FieldReadOnly<string> Notification { get; set; }
         public NotificationForm(string label, string message)
         {
-            Label = new FieldReadOnly<string>(3, 4, label, 25, this);
+            Label = new FieldReadOnly<string>(3, 4, label, label.Length, this);
             //string messageFormated = message.Replace(Environment.NewLine, Environment.NewLine + "   ");
-            Message = new FieldReadOnly<string>(3, 7, message, 25, this);
+            Message = new FieldReadOnly<string>(3, 7, message, message.Length, this);
             string prompt = "Pokračuj stisknutím libovolné klávesy...";
             Notification = new FieldReadOnly<string>(3, Configuration.MaxLines + 7, prompt, prompt.Length, this);
         }

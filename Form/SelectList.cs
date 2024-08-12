@@ -472,7 +472,6 @@ namespace Form
                         {
                             return false;
                         }
-
                         selectedItems.Add(availableItems[adjustedIndex]);
                     }
                 }

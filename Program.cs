@@ -98,14 +98,15 @@ namespace TiskStitku
 				//Parser parser=new Parser();
 				Parser parser = new Parser();
 				eplPrikazy = selectList.Select(eplFiles);
-				while (eplPrikazy.Count != 0)
+				while (eplPrikazy != null)
 				{
 					for (int i = 0; i < eplPrikazy.Count; i++)
 					{
-						parser.Process(ref eplPrikazy[i]);
-						if (eplPrikazy.print)
-							Tisk.TiskniStitek(eplPrikazy.Telo);
-						else eplPrikazy.print = true; //reset
+						EplFile currentEplFile=eplPrikazy[i];
+						parser.Process(ref currentEplFile);
+						if (currentEplFile.print)
+							Tisk.TiskniStitek(currentEplFile.Telo);
+						else currentEplFile.print = true; //reset
 					}
 					eplPrikazy = selectList.Select(eplFiles);
 				}

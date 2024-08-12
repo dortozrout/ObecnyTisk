@@ -46,12 +46,13 @@ namespace Form
             if (display) Display();
             else Hide();
         }
-        
+
         private void DisplayText(string text, bool erase = false)
         {
-            var textArray = text.Split(Environment.NewLine);
+            var textArray = text.Split('\n');
             for (int i = 0; i < textArray.Length; i++)
             {
+                textArray[i] = textArray[i].TrimEnd();
                 textArray[i] = erase
                     ? new string(' ', Length)
                     : textArray[i].PadRight(Length).Substring(0, Length);
