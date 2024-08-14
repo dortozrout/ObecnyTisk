@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using TiskStitku;
+using Labels;
 
 namespace Form
 {

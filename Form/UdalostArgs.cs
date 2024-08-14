@@ -1,6 +1,6 @@
 using System;
 
-namespace TiskStitku
+namespace Labels
 {
     class UdalostArgs : EventArgs
     {

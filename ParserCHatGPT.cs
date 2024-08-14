@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using Form;
 
-namespace TiskStitku
+namespace Labels
 {
     public class Parser
     {

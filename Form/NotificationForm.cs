@@ -1,5 +1,5 @@
 using System;
-using TiskStitku;
+using Labels;
 
 namespace Form
 {

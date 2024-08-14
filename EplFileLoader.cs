@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 
-namespace TiskStitku
+namespace Labels
 {
     public class EplFileLoader
     {

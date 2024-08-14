@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Xml;
 using System.Linq;
-using TiskStitku;
+using Labels;
 using System.Text;
 using System.Globalization;
 

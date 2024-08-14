@@ -7,7 +7,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Form;
 
-namespace TiskStitku
+namespace Labels
 {
 	public class Manager
 	{

@@ -1,7 +1,7 @@
 using System;
 using Form;
 
-namespace TiskStitku
+namespace Labels
 {
     public class Tisk
     {

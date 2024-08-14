@@ -1,6 +1,6 @@
 using System;
 
-namespace TiskStitku
+namespace Labels
 {
 
 	public class Polozka : IComparable //trida pro ulozeni polozky

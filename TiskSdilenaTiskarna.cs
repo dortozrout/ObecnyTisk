@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace TiskStitku
+namespace Labels
 {
 	public static class TiskSdilenaTiskarna
 	{

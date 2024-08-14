@@ -1,5 +1,5 @@
 using System;
-using TiskStitku;
+using Labels;
 
 namespace Form
 {
@@ -18,7 +18,7 @@ namespace Form
             string notification = "Stisknutím libovolné klávesy program ukončíš...";
             Notification = new FieldReadOnly<string>(3, Configuration.MaxLines + 7, notification, notification.Length, this);
         }
-        public void Display(object sender, TiskStitku.ErrorEventArgs eventArgs)
+        public void Display(object sender, Labels.ErrorEventArgs eventArgs)
         {
             string message = eventArgs.Message;
             string messageFormated = "\n";

@@ -1,6 +1,6 @@
 using System;
 
-namespace TiskStitku
+namespace Labels
 {
     public class ErrorEventArgs : EventArgs
     {

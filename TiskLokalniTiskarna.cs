@@ -3,7 +3,7 @@ using System.Text;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace TiskStitku
+namespace Labels
 {
 	public class TiskLokalniTiskarna
 	{

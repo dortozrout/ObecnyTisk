@@ -5,7 +5,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using Form;
 
-namespace TiskStitku
+namespace Labels
 {
 
 	class Program
@@ -42,9 +42,11 @@ namespace TiskStitku
 				Configuration.Uzivatel = user;
 			}
 			//deklarace promennych
-			List<EplFile> eplPrikazy;
+			List<EplFile> selectedEplFiles;
 			//nacteni epl prikazu
-			List<EplFile> eplFiles = Configuration.HledanyText == "" ? new EplFileLoader().LoadFiles(Configuration.TemplatesDirectory) : new EplFileLoader().LoadFiles(Configuration.TemplatesDirectory, Configuration.HledanyText);
+			List<EplFile> eplFiles = Configuration.HledanyText == "" ?
+				new EplFileLoader().LoadFiles(Configuration.TemplatesDirectory) :
+				new EplFileLoader().LoadFiles(Configuration.TemplatesDirectory, Configuration.HledanyText);
 
 			//Program muze bezet ve 3 modech - tisk pouze jednoho souboru podle konfiguraku
 			//                               - vyber ze souboru vyfiltrovanych jiz v konfiguraku
@@ -95,20 +97,19 @@ namespace TiskStitku
 					  Configuration.HledanyText, Configuration.TemplatesDirectory)));
 				}
 				SelectFromList<EplFile> selectList = new SelectFromList<EplFile>();
-				//Parser parser=new Parser();
 				Parser parser = new Parser();
-				eplPrikazy = selectList.Select(eplFiles);
-				while (eplPrikazy != null)
+				selectedEplFiles = selectList.Select(eplFiles);
+				while (selectedEplFiles != null)
 				{
-					for (int i = 0; i < eplPrikazy.Count; i++)
+					for (int i = 0; i < selectedEplFiles.Count; i++)
 					{
-						EplFile currentEplFile=eplPrikazy[i];
+						EplFile currentEplFile = selectedEplFiles[i];
 						parser.Process(ref currentEplFile);
 						if (currentEplFile.print)
 							Tisk.TiskniStitek(currentEplFile.Telo);
 						else currentEplFile.print = true; //reset
 					}
-					eplPrikazy = selectList.Select(eplFiles);
+					selectedEplFiles = selectList.Select(eplFiles);
 				}
 			}
 		}

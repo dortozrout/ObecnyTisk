@@ -3,10 +3,10 @@ using System.IO;
 using System.Diagnostics;
 using System.Text;
 using System.Runtime.InteropServices;
-using TiskStitku;
+using Labels;
 using Form;
 
-namespace TiskStitku
+namespace Labels
 {
 	/// <summary>
 	/// Static class that holds the configuration for the program.

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace TiskStitku
+namespace Labels
 {
 	public class EplFile : IComparable
 	{
