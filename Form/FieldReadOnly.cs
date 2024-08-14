@@ -52,7 +52,7 @@ namespace Form
             var textArray = text.Split('\n');
             for (int i = 0; i < textArray.Length; i++)
             {
-                textArray[i] = textArray[i].TrimEnd();
+                textArray[i] = textArray[i].Trim();
                 textArray[i] = erase
                     ? new string(' ', Length)
                     : textArray[i].PadRight(Length).Substring(0, Length);

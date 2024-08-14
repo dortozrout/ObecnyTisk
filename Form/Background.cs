@@ -12,8 +12,9 @@ namespace Form
         {
             LeftPosition = 0;
             TopPosition = 5;
-            string barcode39 = "   ▌ ▌█▌█▌▌▌█▌▌▌ █▌█▌▌▌ ▌█▌▌█▌▌ ▌█▌█▌▌█▌ ▌▌▌█▌▌▌ █▌▌█▌▌█▌ ▌▌ ▌█▌█▌▌   ";
-            barcode = new FieldReadOnly<TForm>(0, 0, barcode39, barcode39.Length, null,ConsoleColor.Black,ConsoleColor.Gray);
+          //string barcode39 = "   ▌ ▌█▌█▌▌▌█▌▌▌ █▌█▌▌▌ ▌█▌▌█▌▌ ▌█▌█▌▌█▌ ▌▌▌█▌▌▌ █▌▌█▌▌█▌ ▌▌ ▌█▌█▌▌   ";
+            string barcode39 = "███▐█▐ ▐ ▐▐▐ ▐▐▐█ ▐ ▐▐▐█▐ ▐▐ ▐▐█▐ ▐ ▐▐ ▐█▐▐▐ ▐▐▐█ ▐▐ ▐▐ ▐█▐▐█▐ ▐ ▐▐███";
+            barcode = new FieldReadOnly<TForm>(0, 0, barcode39, barcode39.Length, null, ConsoleColor.Gray, ConsoleColor.Black);
             header = new FieldReadOnly<TForm>(1, 1, Configuration.Header, Console.WindowWidth, null, Configuration.ActiveBackgroundColor, Configuration.ActiveForegroundColor);
         }
         public override void Display()
