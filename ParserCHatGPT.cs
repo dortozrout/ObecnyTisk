@@ -48,7 +48,7 @@ namespace Labels
         {
             continueProcessing = true;
             CurrentEplFile = eplFile;
-            eplFile.Telo = FillOutTemplate(eplFile.Sablona);
+            eplFile.Body = FillOutTemplate(eplFile.Template);
         }
 
         private string FillOutTemplate(string template)
@@ -105,8 +105,8 @@ namespace Labels
             if (key == "<GS1>")
                 return "\u001D";
 
-            if (Configuration.Prihlasit && key == "<uzivatel>")
-                return Configuration.Uzivatel;
+            if (Configuration.Login && key == "<uzivatel>")
+                return Configuration.User;
 
             if (key.StartsWith("<time"))
                 return HandleTimeKey(key);

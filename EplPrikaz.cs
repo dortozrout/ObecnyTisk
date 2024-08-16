@@ -8,28 +8,28 @@ namespace Labels
 {
 	public class EplFile : IComparable
 	{
-		public string AdresaSouboru { get; private set; }
-		public string JmenoSouboru { get; private set; }
-		public string Sablona { get; private set; }
-		public string Telo { get; set; }
+		public string FileAddress { get; private set; }
+		public string FileName { get; private set; }
+		public string Template { get; private set; }
+		public string Body { get; set; }
 
 		public bool print = true;
-		public EplFile(string adresaSouboru, string sablona) //konstruktor
+		public EplFile(string fileAddress, string template) //konstruktor
 		{
-			AdresaSouboru = adresaSouboru;
-			JmenoSouboru = Path.GetFileName(AdresaSouboru);
-			Sablona = sablona;
+			FileAddress = fileAddress;
+			FileName = Path.GetFileName(FileAddress);
+			Template = template;
 		}
 
 		public int CompareTo(object obj)
 		{
-			EplFile anotherEplPrikaz = (EplFile)obj;
-			int rv = string.Compare(JmenoSouboru, anotherEplPrikaz.JmenoSouboru);
+			EplFile anotherEplFile = (EplFile)obj;
+			int rv = string.Compare(FileName, anotherEplFile.FileName);
 			return rv;
 		}
 		public override string ToString()
 		{
-			return JmenoSouboru;
+			return FileName;
 		}
 	}
 }

@@ -13,14 +13,14 @@ namespace Labels
 	{
 		public void Interface()
 		{
-			List<string> seznamVoleb = new List<string>() { "Editace souboru s daty", "Editace šablon", "Editace konfiguračního souboru", "Nápověda" };
-			string volba;
+			List<string> choices = new List<string>() { "Editace souboru s daty", "Editace šablon", "Editace konfiguračního souboru", "Nápověda" };
+			string selectedChoice;
 			SelectFromList<string> selecList = new SelectFromList<string>();
 			do
 			{
-				var selection = selecList.Select(seznamVoleb);
-				volba = selection?[0];
-				switch (seznamVoleb.IndexOf(volba))
+				var selection = selecList.Select(choices);
+				selectedChoice = selection?[0];
+				switch (choices.IndexOf(selectedChoice))
 				{
 					case 1:
 						EditData();
@@ -38,7 +38,7 @@ namespace Labels
 						break;
 				}
 
-			} while (volba != null);
+			} while (selectedChoice != null);
 			Restart();
 		}
 		public void EditTemplates()

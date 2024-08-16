@@ -26,9 +26,9 @@ namespace Form
         }
         public T Fill(EplFile eplFile, string question, string defaultText)
         {
-            string fileName=string.Format("Tisk souboru: {0}", eplFile.JmenoSouboru);
+            string fileName=string.Format("Tisk souboru: {0}", eplFile.FileName);
             EplFileName = new FieldReadOnly<T>("eplfilespec", 3, 7, fileName, fileName.Length, this);
-            EplTemplate = new FieldReadOnly<T>("epltemplate", 3, 9, string.Format("Šablona:\n{0}", eplFile.Sablona), Console.WindowWidth-3, this);
+            EplTemplate = new FieldReadOnly<T>("epltemplate", 3, 9, string.Format("Šablona:\n{0}", eplFile.Template), Console.WindowWidth-3, this);
             AditionalParms ap = new AditionalParms()
             {
                 switchToNext = new List<ConsoleKeyInfo>() { new ConsoleKeyInfo('\r', ConsoleKey.Enter, false, false, false) },

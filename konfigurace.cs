@@ -28,7 +28,7 @@ namespace Labels
 		//Adresář se soubory obsahujícími EPL příkazy
 		public static string TemplatesDirectory { get; private set; }
 		//Vyraz pro vyhledani jednoho nebo nekolika epl prikazu v adresari
-		public static string HledanyText { get; private set; }
+		public static string SearchedText { get; private set; }
 		//Tisk pouze jednoho souboru?
 		public static bool PrintOneFile { get; private set; }
 		//Opakovany tisk 1 souboru?
@@ -39,17 +39,17 @@ namespace Labels
 		public static string PrinterAddress { get; private set; }
 		//typ tiskarny - lokalni, sdilena nebo sitova
 		public static int PrinterType { get; private set; }
-		public static string TypTiskarnySlovy { get; private set; }
+		public static string PrinterTypeByWords { get; private set; }
 		//jestli vyzadovat zadani login
-		public static bool Prihlasit { get; private set; }
+		public static bool Login { get; private set; }
 		//uzivatelske jmeno
-		public static string Uzivatel { get; set; }
+		public static string User { get; set; }
 		//adresa souboru s daty expirace, sarze atd.
 		public static string PrimaryDataAdress { get; private set; }
 		//klicove slovo pro spusteni spravce konfigurace
 		public const string Editace = "edit";
 		//kodovani pouzivane v epl prikazech "I8,B"
-		public const string EplEncoding="windows-1250"; 
+		public const string EplEncoding = "windows-1250";
 
 		//Maximalni pocet radku kolik se zobrazi nez se zacne vypis posouvat 
 		public const int MaxLines = 20;
@@ -144,7 +144,7 @@ namespace Labels
 									//TemplatesDirectory = value==""?"":Path.GetFullPath(value);
 									break;
 								case "hledanytext":
-									HledanyText = value;
+									SearchedText = value;
 									break;
 								case "jedensoubor":
 									PrintOneFile = bool.Parse(value);
@@ -156,7 +156,7 @@ namespace Labels
 									Encoding = value;
 									break;
 								case "prihlasit":
-									Prihlasit = bool.Parse(value);
+									Login = bool.Parse(value);
 									break;
 								case "data":
 									// PrimaryDataAdress = value;
@@ -233,20 +233,20 @@ namespace Labels
 			switch (PrinterType)
 			{
 				case 0:
-					TypTiskarnySlovy = "sdílená tiskárna";
+					PrinterTypeByWords = "sdílená tiskárna";
 					break;
 				case 1:
-					TypTiskarnySlovy = "lokální tiskárna";
+					PrinterTypeByWords = "lokální tiskárna";
 					break;
 				case 2:
-					TypTiskarnySlovy = "síťová tiskárna";
+					PrinterTypeByWords = "síťová tiskárna";
 					break;
 				case 3:
-					TypTiskarnySlovy = "výstup na obrazovku";
+					PrinterTypeByWords = "výstup na obrazovku";
 					break;
 				default:
 					PrinterType = 3;
-					TypTiskarnySlovy = "výstup na obrazovku";
+					PrinterTypeByWords = "výstup na obrazovku";
 					break;
 			}
 			int align = 72;
@@ -256,7 +256,7 @@ namespace Labels
 						+ "Typ tiskárny:    {3}{0}"
 						+ "Kódování souborů:    {5}"
 						+ "{6}{0}",
-						Environment.NewLine, Path.Combine(ConfigPath, ConfigFile).PadRight(align - 22), PrinterAddress, TypTiskarnySlovy,
+						Environment.NewLine, Path.Combine(ConfigPath, ConfigFile).PadRight(align - 22), PrinterAddress, PrinterTypeByWords,
 						Path.GetFullPath(TemplatesDirectory).PadRight(align - 22), Encoding.PadRight(align - 22), RuntimeInformation.FrameworkDescription, AppName);
 			ActiveBackgroundColor = ConsoleColor.DarkGreen;
 			ActiveForegroundColor = ConsoleColor.Black;

@@ -27,7 +27,7 @@ namespace Labels
             }
             if (filter != null)
             {
-                eplFiles = eplFiles.FindAll(e => e.JmenoSouboru.ToLower().Contains(filter.ToLower()));
+                eplFiles = eplFiles.FindAll(e => e.FileName.Contains(filter.ToLower(), StringComparison.OrdinalIgnoreCase));
             }
             return eplFiles;
         }

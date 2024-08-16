@@ -30,7 +30,7 @@ namespace Labels
 			{
 				Configuration.Load(args[0]);
 			}
-			if (Configuration.Prihlasit)
+			if (Configuration.Login)
 			{
 				LoginForm loginForm = new LoginForm();
 				string user;
@@ -39,14 +39,14 @@ namespace Labels
 					user = loginForm.Fill();
 					if (loginForm.Quit) return;
 				} while (user == string.Empty);
-				Configuration.Uzivatel = user;
+				Configuration.User = user;
 			}
 			//deklarace promennych
 			List<EplFile> selectedEplFiles;
 			//nacteni epl prikazu
-			List<EplFile> eplFiles = Configuration.HledanyText == "" ?
+			List<EplFile> eplFiles = Configuration.SearchedText == "" ?
 				new EplFileLoader().LoadFiles(Configuration.TemplatesDirectory) :
-				new EplFileLoader().LoadFiles(Configuration.TemplatesDirectory, Configuration.HledanyText);
+				new EplFileLoader().LoadFiles(Configuration.TemplatesDirectory, Configuration.SearchedText);
 
 			//Program muze bezet ve 3 modech - tisk pouze jednoho souboru podle konfiguraku
 			//                               - vyber ze souboru vyfiltrovanych jiz v konfiguraku
@@ -66,7 +66,7 @@ namespace Labels
 						{
 							parser.Process(ref eplFile);
 							if (eplFile.print)
-								Printer.PrintLabel(eplFile.Telo);
+								Printer.PrintLabel(eplFile.Body);
 							else return;
 							i++;
 						}
@@ -75,7 +75,7 @@ namespace Labels
 					{
 						parser.Process(ref eplFile);
 						if (eplFile.print)
-							Printer.PrintLabel(eplFile.Telo);
+							Printer.PrintLabel(eplFile.Body);
 					}
 				}
 				catch (Exception ex)
@@ -83,7 +83,7 @@ namespace Labels
 					if (ex is ArgumentOutOfRangeException)
 						ErrorHandler.HandleError("Program",
 						 new IndexOutOfRangeException(string.Format("File not found \"{0}\"!",
-						  Path.GetFullPath(Path.Combine(Configuration.TemplatesDirectory, Configuration.HledanyText)))));
+						  Path.GetFullPath(Path.Combine(Configuration.TemplatesDirectory, Configuration.SearchedText)))));
 					else
 						ErrorHandler.HandleError("Program", ex);
 				}
@@ -94,7 +94,7 @@ namespace Labels
 				{
 					ErrorHandler.HandleError("Program",
 					 new FileNotFoundException(string.Format("No file containing \"{0}\" in directory \"{1}\"!",
-					  Configuration.HledanyText, Configuration.TemplatesDirectory)));
+					  Configuration.SearchedText, Configuration.TemplatesDirectory)));
 				}
 				SelectFromList<EplFile> selectList = new SelectFromList<EplFile>();
 				Parser parser = new Parser();
@@ -106,7 +106,7 @@ namespace Labels
 						EplFile currentEplFile = selectedEplFiles[i];
 						parser.Process(ref currentEplFile);
 						if (currentEplFile.print)
-							Printer.PrintLabel(currentEplFile.Telo);
+							Printer.PrintLabel(currentEplFile.Body);
 						else currentEplFile.print = true; //reset
 					}
 					selectedEplFiles = selectList.Select(eplFiles);
