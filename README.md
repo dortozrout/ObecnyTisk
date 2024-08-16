@@ -9,54 +9,42 @@ výchozím adresáři (%appdata%/TiskStisku/), nebo jinde pokud je specifikovan�
 
 Popis konfiguračního souboru
 ----------------------------
-IPtiskarny:
-
+`IPtiskarny:`
 Následuje adresa nebo název tiskárny Zebra nebo jiné která podporuje tiskový jazyk EPL2 nebo ZPL.
 Lze tisknout na síťové, místní nebo sdílené tiskárny.
 
-TypTiskarny:
-
+`TypTiskarny:`
 Je číslo, které určuje typ tiskárny.
+0 - sdílená tiskárna (např: \\\172.16.54.121\Zebra)  
+1 - lokální (např: TSC_TP2224)  
+2 - síťová (např: PRN196283a-TLP2824, nebo 172.16.36.209)  
+3 - výstup na obrazovku  
 
-0 - sdílená tiskárna (např: \\\172.16.54.121\Zebra)
-
-1 - lokální (např: TSC_TP2224)
-
-2 - síťová (např: PRN196283a-TLP2824, nebo 172.16.36.209)
-
-3 - výstup na obrazovku
-
-Adresar:
-
+`Adresar:`
 Určuje cestu k adresáři kde jsou umístěny šablony EPL příkazů.
 
-HledanyText:
-
+`HledanyText:`
 Nepovinný parametr. Pokud je zadán, zobrazí se pouze soubory které obsahují
-hledanyText. Program přeskočí úvodní dotaz.
+hledanyText.  
 
-JedenSoubor:
-
+`JedenSoubor:`
 TRUE nebo FALSE. Pokud je TRUE vytiskne se pouze jeden soubor.
 
-OpakovanyTisk:
+`OpakovanyTisk:`
 
 TRUE nebo FALSE. Souvisí s parametrem JedenSoubor. Pokud je TRUE, výtisk jednoho souboru
 se opakuje dokud uživatel neukončí aplikaci stisknutím CTRL+C nebo křížkem.
 Výtisk je omezen na 20 cyklů. Tato možnost slouží například pro výtisk několika štítků 
 s ručně zadávanými barkódy.
 
-Kodovani:
-
+`Kodovani:`
 Určuje kódování uložených šablon. Zpravidla UTF-8 nebo windows-1250.
 
-Prihlasit:
-
+`Prihlasit:`
 TRUE nebo FALSE. Určuje zda vyžadovat identifikaci uživatele. Např. pro tisk štítků na alikvoty 
 kontrol.
 
-Data:
-
+`Data:`
 Parametr s cestou k souboru s doplňujícími daty ve tvaru otazka:odpoved.
 Pro pochopení viz popis šablony příkazu.
 
@@ -64,42 +52,34 @@ Všechny parametry se píší bez uvozovek. Můžou obsahovat diakritiku a mezer
 
 Příklad konfiguračního souboru:
 -------------------------------
-\# IP adresa nebo jmeno tiskarny
-
+```
+# IP adresa nebo jmeno tiskarny
 IPtiskarny: PRN196283a-TLP2824
 
-\# typ tiskarny 0 - sdilena, 1 - mistni, 2 - sitova, 3 - výstup na obrazovku
-
+# typ tiskarny 0 - sdilena, 1 - mistni, 2 - sitova, 3 - výstup na obrazovku
 TypTiskarny: 2
 
-\# adresar souboru s epl prikazy
-
+# adresar souboru s epl prikazy
 adresar: C:\Users\infolab\Documents\StitkyNaAlikvoty
 
-\# text ktery se hleda v nazvu souboru
-
+# text ktery se hleda v nazvu souboru
 hledanyText: glyhb
 
-\# jestli se ma tisknout jenom jeden soubor
-
+# jestli se ma tisknout jenom jeden soubor
 jedenSoubor:false
 
-\# jeden soubor se tiskne opakovane
-
+# jeden soubor se tiskne opakovane
 opakovanytisk:false
 
-\# kodovani ulozenych souboru (UTF-8 nebo windows-1250)
-
+# kodovani ulozenych souboru (UTF-8 nebo windows-1250)
 kodovani: UTF-8
 
-\# zda vyzadovat login
-
+# zda vyzadovat login
 prihlasit: TRUE
 
-\# adresa souboru s daty
-
+# adresa souboru s daty
 data: C:\Users\infolab\Documents\StitkyNaAlikvoty\data\nastaveni QC.txt
-
+```
 Popis šablony EPL příkazu.
 --------------------------
 Šablony jsou uložené v adresáři definovaném v konfiguračním souboru.
@@ -107,16 +87,19 @@ Popis šablony EPL příkazu.
 Šablona může obsahovat pole ve špičatých závorkách (např: \<pole\>).
 Takto definované pole program chápe jako dotaz, na který se program snaží
 zjistit odpověď.
-Odpověď hledá 
-* v souboru definovaném parametrem "data:" v konfiguračním souboru
-* dotazem na uživatele
-* nebo se jedná o speciální pole.
+
+Odpověď hledá  
+a) v souboru definovaném parametrem "data:" v konfiguračním souboru  
+b) dotazem na uživatele  
+c) nebo se jedná o speciální pole.  
 
 Speciální pole jsou:
 \<date\> - nahradí se aktuálním datem.  
 \<date+10\> - nahradí se datem za deset dní  
+\<date+30|expirace_sarze\> - nahradí se datem za 30 dní nebo datem za značkou '|'
 \<time\> - nahradí se aktuálním časem  
 \<time+30\> - nahradí se časem za 30 minut  
+\<time+> - zobrazí dotaz na počet minut o který se má čas posunout
 \<uzivatel\> - pokud je vyžadována identifikace uživatele, nahradí se značkou uživatele.  
 \<pocet|20\> - zeptá se uživatele na počet štítků s přednastaveným množstvím 20.  
 
@@ -142,33 +125,27 @@ P<pocet|24>
 ```
 
 Šablona na tisk doplněno:
-
+```
 N
-
 I8,B
-
 A146,5,0,3,1,2,N,"Doplněno:"
-
 A146,60,0,3,1,2,N,"<date>"
-
 P1
-
+```
 
 Příklad souboru s daty:
 -----------------------
 
 adresa:
 
-C:\Users\infolab\Documents\StitkyNaAlikvoty\data\nastaveni QC.txt
+C:\Users\username\Documents\StitkyNaAlikvoty\data\nastaveni QC.txt
 
 obsah:
-
-\# kontroly na HbA1c
-
+```
+# kontroly na HbA1c
 GLYHB1 šarže: 85841
-
 GLYHB2 šarže: 85842
-
+```
 Poznámka na závěr:
 ------------------
 Program je šířen včetně zdrojových kódů v naději, že bude užitečný,
