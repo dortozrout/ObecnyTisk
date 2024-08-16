@@ -108,17 +108,17 @@ Popis šablony EPL příkazu.
 Takto definované pole program chápe jako dotaz, na který se program snaží
 zjistit odpověď.
 Odpověď hledá 
-    a) v souboru definovaném parametrem "data:" v konfiguračním souboru
-    b) dotazem na uživatele
-    c) nebo se jedná o speciální pole.
+* v souboru definovaném parametrem "data:" v konfiguračním souboru
+* dotazem na uživatele
+* nebo se jedná o speciální pole.
 
 Speciální pole jsou:
-\<date\> - nahradí se aktuálním datem.
-\<date+10\> - nahradí se datem za deset dní
-\<time\> - nahradí se aktuálním časem
-\<time+30\> - nahradí se časem za 30 minut
-\<uzivatel\> - pokud je vyžadována identifikace uživatele, nahradí se značkou uživatele.
-\<pocet|20\> - zeptá se uživatele na počet štítků s přednastaveným množstvím 20.
+\<date\> - nahradí se aktuálním datem.  
+\<date+10\> - nahradí se datem za deset dní  
+\<time\> - nahradí se aktuálním časem  
+\<time+30\> - nahradí se časem za 30 minut  
+\<uzivatel\> - pokud je vyžadována identifikace uživatele, nahradí se značkou uživatele.  
+\<pocet|20\> - zeptá se uživatele na počet štítků s přednastaveným množstvím 20.  
 
 Šablona může obsahovat libovolné pole např: \<libovolné pole\>.
 Pokud najde program odpověď v souboru s daty (definovaný v konfig. parametrem "data:"),
@@ -130,22 +130,16 @@ Příklady šablon:
 ----------------
 Šablona na tisk štítků na alikvoty kontrol:
 
+```
 N
-
 I8,B
-
 A110,0,0,4,1,2,N,"GLYHB 1"
-
 A110,57,0,2,1,1,N,"lot: <GLYHB1 šarže>"
-
 A110,82,0,2,1,1,N,"exp: <date+30>"
-
 A315,0,1,1,1,1,N,"<date>"
-
 A345,10,1,3,1,1,N,"<uzivatel>"
-
 P<pocet|24>
-
+```
 
 Šablona na tisk doplněno:
 
