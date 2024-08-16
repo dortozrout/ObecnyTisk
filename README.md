@@ -104,13 +104,13 @@ Popis šablony EPL příkazu.
 --------------------------
 Šablony jsou uložené v adresáři definovaném v konfiguračním souboru.
 Šablona obsahuje jeden EPL2 příkaz, který bude odeslán na tiskárnu.
-Šablona může obsahovat pole ve špičatých závorkách (např: <pole>).
+Šablona může obsahovat pole ve špičatých závorkách (např: \<pole\>).
 Takto definované pole program chápe jako dotaz, na který se program snaží
 zjistit odpověď. Odpověď hledá a) v souboru definovaném parametrem "data:" 
 v konfiguračním souboru b) dotazem na uživatele c) nebo se jedná o speciální pole.
 
 Speciální pole jsou:
-<date> - nahradí se aktuálním datem.
+\<date\> - nahradí se aktuálním datem.
 <date+10> - nahradí se datem za deset dní
 <time> - nahradí se aktuálním časem
 <time+30> - nahradí se časem za 30 minut
