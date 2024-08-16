@@ -106,20 +106,23 @@ Popis šablony EPL příkazu.
 Šablona obsahuje jeden EPL2 příkaz, který bude odeslán na tiskárnu.
 Šablona může obsahovat pole ve špičatých závorkách (např: \<pole\>).
 Takto definované pole program chápe jako dotaz, na který se program snaží
-zjistit odpověď. Odpověď hledá a) v souboru definovaném parametrem "data:" 
-v konfiguračním souboru b) dotazem na uživatele c) nebo se jedná o speciální pole.
+zjistit odpověď.
+Odpověď hledá 
+    a) v souboru definovaném parametrem "data:" v konfiguračním souboru
+    b) dotazem na uživatele
+    c) nebo se jedná o speciální pole.
 
 Speciální pole jsou:
 \<date\> - nahradí se aktuálním datem.
-<date+10> - nahradí se datem za deset dní
-<time> - nahradí se aktuálním časem
-<time+30> - nahradí se časem za 30 minut
-<uzivatel> - pokud je vyžadována identifikace uživatele, nahradí se značkou uživatele.
-<pocet|20> - zeptá se uživatele na počet štítků s přednastaveným množstvím 20.
+\<date+10\> - nahradí se datem za deset dní
+\<time\> - nahradí se aktuálním časem
+\<time+30\> - nahradí se časem za 30 minut
+\<uzivatel\> - pokud je vyžadována identifikace uživatele, nahradí se značkou uživatele.
+\<pocet|20\> - zeptá se uživatele na počet štítků s přednastaveným množstvím 20.
 
-Šablona může obsahovat libovolné pole např: <libovolné pole>.
+Šablona může obsahovat libovolné pole např: \<libovolné pole\>.
 Pokud najde program odpověď v souboru s daty (definovaný v konfig. parametrem "data:"),
-například: "libovolné pole:karfiol", dosadí místo <libovolné pole> slovo "karfiol".
+například: "libovolné pole:karfiol", dosadí místo \<libovolné pole\> slovo "karfiol".
 Pokud program nenajde odpověď v souboru s daty, zeptá se uživatele ("Zadej libovolné pole: ").
 Pokud šablona končí na velké "P" položí program dotaz na počet štítků.
 
