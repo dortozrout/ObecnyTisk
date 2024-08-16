@@ -66,7 +66,7 @@ namespace Labels
 						{
 							parser.Process(ref eplFile);
 							if (eplFile.print)
-								Tisk.TiskniStitek(eplFile.Telo);
+								Printer.PrintLabel(eplFile.Telo);
 							else return;
 							i++;
 						}
@@ -75,7 +75,7 @@ namespace Labels
 					{
 						parser.Process(ref eplFile);
 						if (eplFile.print)
-							Tisk.TiskniStitek(eplFile.Telo);
+							Printer.PrintLabel(eplFile.Telo);
 					}
 				}
 				catch (Exception ex)
@@ -106,7 +106,7 @@ namespace Labels
 						EplFile currentEplFile = selectedEplFiles[i];
 						parser.Process(ref currentEplFile);
 						if (currentEplFile.print)
-							Tisk.TiskniStitek(currentEplFile.Telo);
+							Printer.PrintLabel(currentEplFile.Telo);
 						else currentEplFile.print = true; //reset
 					}
 					selectedEplFiles = selectList.Select(eplFiles);

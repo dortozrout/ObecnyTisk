@@ -48,6 +48,8 @@ namespace Labels
 		public static string PrimaryDataAdress { get; private set; }
 		//klicove slovo pro spusteni spravce konfigurace
 		public const string Editace = "edit";
+		//kodovani pouzivane v epl prikazech "I8,B"
+		public const string EplEncoding="windows-1250"; 
 
 		//Maximalni pocet radku kolik se zobrazi nez se zacne vypis posouvat 
 		public const int MaxLines = 20;
