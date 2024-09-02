@@ -162,6 +162,19 @@ namespace Labels
                 if (key.IndexOf('|') > 0 && keyArray.Length == 3)
                 {
                     DateTime lotExpiration = GetLotExpiration(keyArray[2]);
+                    if (lotExpiration < DateTime.Today)
+                    {
+                        new NotificationForm("Expirovaná šarže", $"Datum expirace materiálu ({lotExpiration.ToShortDateString()}) je v minulosti. Štítky nebudou vytištěny! Zkontroluj případně uprav expiraci...").Display();
+                        Console.ReadKey();
+                        continueProcessing = false;
+                        CurrentEplFile.print = false;
+                        return string.Empty;
+                    }
+                    else if(lotExpiration<DateTime.Today.AddMonths(1))
+                    {
+                        new NotificationForm("Blíží se expirace materiálu", $"Datum expirace materiálu ({lotExpiration.ToShortDateString()}) je menší něž 1 měsíc. Zkontroluj případně uprav expiraci...").Display();
+                        Console.ReadKey();
+                    }
                     DateTime dateToPrint = bottleExpiration < lotExpiration ? bottleExpiration : lotExpiration;
                     return dateToPrint.ToString("dd.MM.yyyy");
                 }
