@@ -14,7 +14,7 @@ Následuje adresa nebo název tiskárny Zebra nebo jiné která podporuje tiskov
 Lze tisknout na síťové, místní nebo sdílené tiskárny.
 
 `TypTiskarny:`
-Je číslo, které určuje typ tiskárny.
+Je číslo, které určuje typ tiskárny.  
 0 - sdílená tiskárna (např: \\\172.16.54.121\Zebra)  
 1 - lokální (např: TSC_TP2224)  
 2 - síťová (např: PRN196283a-TLP2824, nebo 172.16.36.209)  
@@ -31,7 +31,6 @@ hledanyText.
 TRUE nebo FALSE. Pokud je TRUE vytiskne se pouze jeden soubor.
 
 `OpakovanyTisk:`
-
 TRUE nebo FALSE. Souvisí s parametrem JedenSoubor. Pokud je TRUE, výtisk jednoho souboru
 se opakuje dokud uživatel neukončí aplikaci stisknutím CTRL+C nebo křížkem.
 Výtisk je omezen na 20 cyklů. Tato možnost slouží například pro výtisk několika štítků 
@@ -94,12 +93,12 @@ b) dotazem na uživatele
 c) nebo se jedná o speciální pole.  
 
 Speciální pole jsou:
-\<date\> - nahradí se aktuálním datem.  
-\<date+10\> - nahradí se datem za deset dní  
-\<date+30|expirace_sarze\> - nahradí se datem za 30 dní nebo datem za značkou '|'
 \<time\> - nahradí se aktuálním časem  
 \<time+30\> - nahradí se časem za 30 minut  
-\<time+> - zobrazí dotaz na počet minut o který se má čas posunout
+\<time+> - zobrazí dotaz na počet minut o který se má čas posunout  
+\<date\> - nahradí se aktuálním datem.  
+\<date+10\> - nahradí se datem za deset dní  
+\<date+30|expirace_sarze\> - nahradí se datem za 30 dní nebo datem definovaným textem za značkou '|'. Může být datum nebo klíč v souboru primárních dat. Pokud nerozpozná datum nebo nenajde klíč zobrazí program dotaz na expiraci.  
 \<uzivatel\> - pokud je vyžadována identifikace uživatele, nahradí se značkou uživatele.  
 \<pocet|20\> - zeptá se uživatele na počet štítků s přednastaveným množstvím 20.  
 
@@ -146,7 +145,9 @@ obsah:
 GLYHB1 šarže: 85841
 GLYHB2 šarže: 85842
 ```
+"\#" značí komentář  
+":" odděluje klíč a hodnotu   
+
 Poznámka na závěr:
 ------------------
-Program je šířen včetně zdrojových kódů v naději, že bude užitečný,
-avšak bez jakýchkoli záruk.
+Program je k dispozici včetně zdrojových kódů v naději, že bude užitečný, ale bez jakýchkoli záruk.
