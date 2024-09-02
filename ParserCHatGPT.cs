@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using Form;
 
 namespace Labels
@@ -155,22 +156,32 @@ namespace Labels
             if (int.TryParse(keyArray[1], out drift))
             {
                 DateTime bottleExpiration = DateTime.Now.AddDays(drift);
-                string lotExpirationStr;
-                DateTime lotExpiration;
                 if (keyArray.Length == 2)
                     return bottleExpiration.ToString("dd.MM.yyyy");
 
-                if (key.IndexOf('|') != -1 && keyArray.Length == 3)
+                if (key.IndexOf('|') > 0 && keyArray.Length == 3)
                 {
-                    if (primaryData.TryGetValue(keyArray[2].ToLower(), out lotExpirationStr) &&
-                        DateTime.TryParse(lotExpirationStr, out lotExpiration))
-                    {
-                        DateTime dateToPrint = bottleExpiration < lotExpiration ? bottleExpiration : lotExpiration;
-                        return dateToPrint.ToString("dd.MM.yyyy");
-                    }
+                    DateTime lotExpiration = GetLotExpiration(keyArray[2]);
+                    DateTime dateToPrint = bottleExpiration < lotExpiration ? bottleExpiration : lotExpiration;
+                    return dateToPrint.ToString("dd.MM.yyyy");
                 }
             }
             return string.Empty;
+        }
+        private DateTime GetLotExpiration(string key)
+        {
+            DateTime lotExpiration;
+            if (DateTime.TryParse(key, out lotExpiration))
+            {
+                return lotExpiration;
+            }
+            if (primaryData.TryGetValue(key.ToLower(), out string lotExpirationStr)
+                    && DateTime.TryParse(lotExpirationStr, out lotExpiration))
+            {
+                return lotExpiration;
+            }
+            lotExpiration = HandleInput<DateTime>(CurrentEplFile, "Zadej expiraci: ", DateTime.MaxValue.ToString("dd.MM.yyyy"));
+            return lotExpiration;
         }
 
         private string HandlePocetKey(string key)
