@@ -31,5 +31,49 @@ namespace Labels
             }
             return eplFiles;
         }
+        public List<EplFile> ReadFromFile(string filePath, string templatePath)
+        {
+            var eplFiles = new List<EplFile>();
+            try
+            {
+                var fileLines = File.ReadAllLines(filePath);
+                string template = File.ReadAllText(templatePath);
+                //List<string> keys;
+                string[] keys = Array.Empty<string>();
+                string[] values;
+                foreach (string line in fileLines)
+                {
+                    if (!line.StartsWith(";") && !line.StartsWith("─") && !line.StartsWith("#") && line != string.Empty)
+                    {
+                        if (line.StartsWith("keys"))
+                        {
+                            int indexOfSeparator = line.IndexOf(':');
+                            keys = line.Substring(indexOfSeparator + 1).Trim().Split();
+                        }
+                        else
+                        {
+                            values = line.Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            if (keys.Length == values.Length)
+                            {
+                                string templateCopy=template;
+                                Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
+                                for (int i = 0; i < keys.Length; i++)
+                                {
+                                    templateCopy=templateCopy.Replace(keys[i],values[i]);
+                                    keyValuePairs.Add(keys[i], values[i]);
+                                }
+                                eplFiles.Add(new EplFile(values[0], templateCopy, keyValuePairs));
+                            }
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return eplFiles;
+        }
     }
 }

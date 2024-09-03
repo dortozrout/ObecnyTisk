@@ -48,6 +48,8 @@ namespace Labels
 				new EplFileLoader().LoadFiles(Configuration.TemplatesDirectory) :
 				new EplFileLoader().LoadFiles(Configuration.TemplatesDirectory, Configuration.SearchedText);
 
+			eplFiles = new EplFileLoader().ReadFromFile(@"F:\Git\ObecnyTisk11\soubory\OneTemplate\qc.conf", @"F:\Git\ObecnyTisk11\soubory\OneTemplate\template.txt");
+
 			//Program muze bezet ve 3 modech - tisk pouze jednoho souboru podle konfiguraku
 			//                               - vyber ze souboru vyfiltrovanych jiz v konfiguraku
 			//                               - vyber ze vsech souboru v zadanem adresari

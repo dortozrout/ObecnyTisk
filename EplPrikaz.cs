@@ -12,6 +12,7 @@ namespace Labels
 		public string FileName { get; private set; }
 		public string Template { get; private set; }
 		public string Body { get; set; }
+		public Dictionary<string, string> KeyValuePairs { get; private set; }
 
 		public bool print = true;
 		public EplFile(string fileAddress, string template) //konstruktor
@@ -19,6 +20,12 @@ namespace Labels
 			FileAddress = fileAddress;
 			FileName = Path.GetFileName(FileAddress);
 			Template = template;
+		}
+		public EplFile(string name, string template, Dictionary<string, string> keyValuePairs)
+		{
+			FileName = name;
+			Template = template;
+			KeyValuePairs = keyValuePairs;
 		}
 
 		public int CompareTo(object obj)
