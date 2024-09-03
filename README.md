@@ -92,10 +92,10 @@ a) v souboru definovaném parametrem "data:" v konfiguračním souboru
 b) dotazem na uživatele  
 c) nebo se jedná o speciální pole.  
 
-Speciální pole jsou:
+Speciální pole jsou:  
 \<time\> - nahradí se aktuálním časem  
 \<time+30\> - nahradí se časem za 30 minut  
-\<time+> - zobrazí dotaz na počet minut o který se má čas posunout  
+\<time+\> - zobrazí dotaz na počet minut o který se má čas posunout  
 \<date\> - nahradí se aktuálním datem.  
 \<date+10\> - nahradí se datem za deset dní  
 \<date+30|expirace_sarze\> - nahradí se datem za 30 dní nebo datem definovaným textem za značkou '|'. Může být datum nebo klíč v souboru primárních dat. Pokud nerozpozná datum nebo nenajde klíč zobrazí program dotaz na expiraci.  
