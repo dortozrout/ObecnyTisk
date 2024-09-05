@@ -46,6 +46,8 @@ namespace Labels
 		public static string User { get; set; }
 		//adresa souboru s daty expirace, sarze atd.
 		public static string PrimaryDataAdress { get; private set; }
+		//adresa hlavni sablony (pro tisk v rezimu jedne sablony)
+		public static string MasterTemplateAddress { get; private set; }
 		//klicove slovo pro spusteni spravce konfigurace
 		public const string Editace = "edit";
 		//kodovani pouzivane v epl prikazech "I8,B"
@@ -162,6 +164,9 @@ namespace Labels
 									// PrimaryDataAdress = value;
 									PrimaryDataAdress = value == "" ? "" : Path.GetFullPath(value);
 									break;
+								case "hlavnisablona":
+									MasterTemplateAddress = value;
+									break;
 							}
 						}
 					}
@@ -207,8 +212,10 @@ namespace Labels
 					+ "kodovani: UTF-8{0}"
 					+ "# zda vyzadovat login{0}"
 					+ "prihlasit: false{0}"
-					+ "# adresa souboru s daty{0}"
-					+ "data: {0}", Environment.NewLine);
+					+ "# adresa souboru s primarnimi daty daty{0}"
+					+ "data: {0}"
+					+ "# adresa sablony pro tisk v modu jedne sablony{0}"
+					+ "hlavniSablona: {0}", Environment.NewLine);
 				File.WriteAllText(configFilePath, content);
 				UserEdit(configFilePath);
 			}

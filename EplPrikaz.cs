@@ -9,12 +9,13 @@ namespace Labels
 	public class EplFile : IComparable
 	{
 		public string FileAddress { get; private set; }
-		public string FileName { get; private set; }
+		public string FileName { get; set; }
 		public string Template { get; private set; }
 		public string Body { get; set; }
 		public Dictionary<string, string> KeyValuePairs { get; private set; }
 
 		public bool print = true;
+		public EplFile() { }
 		public EplFile(string fileAddress, string template) //konstruktor
 		{
 			FileAddress = fileAddress;
@@ -34,9 +35,32 @@ namespace Labels
 			int rv = string.Compare(FileName, anotherEplFile.FileName);
 			return rv;
 		}
+		public override bool Equals(object obj)
+		{
+			if (obj == null || GetType() != obj.GetType())
+				return false;
+
+			var other = (EplFile)obj;
+			return FileName == other.FileName;
+		}
+
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(FileName);
+		}
 		public override string ToString()
 		{
 			return FileName;
+		}
+		public EplFile Copy()
+		{
+			return new EplFile()
+			{
+				FileAddress = FileAddress,
+				FileName = FileName,
+				Template = Template,
+				KeyValuePairs = KeyValuePairs
+			};
 		}
 	}
 }
