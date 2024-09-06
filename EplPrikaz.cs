@@ -36,7 +36,7 @@ namespace Labels
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(FileName);
+			return FileName.GetHashCode();
 		}
 		public override string ToString()
 		{
