@@ -48,6 +48,7 @@ namespace Labels
 		public static string PrimaryDataAdress { get; private set; }
 		//adresa hlavni sablony (pro tisk v rezimu jedne sablony)
 		public static string MasterTemplateAddress { get; private set; }
+		public static string MasterTemplateInputAddress { get; private set; }
 		//klicove slovo pro spusteni spravce konfigurace
 		public const string Editace = "edit";
 		//kodovani pouzivane v epl prikazech "I8,B"
@@ -167,6 +168,9 @@ namespace Labels
 								case "hlavnisablona":
 									MasterTemplateAddress = value;
 									break;
+								case "hlavnisablonadata":
+									MasterTemplateInputAddress = value;
+									break;
 							}
 						}
 					}
@@ -215,7 +219,9 @@ namespace Labels
 					+ "# adresa souboru s primarnimi daty daty{0}"
 					+ "data: {0}"
 					+ "# adresa sablony pro tisk v modu jedne sablony{0}"
-					+ "hlavniSablona: {0}", Environment.NewLine);
+					+ "hlavniSablona: {0}"
+					+ "# adresa souboru se vstupnimi daty pro tisk pomoci hlavni sablony{0}"
+					+ "hlavniSablonaData: {0}", Environment.NewLine);
 				File.WriteAllText(configFilePath, content);
 				UserEdit(configFilePath);
 			}
@@ -257,14 +263,17 @@ namespace Labels
 					break;
 			}
 			int align = 72;
-			Header = string.Format("{7}{0}Konfigurační soubor: {1}"
+			string directoryOrFilePath = string.IsNullOrEmpty(MasterTemplateAddress) ?
+			$"Adresář se soubory:  {Path.GetFullPath(TemplatesDirectory)}" :
+			$"Vstupní data: {Path.GetFullPath(MasterTemplateInputAddress)}";
+			Header = string.Format("{6}{0}Konfigurační soubor: {1}"
 						+ "Adresa tiskárny: {2}{0}"
-						+ "Adresář se soubory:  {4}"
-						+ "Typ tiskárny:    {3}{0}"
-						+ "Kódování souborů:    {5}"
-						+ "{6}{0}",
+						+ directoryOrFilePath.PadRight(align - 1)
+						+ "Typ tiskárny: {3}{0}"
+						+ "Kódování souborů: {4}"
+						+ "{5}{0}",
 						Environment.NewLine, Path.Combine(ConfigPath, ConfigFile).PadRight(align - 22), PrinterAddress, PrinterTypeByWords,
-						Path.GetFullPath(TemplatesDirectory).PadRight(align - 22), Encoding.PadRight(align - 22), RuntimeInformation.FrameworkDescription, AppName);
+						Encoding.PadRight(align - 19), RuntimeInformation.FrameworkDescription, AppName);
 			ActiveBackgroundColor = ConsoleColor.DarkGreen;
 			ActiveForegroundColor = ConsoleColor.Black;
 		}

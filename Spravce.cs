@@ -13,7 +13,15 @@ namespace Labels
 	{
 		public void Interface()
 		{
-			List<string> choices = new List<string>() { "Editace souboru s daty", "Editace šablon", "Editace konfiguračního souboru", "Nápověda" };
+			List<string> choices = new List<string>()
+			{
+				"Editace souboru s daty",
+				"Editace šablon",
+				"Editace konfiguračního souboru",
+				"Editace šablony hlavní",
+				"Editace vstupních dat pro hlavní šablonu",
+				"Nápověda"
+			};
 			string selectedChoice;
 			SelectFromList<string> selecList = new SelectFromList<string>();
 			do
@@ -22,22 +30,27 @@ namespace Labels
 				selectedChoice = selection?[0];
 				switch (choices.IndexOf(selectedChoice))
 				{
+					case 0:
+						EditConfigFile();
+						break;
 					case 1:
 						EditData();
 						break;
 					case 2:
 						EditTemplates();
 						break;
-					case 0:
-						EditConfigFile();
-						break;
 					case 3:
+						EditMasterTemplate();
+						break;
+					case 4:
+						EditMasterTemplateInput();
+						break;
+					case 5:
 						ShowReadme();
 						break;
 					default:
 						break;
 				}
-
 			} while (selectedChoice != null);
 			Restart();
 		}
@@ -53,6 +66,14 @@ namespace Labels
 		public void EditData()
 		{
 			RunExternalProcess(path: Configuration.PrimaryDataAdress);
+		}
+		public void EditMasterTemplate()
+		{
+			RunExternalProcess(path: Configuration.MasterTemplateAddress);
+		}
+		public void EditMasterTemplateInput()
+		{
+			RunExternalProcess(path: Configuration.MasterTemplateInputAddress);
 		}
 		public void ShowReadme()
 		{

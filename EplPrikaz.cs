@@ -8,25 +8,15 @@ namespace Labels
 {
 	public class EplFile : IComparable
 	{
-		public string FileAddress { get; private set; }
 		public string FileName { get; set; }
 		public string Template { get; private set; }
 		public string Body { get; set; }
-		public Dictionary<string, string> KeyValuePairs { get; private set; }
-
 		public bool print = true;
 		public EplFile() { }
-		public EplFile(string fileAddress, string template) //konstruktor
-		{
-			FileAddress = fileAddress;
-			FileName = Path.GetFileName(FileAddress);
-			Template = template;
-		}
-		public EplFile(string name, string template, Dictionary<string, string> keyValuePairs)
+		public EplFile(string name, string template) //konstruktor
 		{
 			FileName = name;
 			Template = template;
-			KeyValuePairs = keyValuePairs;
 		}
 
 		public int CompareTo(object obj)
@@ -56,10 +46,8 @@ namespace Labels
 		{
 			return new EplFile()
 			{
-				FileAddress = FileAddress,
 				FileName = FileName,
 				Template = Template,
-				KeyValuePairs = KeyValuePairs
 			};
 		}
 	}

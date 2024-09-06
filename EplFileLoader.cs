@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Labels
 {
@@ -17,7 +18,7 @@ namespace Labels
                 foreach (var file in files)
                 {
                     string content = File.ReadAllText(file);
-                    var eplFile = new EplFile(file, content);
+                    var eplFile = new EplFile(Path.GetFileName(file), content);
                     eplFiles.Add(eplFile);
                 }
             }
@@ -52,28 +53,42 @@ namespace Labels
                         }
                         else
                         {
-                            values = line.Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            // values = line.Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            values = Split(line);
                             if (keys.Length == values.Length)
                             {
-                                string templateCopy=template;
-                                Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
+                                string templateCopy = template;
+                                //Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
                                 for (int i = 0; i < keys.Length; i++)
                                 {
-                                    templateCopy=templateCopy.Replace(keys[i],values[i]);
-                                    keyValuePairs.Add(keys[i], values[i]);
+                                    templateCopy = templateCopy.Replace(keys[i], values[i]);
+                                    //keyValuePairs.Add(keys[i], values[i]);
                                 }
-                                eplFiles.Add(new EplFile(values[0], templateCopy, keyValuePairs));
+                                eplFiles.Add(new EplFile(values[0], templateCopy));
                             }
                         }
                     }
                 }
-
             }
             catch (Exception ex)
             {
-
+                ErrorHandler.HandleError(this, ex);
             }
             return eplFiles;
+        }
+        public static string[] Split(string input)
+        {
+            // Regular expression to match quoted text or words separated by spaces
+            string pattern = @"(?<=\s|^)(\""[^\""]*\""|\S+)(?=\s|$)";
+
+            // Perform the regex match
+            var matches = Regex.Matches(input, pattern);
+
+            // Convert matches to an array of strings
+            string[] resultArray = matches.Cast<Match>()
+                                          .Select(match => match.Value.Trim('"')) // Optional: trim the quotes
+                                          .ToArray();
+            return resultArray;
         }
     }
 }
