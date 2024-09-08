@@ -137,7 +137,7 @@ Příklad souboru s daty:
 
 adresa:
 
-C:\Users\username\Documents\StitkyNaAlikvoty\data\nastaveni QC.txt
+C:/Users/username/Documents/StitkyNaAlikvoty/data/nastaveni_QC.txt
 
 obsah:
 ```
