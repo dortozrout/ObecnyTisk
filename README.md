@@ -15,7 +15,7 @@ Lze tisknout na síťové, místní nebo sdílené tiskárny.
 
 `TypTiskarny:`
 Je číslo, které určuje typ tiskárny.  
-0 - sdílená tiskárna (např: \\\172.16.54.121\Zebra)  
+0 - sdílená tiskárna (např: \\\172.16.54.121\\Zebra)  
 1 - lokální (např: TSC_TP2224)  
 2 - síťová (např: PRN196283a-TLP2824, nebo 172.16.36.209)  
 3 - výstup na obrazovku  
@@ -65,10 +65,10 @@ adresar: C:\Users\infolab\Documents\StitkyNaAlikvoty
 hledanyText: glyhb
 
 # jestli se ma tisknout jenom jeden soubor
-jedenSoubor:false
+jedenSoubor: false
 
 # jeden soubor se tiskne opakovane
-opakovanytisk:false
+opakovanytisk: false
 
 # kodovani ulozenych souboru (UTF-8 nebo windows-1250)
 kodovani: UTF-8
@@ -77,7 +77,13 @@ kodovani: UTF-8
 prihlasit: TRUE
 
 # adresa souboru s daty
-data: C:\Users\infolab\Documents\StitkyNaAlikvoty\data\nastaveni QC.txt
+data: C:/Users/username/Documents/StitkyNaAlikvoty/data/nastaveni_QC.txt
+
+# adresa sablony pro tisk v modu jedne sablony
+hlavniSablona: 
+
+# adresa souboru se vstupnimi daty pro tisk pomoci hlavni sablony
+hlavniSablonaData: 
 ```
 Popis šablony EPL příkazu.
 --------------------------
@@ -147,6 +153,47 @@ GLYHB2 šarže: 85842
 ```
 "\#" značí komentář  
 ":" odděluje klíč a hodnotu   
+
+Tisk různých štítků podle jedné šablony:
+---------------------------------------
+Druhý způsob jak tisknout více různých štítků, které mají stejné rozložení ale liší se obsahem polí, je použití "hlavní šablony" a souboru vstupních dat pro hlavní šablonu.  
+
+Hlavní šablona může vypadat např takto:  
+```
+N
+I8,B
+A110,0,0,4,1,2,N,"<name>"
+A110,57,0,2,1,1,N,"lot: <lot>"
+A110,82,0,2,1,1,N,"exp: <date+<bottle_exp>|<lot_exp>>"
+A315,0,1,1,1,1,N,"<date>"
+A345,10,1,3,1,1,N,"<uzivatel>"
+P<pocet|<quantity>>
+```
+Soubor vstupních dat pak takto:
+```
+<name>     <lot>    <bottle_exp> <lot_exp>    <quantity>
+"GLYHB 1"  85841    30           31.12.2028   25
+"GLYHB 2"  85842    30           31.12.2028   25
+
+"MQUAL 1"  551231    7           28.2.2029    13
+"MQUAL 2"  551232    7           28.2.2029    13
+"MQUAL 3"  551233    7           28.2.2029     7
+```
+Program pracuje následujícím způsobem:  
+Nejdříve se vyplní klíče:  
+\<name>  
+\<lot>  
+\<bottle_exp>  
+\<lot_exp>  
+\<quantity>  
+Pak se sablona zpracuje obvyklým způsobem.
+
+Výhody tohoto uspořádání jsou:  
+Lze snadno přidávat další štítky podle jednotného vzoru.  
+Pokud je třeba upravit šablonu stačí upravit jen jeden soubor.  
+Lze definovat libovolné klíče, které se použijí k vyplnění hlavní šablony. První klíč se vždy bere zároveň jako název který se zobrazí ve výběru.  
+
+Pokud je v konfiguračním souboru uvedena hlavní šablona, program nebude zobrazovat štítky v adresáři, ale pouze štítky definované v souboru "hlavniSablonaData".
 
 Poznámka na závěr:
 ------------------
