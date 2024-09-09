@@ -49,7 +49,7 @@ namespace Labels
                         if (line.StartsWith("keys"))
                         {
                             int indexOfSeparator = line.IndexOf(':');
-                            keys = line.Substring(indexOfSeparator + 1).Trim().Split();
+                            keys = Split(line.Substring(indexOfSeparator + 1).Trim());
                         }
                         else
                         {

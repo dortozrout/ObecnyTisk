@@ -175,15 +175,16 @@ A315,0,1,1,1,1,N,"<date>"
 A345,10,1,3,1,1,N,"<uzivatel>"
 P<pocet|<quantity>>
 ```
-Soubor vstupních dat pak takto:
+Soubor vstupních dat pak takto (pozor na "keys:" na začátku):
 ```
-<name>     <lot>    <bottle_exp> <lot_exp>    <quantity>
-"GLYHB 1"  85841    30           31.12.2028   25
-"GLYHB 2"  85842    30           31.12.2028   25
+keys: <name> <lot>    <bottle_exp> <lot_exp>    <quantity>
 
-"MQUAL 1"  551231    7           28.2.2029    13
-"MQUAL 2"  551232    7           28.2.2029    13
-"MQUAL 3"  551233    7           28.2.2029     7
+"GLYHB 1"    85841    30           31.12.2028   25
+"GLYHB 2"    85842    30           31.12.2028   25
+
+"MQUAL 1"    551231    7           28.2.2029    13
+"MQUAL 2"    551232    7           28.2.2029    13
+"MQUAL 3"    551233    7           28.2.2029     7
 ```
 Program pracuje následujícím způsobem:  
 Nejdříve se vyplní klíče:  
