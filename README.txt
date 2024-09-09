@@ -45,6 +45,12 @@ Např. pro tisk štítků na alikvoty kontrol.
 Data: Parametr s cestou k souboru s doplňujícími daty ve tvaru
 otazka:odpoved. Pro pochopení viz popis šablony příkazu.
 
+hlavniSablona: Adresa hlavní šablony, pokud se pracuje v režimu jedné
+šablony.
+
+hlavniSablonaData: Adresa souboru který definuje klíče a data, k hlavní
+šabloně.
+
 Všechny parametry se píší bez uvozovek. Můžou obsahovat diakritiku a
 mezery.
 
