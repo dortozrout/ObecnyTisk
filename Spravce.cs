@@ -94,8 +94,8 @@ namespace Labels
 			Environment.Exit(0);
 		}
 
-		private void RunExternalProcess(string command = "mousepad", string path = "", bool waitForExit = false)
-		// private void RunExternalProcess(string command = "notepad.exe", string path = "", bool waitForExit = false)
+		// private void RunExternalProcess(string command = "mousepad", string path = "", bool waitForExit = false)
+		private void RunExternalProcess(string command = "notepad.exe", string path = "", bool waitForExit = false)
 		{
 			try
 			{

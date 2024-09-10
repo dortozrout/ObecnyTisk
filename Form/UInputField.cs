@@ -7,7 +7,7 @@ using Labels;
 namespace Form
 {
     //genericka trida pro vstupni pole formulare
-    class UInputField<TForm,TField> : FormItem<TForm>
+    class UInputField<TForm, TField> : FormItem<TForm>
     {
         //hodnota, kterou pole obsahuje
         public virtual TField Value { get; protected set; }
@@ -95,7 +95,7 @@ namespace Form
         public virtual void Activate()
         {
             //reset Quit
-            Quit=false;
+            Quit = false;
             //nastaveni barev podle skladu
             SetConsoleColors();
             //nastaveni pozice kurzoru
@@ -215,13 +215,14 @@ namespace Form
             else if (typeof(TField) == typeof(int))
             {
                 //if (!int.TryParse(DefaulText, out int maxQuantity)) maxQuantity = Configuration.maxQuantity;
-                int maxQuantity=Configuration.maxQuantity;
+                // int maxQuantity=Configuration.maxQuantity;
                 int number;
                 do
                 {
                     stringDirection = ReadInputWithDefault(text, keyInfos.ToArray());
                     if (stringDirection.Item2.Key == ConsoleKey.Escape) return default;
-                } while (!int.TryParse(stringDirection.Item1, out number) || number < 0 || number > maxQuantity);
+                } while (!int.TryParse(stringDirection.Item1, out number) || number < 0);
+                //} while (!int.TryParse(stringDirection.Item1, out number) || number < 0 || number > maxQuantity);
                 Forward = SwitchToNext.Contains(stringDirection.Item2);
                 return (TField)Convert.ChangeType(number, typeof(TField));
             }

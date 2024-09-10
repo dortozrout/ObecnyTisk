@@ -52,6 +52,25 @@ namespace Labels
             eplFile.Body = FillOutTemplate(eplFile.Template);
         }
 
+        // private string FillOutTemplate(string template)
+        // {
+        //     template = RemoveCommentedLines(template);
+        //     if (template.Trim().EndsWith("P"))
+        //     {
+        //         template = string.Format("{0}<pocet>{1}", template.TrimEnd(), Environment.NewLine);
+        //     }
+
+        //     List<string> keys = ReadKeys(template);
+        //     var keyValuePairs = keys.ToDictionary(key => key, key => continueProcessing ? FindValue(key) : "");
+
+        //     foreach (var keyValue in keyValuePairs)
+        //     {
+        //         template = template.Replace(keyValue.Key, keyValue.Value);
+        //     }
+
+        //     return template;
+        // }
+
         private string FillOutTemplate(string template)
         {
             template = RemoveCommentedLines(template);
@@ -61,11 +80,57 @@ namespace Labels
             }
 
             List<string> keys = ReadKeys(template);
-            var keyValuePairs = keys.ToDictionary(key => key, key => continueProcessing ? FindValue(key) : "");
 
-            foreach (var keyValue in keyValuePairs)
+            // Check if there's a sequence key, and handle it
+            string sequenceKey = keys.FirstOrDefault(k => k.StartsWith("<sequence|"));
+
+            if (sequenceKey != null)
             {
-                template = template.Replace(keyValue.Key, keyValue.Value);
+                // If a sequence key exists, handle the sequence and other keys
+                return HandleSequenceAndOtherKeys(template, keys, sequenceKey);
+            }
+
+            // Otherwise, replace keys normally
+            return ReplaceAllKeys(template, keys);
+        }
+
+
+        private string HandleSequenceAndOtherKeys(string template, List<string> keys, string sequenceKey)
+        {
+            // Parse the sequence start and count from the key
+            var keyParts = sequenceKey.Trim('<', '>').Split('|');
+
+            int start = HandleInput<int>(CurrentEplFile, "Zadej počátek sekvence: ", keyParts[1]);
+            if (!continueProcessing) return string.Empty;
+            int count = HandleInput<int>(CurrentEplFile, "Zadej počet kroků: ", keyParts[2]);
+            // int start = int.Parse(keyParts[1]);
+            // int count = int.Parse(keyParts[2]);
+
+            // Generate the sequence of numbers
+            var sequenceValues = Enumerable.Range(start, count).ToList();
+
+            string result = string.Empty;
+
+            // For each value in the sequence, replace the sequence key
+            foreach (var sequenceValue in sequenceValues)
+            {
+                // Replace the sequence key with the current value
+                string tempTemplate = template.Replace(sequenceKey, sequenceValue.ToString());
+
+                // Append the updated template block to the result
+                result += tempTemplate + Environment.NewLine;
+            }
+            // Replace other keys in the template
+            result = ReplaceAllKeys(result, keys.Where(k => k != sequenceKey).ToList());
+            return result;
+        }
+
+        private string ReplaceAllKeys(string template, List<string> keys)
+        {
+            foreach (var key in keys)
+            {
+                var keyValue = continueProcessing ? FindValue(key) : "";
+                template = template.Replace(key, keyValue);
             }
 
             return template;
@@ -170,7 +235,7 @@ namespace Labels
                         CurrentEplFile.print = false;
                         return string.Empty;
                     }
-                    else if(lotExpiration<DateTime.Today.AddMonths(1))
+                    else if (lotExpiration < DateTime.Today.AddMonths(1))
                     {
                         new NotificationForm("Blíží se expirace materiálu", $"Datum expirace materiálu ({lotExpiration.ToShortDateString()}) je menší něž 1 měsíc. Zkontroluj případně uprav expiraci...").Display();
                         Console.ReadKey();
@@ -199,18 +264,19 @@ namespace Labels
 
         private string HandlePocetKey(string key)
         {
-            var inputForm = new InputForm<int>();
+            int quantity;
             int indexOfSeparator = key.IndexOf('|');
-            if (indexOfSeparator < 1)
-                return inputForm.Fill(CurrentEplFile, "Zadej počet štítků: ", "1").ToString();
-
-            int defaultQuantity;
-            if (int.TryParse(key.Substring(indexOfSeparator + 1).TrimEnd('>'), out defaultQuantity))
+            // if (indexOfSeparator < 1)
+            // {
+            //     quantity = HandleInput<int>(CurrentEplFile, "Zadej počet štítků: ", "1");
+            // }
+            if (int.TryParse(key.Substring(indexOfSeparator + 1).TrimEnd('>'), out quantity))
             {
-                defaultQuantity = HandleInput<int>(CurrentEplFile, "Zadej počet štítků: ", defaultQuantity.ToString());
-                return defaultQuantity.ToString();
+                quantity = HandleInput<int>(CurrentEplFile, "Zadej počet štítků: ", quantity.ToString());
             }
-            return "1";
+            else quantity = HandleInput<int>(CurrentEplFile, "Zadej počet štítků: ", "1");
+            quantity = quantity > Configuration.maxQuantity ? Configuration.maxQuantity : quantity;
+            return quantity.ToString();
         }
         private string HandleDefaultKey(string key)
         {
