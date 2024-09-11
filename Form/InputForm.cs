@@ -9,12 +9,12 @@ namespace Form
         private Background<T> Background { get; set; }
         private FieldReadOnly<T> EplFileName { get; set; }
         private FieldReadOnly<T> EplTemplate { get; set; }
-        private UInputField<T,T> InputField { get; set; }
+        private UInputField<T, T> InputField { get; set; }
         public InputForm()
         {
             Background = new Background<T>();
         }
-        public override  void Display()
+        public override void Display()
         {
             ResetColor();
             Console.Clear();
@@ -26,15 +26,15 @@ namespace Form
         }
         public T Fill(EplFile eplFile, string question, string defaultText)
         {
-            string fileName=string.Format("Tisk souboru: {0}", eplFile.FileName);
+            string fileName = string.Format("Tisk souboru: {0}", eplFile.FileName);
             EplFileName = new FieldReadOnly<T>("eplfilespec", 3, 7, fileName, fileName.Length, this);
-            EplTemplate = new FieldReadOnly<T>("epltemplate", 3, 9, string.Format("Šablona:\n{0}", eplFile.Template), Console.WindowWidth-3, this);
+            EplTemplate = new FieldReadOnly<T>("epltemplate", 3, 9, string.Format("Šablona:\n{0}", eplFile.Template), Console.WindowWidth - 3, this);
             AditionalParms ap = new AditionalParms()
             {
                 switchToNext = new List<ConsoleKeyInfo>() { new ConsoleKeyInfo('\r', ConsoleKey.Enter, false, false, false) },
                 end = true
             };
-            InputField = new UInputField<T,T>("input_field", 3, 21, question, 35, this, defaultText, null, ap);
+            InputField = new UInputField<T, T>("input_field", 3, Configuration.MaxLines + 7, question, 35, this, defaultText, null, ap);
             Display();
             InputField.SwitchTo(true);
             if (Quit)

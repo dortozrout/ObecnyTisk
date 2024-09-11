@@ -52,25 +52,6 @@ namespace Labels
             eplFile.Body = FillOutTemplate(eplFile.Template);
         }
 
-        // private string FillOutTemplate(string template)
-        // {
-        //     template = RemoveCommentedLines(template);
-        //     if (template.Trim().EndsWith("P"))
-        //     {
-        //         template = string.Format("{0}<pocet>{1}", template.TrimEnd(), Environment.NewLine);
-        //     }
-
-        //     List<string> keys = ReadKeys(template);
-        //     var keyValuePairs = keys.ToDictionary(key => key, key => continueProcessing ? FindValue(key) : "");
-
-        //     foreach (var keyValue in keyValuePairs)
-        //     {
-        //         template = template.Replace(keyValue.Key, keyValue.Value);
-        //     }
-
-        //     return template;
-        // }
-
         private string FillOutTemplate(string template)
         {
             template = RemoveCommentedLines(template);
@@ -94,17 +75,36 @@ namespace Labels
             return ReplaceAllKeys(template, keys);
         }
 
-
         private string HandleSequenceAndOtherKeys(string template, List<string> keys, string sequenceKey)
         {
             // Parse the sequence start and count from the key
             var keyParts = sequenceKey.Trim('<', '>').Split('|');
+            if (keyParts.Length < 3 || keyParts.Length > 5)
+            {
+                new NotificationForm("Chyba v klíči sequence", $"Chybný formát seqence klíče ({sequenceKey})!").Display();
+                Console.ReadKey();
+            }
 
             int start = HandleInput<int>(CurrentEplFile, "Zadej počátek sekvence: ", keyParts[1]);
             if (!continueProcessing) return string.Empty;
             int count = HandleInput<int>(CurrentEplFile, "Zadej počet kroků: ", keyParts[2]);
-            // int start = int.Parse(keyParts[1]);
-            // int count = int.Parse(keyParts[2]);
+            string format;
+            if (sequenceKey.ToLower().Contains("save"))
+            {
+                string newSequenceKey = $"<sequence|{start + count}|{keyParts[2]}";
+
+                // If there are additional parts to the sequence key, append them
+                for (int i = 3; i < keyParts.Length; i++)
+                {
+                    newSequenceKey += $"|{keyParts[i]}";
+                }
+                newSequenceKey += ">";
+
+                string newTemplate = CurrentEplFile.Template.Replace(sequenceKey, newSequenceKey);
+                CurrentEplFile.SetAndSaveTemplate(newTemplate);
+                format = keyParts.Length == 5 ? keyParts[4] : "";
+            }
+            else format = keyParts.Length == 4 ? keyParts[3] : "";
 
             // Generate the sequence of numbers
             var sequenceValues = Enumerable.Range(start, count).ToList();
@@ -115,7 +115,7 @@ namespace Labels
             foreach (var sequenceValue in sequenceValues)
             {
                 // Replace the sequence key with the current value
-                string tempTemplate = template.Replace(sequenceKey, sequenceValue.ToString());
+                string tempTemplate = template.Replace(sequenceKey, sequenceValue.ToString(format));
 
                 // Append the updated template block to the result
                 result += tempTemplate + Environment.NewLine;

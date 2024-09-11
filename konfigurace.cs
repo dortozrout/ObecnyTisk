@@ -55,7 +55,7 @@ namespace Labels
 		public const string EplEncoding = "windows-1250";
 
 		//Maximalni pocet radku kolik se zobrazi nez se zacne vypis posouvat 
-		public const int MaxLines = 20;
+		public const int MaxLines = 30;
 
 		//format data v aplikaci
 		public const string DateFormat = "yyyy-MM-dd";

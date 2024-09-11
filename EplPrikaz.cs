@@ -8,7 +8,8 @@ namespace Labels
 {
 	public class EplFile : IComparable
 	{
-		public string FileName { get; set; }
+		public string FileName { get; private set; }
+		public string FileAddress { get; private set; }
 		public string Template { get; private set; }
 		public string Body { get; set; }
 		public bool print = true;
@@ -16,6 +17,7 @@ namespace Labels
 		public EplFile(string name, string template) //konstruktor
 		{
 			FileName = name;
+			FileAddress = string.IsNullOrEmpty(Configuration.MasterTemplateAddress) ? Path.Combine(Configuration.TemplatesDirectory, FileName) : "";
 			Template = template;
 		}
 
@@ -49,6 +51,18 @@ namespace Labels
 				FileName = FileName,
 				Template = Template,
 			};
+		}
+		public void SetAndSaveTemplate(string template)
+		{
+			try
+			{
+				File.WriteAllText(FileAddress, template);
+				Template = template;
+			}
+			catch (Exception ex)
+			{
+				ErrorHandler.HandleError(this, ex);
+			}
 		}
 	}
 }
