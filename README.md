@@ -105,13 +105,23 @@ b) dotazem na uživatele
 c) nebo se jedná o speciální pole.  
 
 Speciální pole jsou:  
+
 \<time\> - nahradí se aktuálním časem  
+
 \<time+30\> - nahradí se časem za 30 minut  
+
 \<time+\> - zobrazí dotaz na počet minut o který se má čas posunout  
+
 \<date\> - nahradí se aktuálním datem.  
+
 \<date+10\> - nahradí se datem za deset dní  
+
 \<date+30|expirace_sarze\> - nahradí se datem za 30 dní nebo datem definovaným textem za značkou '|'. Může být datum nebo klíč v souboru primárních dat. Pokud nerozpozná datum nebo nenajde klíč zobrazí program dotaz na expiraci.  
+
+\<sequence|start|počet kroků|[save]|[formát]\> - nahradí se číslem definovaným parametrem start. Šablona se tiskne opakovaně (počet kroků), číslo se zvyšuje vždy o jedna. Nepovinný parametr "save" uloží startovní pozici (nelze pokud se tiskne s hlavní šablonou). Nepovinný parametr "formát" je text, který definuje formát čísla (např "000" - číslo má nejméně 3 číslice)  
+
 \<uzivatel\> - pokud je vyžadována identifikace uživatele, nahradí se značkou uživatele.  
+
 \<pocet|20\> - zeptá se uživatele na počet štítků s přednastaveným množstvím 20.  
 
 Šablona může obsahovat libovolné pole např: \<libovolné pole\>.
