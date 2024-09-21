@@ -103,17 +103,32 @@ b) dotazem na uživatele
 c) nebo se jedná o speciální pole.
 
 Speciální pole jsou:
+
 <time> - nahradí se aktuálním časem
+
 <time+30> - nahradí se časem za 30 minut
+
 <time+> - zobrazí dotaz na počet minut o který se má čas posunout
+
 <date> - nahradí se aktuálním datem.
+
 <date+10> - nahradí se datem za deset dní
+
 <date+30|expirace_sarze> - nahradí se datem za 30 dní nebo datem
 definovaným textem za značkou ‘|’. Může být datum nebo klíč v souboru
 primárních dat. Pokud nerozpozná datum nebo nenajde klíč zobrazí program
 dotaz na expiraci.
+
+<sequence|start|počet kroků|[save]|[formát]> - nahradí se číslem
+definovaným parametrem start. Šablona se tiskne opakovaně (počet kroků),
+číslo se zvyšuje vždy o jedna. Nepovinný parametr “save” uloží startovní
+pozici (nelze pokud se tiskne s hlavní šablonou). Nepovinný parametr
+“formát” je text, který definuje formát čísla (např “000” - číslo má
+nejméně 3 číslice)
+
 <uzivatel> - pokud je vyžadována identifikace uživatele, nahradí se
 značkou uživatele.
+
 <pocet|20> - zeptá se uživatele na počet štítků s přednastaveným
 množstvím 20.
 
@@ -177,15 +192,16 @@ Hlavní šablona může vypadat např takto:
     A345,10,1,3,1,1,N,"<uzivatel>"
     P<pocet|<quantity>>
 
-Soubor vstupních dat pak takto:
+Soubor vstupních dat pak takto (pozor na “keys:” na začátku):
 
-    <name>     <lot>    <bottle_exp> <lot_exp>    <quantity>
-    "GLYHB 1"  85841    30           31.12.2028   25
-    "GLYHB 2"  85842    30           31.12.2028   25
+    keys: <name> <lot>    <bottle_exp> <lot_exp>    <quantity>
 
-    "MQUAL 1"  551231    7           28.2.2029    13
-    "MQUAL 2"  551232    7           28.2.2029    13
-    "MQUAL 3"  551233    7           28.2.2029     7
+    "GLYHB 1"    85841    30           31.12.2028   25
+    "GLYHB 2"    85842    30           31.12.2028   25
+
+    "MQUAL 1"    551231    7           28.2.2029    13
+    "MQUAL 2"    551232    7           28.2.2029    13
+    "MQUAL 3"    551233    7           28.2.2029     7
 
 Program pracuje následujícím způsobem:
 Nejdříve se vyplní klíče:
