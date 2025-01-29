@@ -22,6 +22,7 @@ namespace Labels
 			Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 #endif
 			Console.OutputEncoding = Encoding.UTF8;
+			Console.SetWindowSize(120, Configuration.MaxLines + 12);
 			if (args.Length == 0) //pokud je program spusten bez parametru
 			{
 				Configuration.Load("conf.txt"); //pouzije se vychozi konfigurak

@@ -13,9 +13,9 @@ namespace Form
 		private FieldReadOnly<string> help;
 		public LoginForm()
 		{
-			Label = new FieldReadOnly<string>("label", 3, 7, "Je vyžadována identifikace uživatele", 25, this);
+			Label = new FieldReadOnly<string>("label", 3, 7, "Je vyžadována identifikace uživatele", 36, this);
 			Login = new UInputField<string,string>("login", 3, 10, "Login: ", 20, this, string.Empty, null, null, new AditionalParms() { end = true, switchToNext = new List<ConsoleKeyInfo>() { new ConsoleKeyInfo('\r', ConsoleKey.Enter, false, false, false) } });
-			help = new FieldReadOnly<string>("help", 0, Configuration.MaxLines + 7, "".PadRight(Polozka.col1) + "Zadej uživatelské jméno, potvrdit \"Enter\", zrušit \"Esc\"", Console.WindowWidth, this);
+			help = new FieldReadOnly<string>("help", 3, Configuration.MaxLines + 7, "".PadRight(Polozka.col1) + "Zadej uživatelské jméno, potvrdit \"Enter\", zrušit \"Esc\"", Console.WindowWidth, this);
 			Background = new Background<string>();
 		}
 		public override void Display()
