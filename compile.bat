@@ -4,10 +4,10 @@ set exeName=Labels.exe
 IF NOT EXIST .\publish (
     mkdir publish
 )
-
 set currentDisc=%cd:~0,3%
-IF EXIST "%currentDisc%Roslyn-4.1.0\csc.exe" (
-    %currentDisc%Roslyn-4.1.0\csc.exe -nologo -r:System.Net.Http.dll *.cs .\Form\*.cs -out:.\publish\%exeName%
+set roslynDir=Roslyn-4.12.0
+IF EXIST "%currentDisc%\%roslynDir%\csc.exe" (
+    %currentDisc%\%roslynDir%\csc.exe -nologo -r:System.Net.Http.dll *.cs .\Form\*.cs -out:.\publish\%exeName%
 ) ELSE (
     echo Compiller not found!
 )
