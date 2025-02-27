@@ -249,6 +249,10 @@ namespace Labels
         private DateTime GetLotExpiration(string key)
         {
             DateTime lotExpiration;
+            if (key == "0")
+            {
+                return DateTime.MaxValue;
+            }
             if (DateTime.TryParse(key, out lotExpiration))
             {
                 return lotExpiration;
