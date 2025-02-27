@@ -14,7 +14,7 @@ namespace Labels
 	class Configuration
 	{
 		//Nazev aplikace ktery se zobrazi v hlavicce
-		private const string AppName = "Tisk štítků na EPL tiskárně v.202501";
+		private const string AppName = "Tisk štítků na EPL tiskárně v.202502";
 
 		public const ConsoleColor defaultForegroundColor = ConsoleColor.White;
 		public const ConsoleColor defaultBackgroundColor = ConsoleColor.Black;
