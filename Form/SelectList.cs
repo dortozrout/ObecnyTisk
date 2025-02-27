@@ -364,7 +364,8 @@ namespace Form
             }
             else
             {
-                selectedItems = items.FindAll(p => p.ToString().ToLower().Contains(filter));
+                selectedItems = items.FindAll(p => RemoveDiacritics(p.ToString().ToLower()).Contains(filter));
+                //selectedItems = items.FindAll(p => p.ToString().ToLower().Contains(filter));
             }
 
             return selectedItems;
