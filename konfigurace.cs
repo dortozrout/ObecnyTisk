@@ -66,6 +66,8 @@ namespace Labels
 		public static ConsoleColor ActiveForegroundColor { get; set; }
 		public static ConsoleColor ActiveBackgroundColor { get; set; }
 
+		private static string userDefinedColor = "";
+
 		public static string Header { get; private set; }
 
 		//maximalni pocet stitku ktery lze vytisknout najednou
@@ -171,6 +173,10 @@ namespace Labels
 								case "hlavnisablonadata":
 									MasterTemplateInputAddress = value;
 									break;
+								case "barva":
+									userDefinedColor = value;
+
+									break;
 							}
 						}
 					}
@@ -221,7 +227,9 @@ namespace Labels
 					+ "# adresa sablony pro tisk v modu jedne sablony{0}"
 					+ "hlavniSablona: {0}"
 					+ "# adresa souboru se vstupnimi daty pro tisk pomoci hlavni sablony{0}"
-					+ "hlavniSablonaData: {0}", Environment.NewLine);
+					+ "hlavniSablonaData: {0}"
+					+ "# nastaveni barevneho zvyrazneni (modra, zluta, fialova, seda, vychozi = zelena){0}"
+					+ "barva: {0}", Environment.NewLine);
 				File.WriteAllText(configFilePath, content);
 				UserEdit(configFilePath);
 			}
@@ -274,8 +282,27 @@ namespace Labels
 						+ "{5}{0}",
 						Environment.NewLine, Path.Combine(ConfigPath, ConfigFile).PadRight(align - 22), PrinterAddress, PrinterTypeByWords,
 						Encoding.PadRight(align - 19), RuntimeInformation.FrameworkDescription, AppName);
-			ActiveBackgroundColor = ConsoleColor.DarkGreen;
+			//ActiveBackgroundColor = ConsoleColor.DarkGreen;
+			ActiveBackgroundColor = SetupConsoleColor(userDefinedColor);
 			ActiveForegroundColor = ConsoleColor.Black;
+		}
+		private static ConsoleColor SetupConsoleColor(string color)
+		{
+			switch (color)
+			{
+				case "modra":
+					return ConsoleColor.Blue;
+				case "zluta":
+					return ConsoleColor.DarkYellow;
+				case "fialova":
+					return ConsoleColor.Magenta;
+				case "seda":
+					return ConsoleColor.Gray;
+				case "cervena":
+					return ConsoleColor.Red;
+				default:
+					return ConsoleColor.DarkGreen;
+			}
 		}
 	}
 }
