@@ -66,7 +66,9 @@ namespace Labels
 		public static ConsoleColor ActiveForegroundColor { get; set; }
 		public static ConsoleColor ActiveBackgroundColor { get; set; }
 
-		private static string userDefinedColor = "";
+		private static string userDefinedColorBg = "";
+
+		private static string userDefinedColorFg = "";
 
 		public static string Header { get; private set; }
 
@@ -173,9 +175,11 @@ namespace Labels
 								case "hlavnisablonadata":
 									MasterTemplateInputAddress = value;
 									break;
-								case "barva":
-									userDefinedColor = value;
-
+								case "barvapozadi":
+									userDefinedColorBg = value;
+									break;
+								case "barvapisma":
+									userDefinedColorFg = value;
 									break;
 							}
 						}
@@ -228,8 +232,9 @@ namespace Labels
 					+ "hlavniSablona: {0}"
 					+ "# adresa souboru se vstupnimi daty pro tisk pomoci hlavni sablony{0}"
 					+ "hlavniSablonaData: {0}"
-					+ "# nastaveni barevneho zvyrazneni (modra, zluta, fialova, seda, vychozi = zelena){0}"
-					+ "barva: {0}", Environment.NewLine);
+					+ "# nastaveni barevneho zvyrazneni (gray, blue, DarkYellow atd, vychozi = zelena){0}"
+					+ "barvaPisma: {0}"
+					+ "barvaPozadi: {0}", Environment.NewLine);
 				File.WriteAllText(configFilePath, content);
 				UserEdit(configFilePath);
 			}
@@ -283,26 +288,15 @@ namespace Labels
 						Environment.NewLine, Path.Combine(ConfigPath, ConfigFile).PadRight(align - 22), PrinterAddress, PrinterTypeByWords,
 						Encoding.PadRight(align - 19), RuntimeInformation.FrameworkDescription, AppName);
 			//ActiveBackgroundColor = ConsoleColor.DarkGreen;
-			ActiveBackgroundColor = SetupConsoleColor(userDefinedColor);
-			ActiveForegroundColor = ConsoleColor.Black;
+			ActiveBackgroundColor = SetupConsoleColor(userDefinedColorBg, ConsoleColor.DarkGreen);
+			//ActiveForegroundColor = ConsoleColor.Black;
+			ActiveForegroundColor = SetupConsoleColor(userDefinedColorFg, ConsoleColor.Black);
 		}
-		private static ConsoleColor SetupConsoleColor(string color)
+		private static ConsoleColor SetupConsoleColor(string color, ConsoleColor defaultColor)
 		{
-			switch (color)
-			{
-				case "modra":
-					return ConsoleColor.Blue;
-				case "zluta":
-					return ConsoleColor.DarkYellow;
-				case "fialova":
-					return ConsoleColor.Magenta;
-				case "seda":
-					return ConsoleColor.Gray;
-				case "cervena":
-					return ConsoleColor.Red;
-				default:
-					return ConsoleColor.DarkGreen;
-			}
+			return Enum.TryParse(color, true, out ConsoleColor parsedColor)
+				? parsedColor
+				: defaultColor;
 		}
 	}
 }
