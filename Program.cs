@@ -22,7 +22,7 @@ namespace Labels
 			Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 #endif
 			Console.OutputEncoding = Encoding.UTF8;
-			if (OperatingSystem.IsWindows())
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
 				Console.SetWindowSize(120, Configuration.MaxLines + 12);
 			}

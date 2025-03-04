@@ -15,13 +15,13 @@ namespace Labels
 		private string fileManager;
 		public Manager()
 		{
-			if (OperatingSystem.IsWindows())
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
 				editor = "notepad";
 				fileManager = "explorer";
 				//fileManager = @"C:\Program Files (x86)\FreeCommander\FreeCommander.exe";
 			}
-			else if (OperatingSystem.IsLinux())
+			else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
 			{
 				editor = "mousepad";
 				fileManager = "pcmanfm";
