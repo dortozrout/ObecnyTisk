@@ -218,6 +218,7 @@ namespace Labels
 
             var keyArray = key.Trim('<', '>').Split(new[] { '+', '|' }, StringSplitOptions.None);
             int drift;
+            if (keyArray[1]=="exp") return "expirace";
             if (int.TryParse(keyArray[1], out drift))
             {
                 DateTime bottleExpiration = DateTime.Now.AddDays(drift);
