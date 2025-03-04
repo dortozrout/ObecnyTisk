@@ -11,6 +11,27 @@ namespace Labels
 {
 	public class Manager
 	{
+		private string editor;
+		private string fileManager;
+		public Manager()
+		{
+			if (OperatingSystem.IsWindows())
+			{
+				editor = "notepad";
+				fileManager = "explorer";
+				//fileManager = @"C:\Program Files (x86)\FreeCommander\FreeCommander.exe";
+			}
+			else if (OperatingSystem.IsLinux())
+			{
+				editor = "mousepad";
+				fileManager = "pcmanfm";
+			}
+			else
+			{
+				editor = "";
+				fileManager = "";
+			}
+		}
 		public void Interface()
 		{
 			List<string> choices = new List<string>()
@@ -56,24 +77,23 @@ namespace Labels
 		}
 		public void EditTemplates()
 		{
-			RunExternalProcess("explorer", Path.GetFullPath(Configuration.TemplatesDirectory));
-			//RunExternalProcess(@"C:\Program Files (x86)\FreeCommander\FreeCommander.exe", Path.GetFullPath(Configuration.TemplatesDirectory));
+			RunExternalProcess(fileManager, Path.GetFullPath(Configuration.TemplatesDirectory));
 		}
 		public void EditConfigFile(bool waitForExit = false)
 		{
-			RunExternalProcess(path: Path.GetFullPath(Path.Combine(Configuration.ConfigPath, Configuration.ConfigFile)), waitForExit: waitForExit);
+			RunExternalProcess(editor, path: Path.GetFullPath(Path.Combine(Configuration.ConfigPath, Configuration.ConfigFile)), waitForExit: waitForExit);
 		}
 		public void EditData()
 		{
-			RunExternalProcess(path: Configuration.PrimaryDataAdress);
+			RunExternalProcess(editor, path: Configuration.PrimaryDataAdress);
 		}
 		public void EditMasterTemplate()
 		{
-			RunExternalProcess(path: Configuration.MasterTemplateAddress);
+			RunExternalProcess(editor, path: Configuration.MasterTemplateAddress);
 		}
 		public void EditMasterTemplateInput()
 		{
-			RunExternalProcess(path: Configuration.MasterTemplateInputAddress);
+			RunExternalProcess(editor, path: Configuration.MasterTemplateInputAddress);
 		}
 		public void ShowReadme()
 		{
@@ -82,7 +102,7 @@ namespace Labels
 			string adrReadMe = Path.Combine(".", "zdrojak", "Readme.txt");
 			if (File.Exists(adrReadMe))
 			{
-				RunExternalProcess(path: Path.GetFullPath(adrReadMe));
+				RunExternalProcess(editor, path: Path.GetFullPath(adrReadMe));
 			}
 			else ErrorHandler.HandleError(this, new FileNotFoundException("Nenašel jsem soubor s nápovědou:" + Path.GetFullPath(adrReadMe)));
 		}
