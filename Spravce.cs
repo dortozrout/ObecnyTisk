@@ -23,8 +23,8 @@ namespace Labels
 			}
 			else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
 			{
-				editor = "mousepad";
-				fileManager = "pcmanfm";
+				editor = "xdg-open";
+				fileManager = "xdg-open";
 			}
 			else
 			{
