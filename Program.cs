@@ -75,7 +75,10 @@ namespace Labels
 						{
 							parser.Process(ref eplFile);
 							if (eplFile.print)
+							{
 								Printer.PrintLabel(eplFile.Body);
+								if (!string.IsNullOrWhiteSpace(Configuration.LogFile)) Log.Write(eplFile.Body, Configuration.LogFile);
+							}
 							else return;
 							i++;
 						}
@@ -84,7 +87,10 @@ namespace Labels
 					{
 						parser.Process(ref eplFile);
 						if (eplFile.print)
+						{
 							Printer.PrintLabel(eplFile.Body);
+							if (!string.IsNullOrWhiteSpace(Configuration.LogFile)) Log.Write(eplFile.Body, Configuration.LogFile);
+						}
 					}
 				}
 				catch (Exception ex)
@@ -114,7 +120,10 @@ namespace Labels
 						EplFile currentEplFile = selectedEplFiles[i];
 						parser.Process(ref currentEplFile);
 						if (currentEplFile.print)
+						{
 							Printer.PrintLabel(currentEplFile.Body);
+							if (!string.IsNullOrWhiteSpace(Configuration.LogFile)) Log.Write(currentEplFile.Body, Configuration.LogFile);
+						}
 						else currentEplFile.print = true; //reset
 					}
 					selectedEplFiles = selectList.Select(eplFiles);

@@ -49,6 +49,8 @@ namespace Labels
 		//adresa hlavni sablony (pro tisk v rezimu jedne sablony)
 		public static string MasterTemplateAddress { get; private set; }
 		public static string MasterTemplateInputAddress { get; private set; }
+		//adresa log souboru
+		public static string LogFile { get; private set; }
 		//klicove slovo pro spusteni spravce konfigurace
 		public const string Editace = "edit";
 		//kodovani pouzivane v epl prikazech "I8,B"
@@ -181,6 +183,9 @@ namespace Labels
 								case "barvapisma":
 									userDefinedColorFg = value;
 									break;
+								case "logsoubor":
+									LogFile = value;
+									break;
 							}
 						}
 					}
@@ -234,7 +239,9 @@ namespace Labels
 					+ "hlavniSablonaData: {0}"
 					+ "# nastaveni barevneho zvyrazneni (gray, blue, DarkYellow atd, vychozi = zelena){0}"
 					+ "barvaPisma: {0}"
-					+ "barvaPozadi: {0}", Environment.NewLine);
+					+ "barvaPozadi: {0}"
+					+ "# umisteni logovaciho souboru{0}"
+					+ "logSoubor: {0}", Environment.NewLine);
 				File.WriteAllText(configFilePath, content);
 				UserEdit(configFilePath);
 			}

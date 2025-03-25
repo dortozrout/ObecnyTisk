@@ -41,7 +41,8 @@ namespace Labels
 				"Editace konfiguračního souboru",
 				"Editace šablony hlavní",
 				"Editace vstupních dat pro hlavní šablonu",
-				"Nápověda"
+				"Zobrazit log",
+				"Zobrazit nápovědu"
 			};
 			string selectedChoice;
 			SelectFromList<string> selecList = new SelectFromList<string>();
@@ -67,6 +68,9 @@ namespace Labels
 						EditMasterTemplateInput();
 						break;
 					case 5:
+						ShowLog();
+						break;
+					case 6:
 						ShowReadme();
 						break;
 					default:
@@ -94,6 +98,10 @@ namespace Labels
 		public void EditMasterTemplateInput()
 		{
 			RunExternalProcess(editor, path: Configuration.MasterTemplateInputAddress);
+		}
+		public void ShowLog()
+		{
+			RunExternalProcess(editor, path: Configuration.LogFile);
 		}
 		public void ShowReadme()
 		{
