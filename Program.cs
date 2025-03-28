@@ -56,7 +56,7 @@ namespace Labels
 				   new EplFileLoader().LoadFiles(Configuration.TemplatesDirectory, Configuration.SearchedText);
 			}
 			else //ze souboru definovaneho v Configuration.MasterTemplateInputAddress
-				eplFiles = new EplFileLoader().ReadFromFile(Configuration.MasterTemplateInputAddress, Configuration.MasterTemplateAddress);
+				eplFiles = new EplFileLoader().ReadFromFile(Configuration.MasterTemplateInputAddress, Configuration.MasterTemplateAddress, Configuration.SearchedText);
 			//Program muze bezet ve 3 modech - tisk pouze jednoho souboru podle konfiguraku
 			//                               - vyber ze vsech souboru v zadanem adresari (mozny filtr)
 			//                               - tisk vice souboru podle jedne sablony (hlavniSablona, hlaviSablonaData)

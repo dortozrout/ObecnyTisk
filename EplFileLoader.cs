@@ -32,7 +32,7 @@ namespace Labels
             }
             return eplFiles;
         }
-        public List<EplFile> ReadFromFile(string filePath, string templatePath)
+        public List<EplFile> ReadFromFile(string filePath, string templatePath, string searchedText="")
         {
             var eplFiles = new List<EplFile>();
             try
@@ -74,6 +74,7 @@ namespace Labels
             {
                 ErrorHandler.HandleError(this, ex);
             }
+            if (!string.IsNullOrWhiteSpace(searchedText)) return eplFiles.FindAll(s => s.FileName.ToLower().Contains(searchedText.ToLower()));
             return eplFiles;
         }
         public static string[] Split(string input)
