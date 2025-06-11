@@ -74,7 +74,7 @@ namespace Labels
             {
                 ErrorHandler.HandleError(this, ex);
             }
-            if (!string.IsNullOrWhiteSpace(searchedText)) return eplFiles.FindAll(s => s.FileName.ToLower().Contains(searchedText.ToLower()));
+            if (!string.IsNullOrWhiteSpace(searchedText)) return eplFiles.FindAll(epl => epl.FileName.ToLower().Contains(searchedText.ToLower()));
             return eplFiles;
         }
         public static string[] Split(string input)
