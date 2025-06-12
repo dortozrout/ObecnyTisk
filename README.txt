@@ -110,11 +110,12 @@ Speciální pole jsou:
 
 <time+> - zobrazí dotaz na počet minut o který se má čas posunout
 
-<date> - nahradí se aktuálním datem.
+<date|[format:dd.MM.yyyy]> - nahradí se aktuálním datem volitelně
+lze zadat formát data.
 
-<date+10> - nahradí se datem za deset dní
+<date+10|[format:dd.MM.yyyy]> - nahradí se datem za deset dní
 
-<date+30|expirace_sarze> - nahradí se datem za 30 dní nebo datem
+<date+30|expirace_sarze|[format:dd.MM.yyyy]> - nahradí se datem za 30 dní nebo datem
 definovaným textem za značkou ‘|’. Může být datum nebo klíč v souboru
 primárních dat. Pokud nerozpozná datum nebo nenajde klíč zobrazí program
 dotaz na expiraci.
@@ -125,6 +126,9 @@ definovaným parametrem start. Šablona se tiskne opakovaně (počet kroků),
 pozici (nelze pokud se tiskne s hlavní šablonou). Nepovinný parametr
 “formát” je text, který definuje formát čísla (např “000” - číslo má
 nejméně 3 číslice)
+
+<number|číslo|[formát]> - nahradí se číslem "číslo" případně zobrazí
+dotaz (zadej číslo). Formát čísla může být např. d6 - minimálně 6 číslic. 
 
 <uzivatel> - pokud je vyžadována identifikace uživatele, nahradí se
 značkou uživatele.

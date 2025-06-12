@@ -182,6 +182,9 @@ namespace Labels
 
             if (key.StartsWith("<pocet"))
                 return HandlePocetKey(key);
+                
+            if (key.StartsWith("<number"))
+                return HandleNumberKey(key);
 
             return HandleDefaultKey(key);
         }
@@ -210,24 +213,82 @@ namespace Labels
             return DateTime.Now.AddMinutes(drift).ToString("H:mm");
         }
 
+        // private string HandleDateKey(string key)
+        // {
+        //     int indexOfPlus = key.IndexOf('+');
+        //     if (indexOfPlus == -1)
+        //         return DateTime.Now.ToString("dd.MM.yyyy");
+
+        //     var keyArray = key.Trim('<', '>').Split(new[] { '+', '|' }, StringSplitOptions.None);
+        //     int drift;
+        //     if (keyArray[1] == "exp") return "expirace";
+        //     if (int.TryParse(keyArray[1], out drift))
+        //     {
+        //         DateTime bottleExpiration = DateTime.Now.AddDays(drift);
+        //         if (keyArray.Length == 2)
+        //             return bottleExpiration.ToString("dd.MM.yyyy");
+
+        //         if (key.IndexOf('|') > 0 && keyArray.Length == 3)
+        //         {
+        //             DateTime lotExpiration = GetLotExpiration(keyArray[2]);
+        //             if (lotExpiration < DateTime.Today)
+        //             {
+        //                 new NotificationForm("Expirovaná šarže", $"Datum expirace materiálu ({lotExpiration.ToShortDateString()}) je v minulosti. Štítky nebudou vytištěny! Zkontroluj případně uprav expiraci...").Display();
+        //                 Console.ReadKey();
+        //                 continueProcessing = false;
+        //                 CurrentEplFile.print = false;
+        //                 return string.Empty;
+        //             }
+        //             else if (lotExpiration < DateTime.Today.AddMonths(1))
+        //             {
+        //                 new NotificationForm("Blíží se expirace materiálu", $"Datum expirace materiálu ({lotExpiration.ToShortDateString()}) je menší něž 1 měsíc. Zkontroluj případně uprav expiraci...").Display();
+        //                 Console.ReadKey();
+        //             }
+        //             DateTime dateToPrint = bottleExpiration < lotExpiration ? bottleExpiration : lotExpiration;
+        //             return dateToPrint.ToString("dd.MM.yyyy");
+        //         }
+        //     }
+        //     return string.Empty;
+        // }
+
         private string HandleDateKey(string key)
         {
+            // Extract the date format if specified, otherwise use the default format
+            string format = key.Contains("format:")
+            ? key[(key.IndexOf("format:") + 7)..].TrimEnd('>')
+            : "dd.MM.yyyy";
+
+            // Check if the key contains a drift value (e.g., <date+5>)
             int indexOfPlus = key.IndexOf('+');
             if (indexOfPlus == -1)
-                return DateTime.Now.ToString("dd.MM.yyyy");
+                return DateTime.Now.ToString(format);
 
-            var keyArray = key.Trim('<', '>').Split(new[] { '+', '|' }, StringSplitOptions.None);
-            int drift;
-            if (keyArray[1]=="exp") return "expirace";
-            if (int.TryParse(keyArray[1], out drift))
+            // Split the key into parts for further processing
+            var keyParts = key.Trim('<', '>').Split(new[] { '+', '|' }, StringSplitOptions.None);
+
+            // Remove the format part from the key parts if it exists
+            if (keyParts.Last().StartsWith("format:"))
+                keyParts = keyParts.Take(keyParts.Length - 1).ToArray();
+
+            // Handle the "exp" keyword for expiration
+            if (keyParts[1] == "exp")
+                return "expirace";
+
+            // Parse the drift value and calculate the bottle expiration date
+            if (int.TryParse(keyParts[1], out int drift))
             {
                 DateTime bottleExpiration = DateTime.Now.AddDays(drift);
-                if (keyArray.Length == 2)
-                    return bottleExpiration.ToString("dd.MM.yyyy");
 
-                if (key.IndexOf('|') > 0 && keyArray.Length == 3)
+                // If no additional parts, return the bottle expiration date
+                if (keyParts.Length == 2)
+                    return bottleExpiration.ToString(format);
+
+                // Handle the case where a lot expiration key is provided
+                if (keyParts.Length == 3)
                 {
-                    DateTime lotExpiration = GetLotExpiration(keyArray[2]);
+                    DateTime lotExpiration = GetLotExpiration(keyParts[2]);
+
+                    // Check if the lot expiration date is in the past
                     if (lotExpiration < DateTime.Today)
                     {
                         new NotificationForm("Expirovaná šarže", $"Datum expirace materiálu ({lotExpiration.ToShortDateString()}) je v minulosti. Štítky nebudou vytištěny! Zkontroluj případně uprav expiraci...").Display();
@@ -236,15 +297,21 @@ namespace Labels
                         CurrentEplFile.print = false;
                         return string.Empty;
                     }
-                    else if (lotExpiration < DateTime.Today.AddMonths(1))
+
+                    // Warn if the lot expiration date is within one month
+                    if (lotExpiration < DateTime.Today.AddMonths(1))
                     {
                         new NotificationForm("Blíží se expirace materiálu", $"Datum expirace materiálu ({lotExpiration.ToShortDateString()}) je menší něž 1 měsíc. Zkontroluj případně uprav expiraci...").Display();
                         Console.ReadKey();
                     }
+
+                    // Return the earlier of the bottle expiration and lot expiration dates
                     DateTime dateToPrint = bottleExpiration < lotExpiration ? bottleExpiration : lotExpiration;
-                    return dateToPrint.ToString("dd.MM.yyyy");
+                    return dateToPrint.ToString(format);
                 }
             }
+
+            // Return an empty string if the key format is invalid
             return string.Empty;
         }
         private DateTime GetLotExpiration(string key)
@@ -282,6 +349,28 @@ namespace Labels
             else quantity = HandleInput<int>(CurrentEplFile, "Zadej počet štítků: ", "1");
             quantity = quantity > Configuration.maxQuantity ? Configuration.maxQuantity : quantity;
             return quantity.ToString();
+        }
+        private string HandleNumberKey(string key)
+        {
+            // <number|text|format>
+            string[] parts = key.Trim('<', '>').Split('|');
+            if (parts.Length < 2 || parts.Length > 3)
+            {
+                // Handle the error for invalid number key format
+                new NotificationForm("Wrong key format", $"Wrong key format ({key})! Check the key format and try again.");
+                return string.Empty;
+            }
+            if (int.TryParse(parts[1], out int number))
+            {
+                // If the second part is a valid number, return it
+                return number.ToString(parts.Length == 3 ? parts[2] : "");
+            }
+            else
+            {
+                // If the second part is not a valid number, prompt the user for input
+                number = HandleInput<int>(CurrentEplFile, "Zadej " + parts[1] + ": ", "");
+                return number.ToString(parts.Length == 3 ? parts[2] : "");
+            }
         }
         private string HandleDefaultKey(string key)
         {
