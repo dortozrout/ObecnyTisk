@@ -255,7 +255,7 @@ namespace Labels
         {
             // Extract the date format if specified, otherwise use the default format
             string format = key.Contains("format:")
-            ? key[(key.IndexOf("format:") + 7)..].TrimEnd('>')
+            ? key.Substring(key.IndexOf("format:") + 7).TrimEnd('>')
             : "dd.MM.yyyy";
 
             // Check if the key contains a drift value (e.g., <date+5>)
