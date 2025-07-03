@@ -367,12 +367,6 @@ namespace Labels
             string[] parts = key.Trim('<', '>').Split('|');
             if (parts.Length < 2 || parts.Length > 3)
             {
-                // // Handle the error for invalid number key format
-                // continueProcessing = false;
-                // CurrentEplFile.print = false;
-                // var Notification = new NotificationForm("Wrong key format", $"Wrong key format ({key})! Propper key format is <number|text|[format:format]>. Check the key format and try again.");
-                // Notification.Display();
-                // Console.ReadKey();
                 HandleWrongKeyFormat(key, "<number|hodnota|format:formát>");
                 return string.Empty;
             }
@@ -417,7 +411,7 @@ namespace Labels
         {
             continueProcessing = false;
             CurrentEplFile.print = false;
-            var notification = new NotificationForm("Špatný formát klíče", $"Špatný formát klíče ({wrongKey})! Správný formát klíče je {properKey}. Zkontrolujte formát klíče a zkuste to znovu.");
+            var notification = new NotificationForm("Špatný formát klíče", $"Špatný formát klíče ({wrongKey})!\nSprávný formát klíče je {properKey}.\nZkontrolujte formát klíče a zkuste to znovu.");
             notification.Display();
             Console.ReadKey();
         }

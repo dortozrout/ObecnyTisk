@@ -14,9 +14,9 @@ namespace Form
             {
                 Label = new FieldReadOnly<string>(3, 7, label, label.Length, this);
                 //string messageFormated = message.Replace(Environment.NewLine, Environment.NewLine + "   ");
-                Message = new FieldReadOnly<string>(3, 9, message, message.Length, this);
+                Message = new FieldReadOnly<string>(3, 9, message, Console.WindowWidth - 3, this);
             }
-            else Message = new FieldReadOnly<string>(3, 7, message, message.Length, this);
+            else Message = new FieldReadOnly<string>(3, 7, message, Console.WindowWidth - 3, this);
             string prompt = "Pokračuj stisknutím libovolné klávesy...";
             Notification = new FieldReadOnly<string>(3, Configuration.MaxLines + 7, prompt, prompt.Length, this);
         }
