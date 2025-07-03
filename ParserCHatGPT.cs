@@ -81,30 +81,41 @@ namespace Labels
             var keyParts = sequenceKey.Trim('<', '>').Split('|');
             if (keyParts.Length < 3 || keyParts.Length > 5)
             {
-                new NotificationForm("Chyba v klíči sequence", $"Chybný formát seqence klíče ({sequenceKey})!").Display();
-                Console.ReadKey();
+                HandleWrongKeyFormat(sequenceKey, "<sequence|start|počet kroků|[save]|[format:formát]>");
+                return string.Empty;
             }
 
             int start = HandleInput<int>(CurrentEplFile, "Zadej počátek sekvence: ", keyParts[1]);
             if (!continueProcessing) return string.Empty;
             int count = HandleInput<int>(CurrentEplFile, "Zadej počet kroků: ", keyParts[2]);
-            string format;
-            if (sequenceKey.ToLower().Contains("save"))
-            {
-                string newSequenceKey = $"<sequence|{start + count}|{keyParts[2]}";
+            if (!continueProcessing) return string.Empty;
 
-                // If there are additional parts to the sequence key, append them
+            // Support both <sequence|start|steps|save|format:000> and <sequence|start|steps|format:000|save>
+            bool save = false;
+            string format = "";
+
+            // Check all extra parts for "save" and "format:"
+            for (int i = 3; i < keyParts.Length; i++)
+            {
+                if (keyParts[i].ToLower().Equals("save"))
+                    save = true;
+                else if (keyParts[i].ToLower().StartsWith("format:"))
+                    format = keyParts[i].Substring("format:".Length);
+            }
+
+            if (save)
+            {
+                // Prepare new sequence key for saving, preserving order of extra parts
+                var newParts = new List<string> { "sequence", (start + count).ToString(), keyParts[2] };
                 for (int i = 3; i < keyParts.Length; i++)
                 {
-                    newSequenceKey += $"|{keyParts[i]}";
+                    if (keyParts[i].ToLower().Equals("save") || keyParts[i].ToLower().StartsWith("format:"))
+                        newParts.Add(keyParts[i]);
                 }
-                newSequenceKey += ">";
-
+                string newSequenceKey = $"<{string.Join("|", newParts)}>";
                 string newTemplate = CurrentEplFile.Template.Replace(sequenceKey, newSequenceKey);
                 CurrentEplFile.SetAndSaveTemplate(newTemplate);
-                format = keyParts.Length == 5 ? keyParts[4] : "";
             }
-            else format = keyParts.Length == 4 ? keyParts[3] : "";
 
             // Generate the sequence of numbers
             var sequenceValues = Enumerable.Range(start, count).ToList();
@@ -182,7 +193,7 @@ namespace Labels
 
             if (key.StartsWith("<pocet"))
                 return HandlePocetKey(key);
-                
+
             if (key.StartsWith("<number"))
                 return HandleNumberKey(key);
 
@@ -352,24 +363,38 @@ namespace Labels
         }
         private string HandleNumberKey(string key)
         {
-            // <number|text|format>
+            // <number|text|format:format>
             string[] parts = key.Trim('<', '>').Split('|');
             if (parts.Length < 2 || parts.Length > 3)
             {
-                // Handle the error for invalid number key format
-                new NotificationForm("Wrong key format", $"Wrong key format ({key})! Check the key format and try again.");
+                // // Handle the error for invalid number key format
+                // continueProcessing = false;
+                // CurrentEplFile.print = false;
+                // var Notification = new NotificationForm("Wrong key format", $"Wrong key format ({key})! Propper key format is <number|text|[format:format]>. Check the key format and try again.");
+                // Notification.Display();
+                // Console.ReadKey();
+                HandleWrongKeyFormat(key, "<number|hodnota|format:formát>");
                 return string.Empty;
             }
-            if (int.TryParse(parts[1], out int number))
+
+            string prompt = parts[1].Trim();
+            string format = "";
+
+            if (parts.Length == 3 && parts[2].StartsWith("format:"))
+            {
+                format = parts[2].Substring(7).Trim();
+            }
+
+            if (int.TryParse(prompt, out int number))
             {
                 // If the second part is a valid number, return it
-                return number.ToString(parts.Length == 3 ? parts[2] : "");
+                return string.IsNullOrEmpty(format) ? number.ToString() : number.ToString(format);
             }
             else
             {
                 // If the second part is not a valid number, prompt the user for input
-                number = HandleInput<int>(CurrentEplFile, "Zadej " + parts[1] + ": ", "");
-                return number.ToString(parts.Length == 3 ? parts[2] : "");
+                number = HandleInput<int>(CurrentEplFile, "Zadej " + prompt + ": ", "");
+                return string.IsNullOrEmpty(format) ? number.ToString() : number.ToString(format);
             }
         }
         private string HandleDefaultKey(string key)
@@ -387,6 +412,14 @@ namespace Labels
 
             // Join the filtered lines back into a single string
             return string.Join(Environment.NewLine, filteredLines);
+        }
+        private void HandleWrongKeyFormat(string wrongKey, string properKey)
+        {
+            continueProcessing = false;
+            CurrentEplFile.print = false;
+            var notification = new NotificationForm("Špatný formát klíče", $"Špatný formát klíče ({wrongKey})! Správný formát klíče je {properKey}. Zkontrolujte formát klíče a zkuste to znovu.");
+            notification.Display();
+            Console.ReadKey();
         }
     }
 }
